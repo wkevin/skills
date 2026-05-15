@@ -1,0 +1,14 @@
+{
+  "name": "wkevin-skills",
+  "owner": {
+    "name": "wkevin",
+    "email": "wkevin27@gmail.com"
+  },
+  "metadata": {
+    "description": "Skills shared by wkevin",
+    "version": "0.5.15"
+  },
+  "skills": [
+    "./skills/productivity/srt-translate"
+  ]
+}
