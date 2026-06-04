@@ -9,6 +9,6 @@
     "version": "0.5.15"
   },
   "skills": [
-    "./skills/productivity/srt-translate"
+    "./skills/utils/srt-translate"
   ]
 }

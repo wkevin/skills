@@ -1,7 +1,7 @@
 ---
-name: srt-translate
+name: wkevin-srt-translate
 description: 将 SRT 字幕文件拆分为多个片段，生成并行翻译 subagents 进行翻译，最后拼接结果。在用户提供 SRT 文件进行翻译或要求翻译字幕时使用。
-trigger: /srt-translate
+version: 1.0
 ---
 
 # /srt-translate
