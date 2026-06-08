@@ -6,9 +6,7 @@ version: 2.1
 
 # Skill: 架构解码器 (wkevin-arch-decoder) - 从代码反推设计哲学
 
-> **v2.0 重大重构说明**(沿用):v1.0 只产出"事实清点",在 AI/Agent 类项目上会**只见树木不见森林**(描述了 SQLite、MCP、FTS5,但没解释作者为什么这么选,也没看 prompt 层)。v2.0 加入**前置上下文视图、决策视图、行为视图(AI 专属)、凝结步骤、批判视角**,强制每个事实都配 WHY 和判断,把分析从"清点表"升级为"架构理解"。
->
-> **v2.1 改名说明**:`wkevin-5-views` → `wkevin-arch-decoder`。v2.0 升级后,五视图只占工作流 1/7(Phase 1),"5-views" 这个名字已无法代表 skill 全貌。"decoder"(解码)对应新定位 —— 核心任务不是"看清代码有什么",而是"**理解作者为什么这么写**"。五视图法作为 v1.0 沉淀的方法论,保留为内部参考 `reference-5-views.md`(原 `5-views-method.md`),作为 Phase 1 的方法论依据。
+> 📖 **改动历史 / 设计哲学 / 文件结构 / 触发词** 见 [README.md](./README.md)。本文件只包含**操作规范**(被 Claude 加载执行的部分)。
 
 ---
 
@@ -487,34 +485,5 @@ grep -rn "// 暴力\|brute.force\|works for" --include="*.js" src/  # 找作者�
 
 ---
 
-## 10. 版本变更日志
+<!-- 变更历史已迁至 [README.md](./README.md) 的"改动说明"章节。本文件只保留操作规范。 -->
 
-### v2.1 (改名)
-
-- ⭐ **改名**:`wkevin-5-views` → `wkevin-arch-decoder`(架构解码器)
-- **原因**:v2.0 升级后,五视图只占工作流 1/7(Phase 1),"5-views" 已不能代表 skill 全貌。"decoder" 对应新加的"理解/解码设计哲学"定位。
-- **改动**:
-  - 目录:`skills/dev/wkevin-5-views/` → `skills/dev/wkevin-arch-decoder/`
-  - `5-views-method.md` 保留为内部参考,改名为 `reference-5-views.md`,头部加 v1.0 定位说明
-  - `SKILL.md` frontmatter `name` 同步、`description` 增加"架构解码"触发词
-  - `example.md` 头部增加"读者导览",说明 7 视图结构
-- **破坏性变更**:无对外接口破坏,文件路径变了而已
-
-### v2.0 (重大重构)
-
-- ⭐ 新增 Phase 0: 上下文与心智模型 (强制前置)
-- ⭐ 新增 Phase 2: 决策视图 (含 Roads Not Taken)
-- ⭐ 新增 Phase 3: 行为视图 (AI 项目专属 -- Prompt 位置图 / Token 经济 / 触发链)
-- ⭐ 新增 Phase 4: Synthesis 凝结
-- ⭐ 新增 Phase 5: Critical Lens 批判
-- ⭐ 强制每张表加 WHY 列,禁止空话
-- ⭐ 强制每张 mermaid 配 ≥ 2 段文字解读
-- ⭐ 加入事实/判断分层标注 (📋/💭/❓/⚠️)
-- ⭐ 加入项目类型识别 + 领域适配 checklist
-- ⭐ 加入读者意图前置
-
-### v1.0 (基线)
-
-- 五视图清点(逻辑/数据/开发/运行/物理)
-- 每视图必绘图清单
-- 章节归属原则
