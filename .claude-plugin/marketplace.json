@@ -1,0 +1,34 @@
+{
+  "name": "wkevin-skills",
+  "owner": {
+    "name": "wkevin",
+    "email": "wkevin27@gmail.com"
+  },
+  "metadata": {
+    "description": "Skills shared by wkevin",
+    "version": "0.0.2"
+  },
+  "plugins": [
+    {
+      "name": "dev",
+      "description": "开发类 skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/dev/wkevin-arch-decoder",
+        "./skills/dev/wkevin-dev-tasks",
+        "./skills/dev/wkevin-new-idea",
+        "./skills/dev/wkevin-vital-docs"
+      ]
+    },
+    {
+      "name": "utils",
+      "description": "工具类 skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/utils/wkevin-srt-translate"
+      ]
+    }
+  ]
+}
