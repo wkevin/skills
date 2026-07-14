@@ -197,4 +197,4 @@
 
 本文件仅在评估 PRD 时加载。如果用户问"评估 add.md"——不要读此文件，跳到 [add-checklist.md](add-checklist.md)。
 
-本 skill 触发名：`/vital-docs`。
+本 skill 触发名：`/doc-align`。

@@ -1,9 +1,9 @@
 ---
-name: wkevin-vital-docs
+name: wkevin-doc-align
 description: 评估项目最重要的四件套文档——prd.md / add.md / tasks.md / sprint.md——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Sprint 起止日期+Goal、Critical Lens ≥ 3 毛病等。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或 Sprint 收尾 sign-off,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
-# /vital-docs — 三件套文档评估器 / 改造器
+# /doc-align — 三件套文档评估器 / 改造器
 
 评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 是否符合 PRD + ADD + Tasks 三文档方法论。**两种模式**:
 
@@ -27,7 +27,7 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 - ❌ 用户要**加新需求**(已有三件套上加新 UC/IF/ADR)→ 用 [`wkevin-realize-idea`](../wkevin-realize-idea/SKILL.md)(增量改动范式)
 - ❌ 用户要**改代码实现**→ 用 `dev:code` / `dev:end-to-end`
 - ❌ 项目没有 `docs/` 目录(先建文档骨架)
-- ❌ 文档结构跟 vital-docs 不一致但用户只想加需求 → 先跑 `evaluate` 评估,verdict 是 PASS 后才能用 `realize-idea`
+- ❌ 文档结构跟 doc-align 不一致但用户只想加需求 → 先跑 `evaluate` 评估,verdict 是 PASS 后才能用 `realize-idea`
 
 ---
 
@@ -192,7 +192,7 @@ Step 9e: git add + 一个 commit(commit message 见下方模板)
 
 **commit message 模板**:
 ```
-docs: rewrite PRD/ADD/Tasks to vital-docs schema
+docs: rewrite PRD/ADD/Tasks to doc-align schema
 
 - prd.md: 412 → N lines, restructure to §1-§9 schema
   - New §2 SMART goals, §3 non-goals, §4 user scenarios (agile 3-segment),
@@ -290,7 +290,7 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 | `skill-judge` | 通用 skill 评估 → 评估本 skill 自身用 |
 
 **完整工作流**:
-1. **基线评估**:`wkevin-vital-docs --mode=evaluate`(确认现状 verdict)
-2. **基线改造**:`wkevin-vital-docs --mode=transform`(把 REWRITE → PASS)
+1. **基线评估**:`wkevin-doc-align --mode=evaluate`(确认现状 verdict)
+2. **基线改造**:`wkevin-doc-align --mode=transform`(把 REWRITE → PASS)
 3. **增量需求**:后续加需求 → `wkevin-realize-idea`(基于 PASS 基线做增量联动)
 4. **回滚 / 退一步**:若 transform 失败,保留 `docs/_draft/` 作为 partial state,人工清理

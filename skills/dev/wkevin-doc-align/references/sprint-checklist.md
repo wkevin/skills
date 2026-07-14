@@ -129,4 +129,4 @@
 
 本文件仅在评估 sprint.md 时加载。如果用户问"评估 tasks.md"——不要读此文件,跳到 [tasks-checklist.md](tasks-checklist.md)。
 
-本 skill 触发名:`/vital-docs`。
+本 skill 触发名:`/doc-align`。

@@ -10,7 +10,7 @@ npx skills add https://github.com/wkevin/skills
 │  │ ◻ wkevin-arch-decoder
 │  │ ◻ wkevin-dev-tasks
 │  │ ◻ wkevin-realize-idea
-│  └ ◻ wkevin-vital-docs
+│  └ ◻ wkevin-doc-align
 │  ◻ Utils
 │  └ ◻ wkevin-srt-translate
 ```
@@ -36,7 +36,7 @@ npx skills add https://github.com/wkevin/skills
 
 详见 [README](skills/dev/wkevin-arch-decoder/README.md)。
 
-### `wkevin-vital-docs` - 评估文档四件套及提出改进意见
+### `wkevin-doc-align` - 评估文档四件套及提出改进意见
 
 **思考逻辑：**
 
@@ -60,7 +60,7 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-vital-docs
+/wkevin-doc-align
 ```
 
 或靠提示词触发

@@ -1,6 +1,6 @@
 ---
 name: wkevin-realize-idea
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-vital-docs 评估基线。触发词:"/realize-idea"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-doc-align 评估基线。触发词:"/realize-idea"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
 ---
 
 # /realize-idea — 3 维度头脑风暴驱动的想法落地
@@ -56,7 +56,7 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 
 **关键**: 新产生的 UC/IF **同时**进 `tasks.md §1.1/§1.2`(完整定义,给未来实现用)+ `sprint.md §2 Product Backlog`(暂存状态)。
 
-> **作用域**:本 skill **只**处理 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` / `docs/sprint.md` 四个文件 —— 这是 wkevin-vital-docs 评估基线。任何其他文件(如独立的 `design.md` / `decisions/000N-xxx.md` / `roadmap.md`)**不在本 skill 范围**。
+> **作用域**:本 skill **只**处理 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` / `docs/sprint.md` 四个文件 —— 这是 wkevin-doc-align 评估基线。任何其他文件(如独立的 `design.md` / `decisions/000N-xxx.md` / `roadmap.md`)**不在本 skill 范围**。
 
 ## 何时使用
 
@@ -66,7 +66,7 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 ## 何时不要使用
 
 - ❌ 项目没有 `docs/` 目录(先建文档骨架)
-- ❌ 文档结构跟 vital-docs 不一致(先跑 `wkevin-vital-docs` 评估,按其 verdict 修复后再用)
+- ❌ 文档结构跟 doc-align 不一致(先跑 `wkevin-doc-align` 评估,按其 verdict 修复后再用)
 - ❌ 用户要写代码实现(用 `dev:end-to-end` / `ultracode` / `dev:code` 模式)
 - ❌ 改动只是代码(无 PRD/ADD/Tasks 联动需求)—— 本 skill 不动代码
 - ❌ 要改 `design.md` / `roadmap.md` / `decisions/` 文件 —— 这些不在本 skill 范围
@@ -85,7 +85,7 @@ ls docs/prd.md docs/add.md docs/tasks.md docs/sprint.md 2>&1
 | 情况     | 处理                                                  |
 | -------- | ----------------------------------------------------- |
 | 4 个全在 | 进 Step 2                                             |
-| 只有部分 | **先停**——告诉用户缺哪个,按 vital-docs 规范补建空模板 |
+| 只有部分 | **先停**——告诉用户缺哪个,按 doc-align 规范补建空模板 |
 | 全都不在 | **拒绝执行**——本 skill 只增量更新,不从零搭文档        |
 
 ### Step 2:3 维度头脑风暴(多轮澄清)
@@ -292,7 +292,7 @@ commit 后提示用户:
 
 后续可选:
 - 继续 /wkevin-realize-idea 加新想法
-- 用 /wkevin-vital-docs 评估文档质量(4 文件)
+- 用 /wkevin-doc-align 评估文档质量(4 文件)
 - 用 /wkevin-dev-tasks 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
 ```
 
@@ -307,8 +307,8 @@ commit 后提示用户:
 5. **commit message subject ≤ 60 字** — WHY: git log 可读性 + Conventional Commits 规范。
 6. **PRD 瘦身** — WHY: 已迁到 ADD 的内容(数据模型 / 技术栈等)写回 PRD 会双源失同步。
 7. **联动改动不拆 commit**(默认) — WHY: 单 commit 保证原子性,避免中间状态文档失同步。
-8. **不创建独立 `decisions/000N-xxx.md` 文件** — WHY: vital-docs 不评估该路径;ADD §7 Decision View 才是 ADR 内容的归宿。
-9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: vital-docs 不评估这两个文件;请改用 add.md / tasks.md。
+8. **不创建独立 `decisions/000N-xxx.md` 文件** — WHY: doc-align 不评估该路径;ADD §7 Decision View 才是 ADR 内容的归宿。
+9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: doc-align 不评估这两个文件;请改用 add.md / tasks.md。
 10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
 12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 dev-tasks 实现用),§2 是暂存状态(等 Sprint 排期)。
@@ -458,10 +458,10 @@ git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 + IF-05-01 CSV 解
 
 - ❌ 不写代码实现
 - ❌ 不改 `docs/` 之外的任何文件(README.md 等需同步的单独指示)
-- ❌ **不创建 / 修改 `design.md`、`roadmap.md`、`decisions/` 等 vital-docs 不评估的文件** —— 这些是历史遗留,本 skill 强制 4 文件(prd + add + tasks + sprint)+ Product Backlog 模型
+- ❌ **不创建 / 修改 `design.md`、`roadmap.md`、`decisions/` 等 doc-align 不评估的文件** —— 这些是历史遗留,本 skill 强制 4 文件(prd + add + tasks + sprint)+ Product Backlog 模型
 - ❌ 不直接 commit(必须用户确认 message 后再 commit)
 - ❌ 不创建 `idea.md` / `research.md`(旧版幽灵文件)
-- ❌ 不重新创建 vital-docs 视为已迁出的 PRD 章节(数据模型 / 技术栈等应写 ADD)
+- ❌ 不重新创建 doc-align 视为已迁出的 PRD 章节(数据模型 / 技术栈等应写 ADD)
 - ❌ **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** —— 这些是版本规划,不属于"新想法"
 
 ## 回滚
@@ -476,11 +476,11 @@ git checkout HEAD~1 -- docs/
 git revert <commit-hash>
 ```
 
-回滚后建议跑一次 `wkevin-vital-docs` 确认没破坏文档质量基线。
+回滚后建议跑一次 `wkevin-doc-align` 确认没破坏文档质量基线。
 
 ## 关联
 
-- **上游**:`wkevin-vital-docs` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
+- **上游**:`wkevin-doc-align` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
 - **下游**:`wkevin-dev-tasks` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期移到 §1 才能被 dev-tasks 实现
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
 - **同族**:
