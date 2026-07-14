@@ -1,9 +1,9 @@
 ---
-name: wkevin-idea-realize
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-doc-align 评估基线。触发词:"/idea-realize"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
+name: wkevin-idea-flesh
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
 ---
 
-# /idea-realize — 3 维度头脑风暴驱动的想法落地
+# /idea-flesh — 3 维度头脑风暴驱动的想法落地
 
 把当前轮用户描述的想法,通过 **3 维度头脑风暴** 落到文档系统 —— 跟用户多轮交互把需求、方案、任务各自清晰化,然后**直接联动修改 prd.md / add.md / tasks.md / sprint.md 四个文档**。新产生的 UC/IF 进入 `tasks.md §1.1/§1.2`(完整定义)+ `sprint.md §2 Product Backlog`(等待排期)。
 
@@ -17,15 +17,15 @@ description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)�
 ## 接口
 
 ```sh
-/wkevin-idea-realize <任意模糊想法>
+/wkevin-idea-flesh <任意模糊想法>
 ```
 
 **例**:
 
 ```sh
-/wkevin-idea-realize 我要赚到一个小目标
-/wkevin-idea-realize btw 能不能批量导入 repo
-/wkevin-idea-realize 加个暗色主题
+/wkevin-idea-flesh 我要赚到一个小目标
+/wkevin-idea-flesh btw 能不能批量导入 repo
+/wkevin-idea-flesh 加个暗色主题
 ```
 
 skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法 6 轮)。
@@ -291,7 +291,7 @@ commit 后提示用户:
 位置:tasks.md §1.1/§1.2 完整定义 + sprint.md §2 Product Backlog 暂存
 
 后续可选:
-- 继续 /wkevin-idea-realize 加新想法
+- 继续 /wkevin-idea-flesh 加新想法
 - 用 /wkevin-doc-align 评估文档质量(4 文件)
 - 用 /wkevin-task-dev 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
 ```
@@ -383,7 +383,7 @@ commit 后提示用户:
 
 ## Worked Example
 
-**用户**:`/wkevin-idea-realize btw 能不能批量导入 repo,现在只能一个个粘贴 URL`
+**用户**:`/wkevin-idea-flesh btw 能不能批量导入 repo,现在只能一个个粘贴 URL`
 
 **Step 2 3 维度头脑风暴**:
 
@@ -485,5 +485,5 @@ git revert <commit-hash>
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
 - **同族**:
   - **wkevin-add-idea**:另一种轻量想法入库模型 —— 只写 Backlog 一行(无 UC/IF 完整定义),适合快速随手记下想法
-  - **wkevin-idea-realize**(本 skill):深度想法落地模型 —— 3 维度头脑风暴 + 直接联动改 3 文档 + UC/IF 进 Backlog 暂存
-  - 两个 skill 的 Backlog 互通:wkevin-add-idea 写的"一行 idea"在需要展开时,可由 wkevin-idea-realize 做 3 维度头脑风暴补全
+  - **wkevin-idea-flesh**(本 skill):深度想法落地模型 —— 3 维度头脑风暴 + 直接联动改 3 文档 + UC/IF 进 Backlog 暂存
+  - 两个 skill 的 Backlog 互通:wkevin-add-idea 写的"一行 idea"在需要展开时,可由 wkevin-idea-flesh 做 3 维度头脑风暴补全
