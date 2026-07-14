@@ -9,7 +9,7 @@ npx skills add https://github.com/wkevin/skills
 │  ◻ Dev
 │  │ ◻ wkevin-arch-decoder
 │  │ ◻ wkevin-dev-tasks
-│  │ ◻ wkevin-new-idea
+│  │ ◻ wkevin-realize-idea
 │  └ ◻ wkevin-vital-docs
 │  ◻ Utils
 │  └ ◻ wkevin-srt-translate
@@ -66,7 +66,7 @@ npx skills add https://github.com/wkevin/skills
 评估当前项目的文档，给出修改建议。
 ```
 
-### `wkevin-new-idea` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks）
+### `wkevin-realize-idea` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks）
 
 **思考逻辑：**
 
@@ -90,7 +90,7 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-new-idea 我要赚到一个小目标
+/wkevin-realize-idea 我要赚到一个小目标
 ```
 
 ### `wkevin-dev-tasks` - 批量开发 tasks.md 中的 task
