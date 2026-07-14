@@ -1,6 +1,6 @@
 ---
 name: wkevin-dev-tasks
-description: 用户批量开发 task 的 skill，启动 docs/tasks.md 中的 tasks 集合（可以是 task 的 id，或 version id，不能指定 milestone id）， 依次开发，每个 task 完成一次 git commit, 过程中无需确认，尽最大努力完成长时间、无人工干预的批量 task 开发。所以启动前由用户掌握 tasks 的实现集、优先级、实现顺序等关键要素。
+description: 批量实现 docs/tasks.md 中指定 version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。skill workflow 自身定义了批量 commit 节奏——每个 task 完成一次 `git commit`，正常情况下不需要逐条询问用户确认 'commit'。若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"），仍以全局 memory 为准；否则按本 skill 的批量节奏执行。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -8,33 +8,94 @@ description: 用户批量开发 task 的 skill，启动 docs/tasks.md 中的 tas
 **允许：**
 
 ```
-/wkevin-dev-tasks UC-03-02         # 实现 id 为 UC-03-02 的 User Case
-/wkevin-dev-tasks IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
-/wkevin-dev-tasks v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
+/wkevin-dev-tasks UC-03-02         # 实现单 task
+/wkevin-dev-tasks IF-04-01         # 实现单 task
+/wkevin-dev-tasks v0.5             # 实现指定 version 的所有 [ ]
 /wkevin-dev-tasks status           # 仅打印当前进度（不开发）
 ```
 
 **禁止：**
 
 ```
-/wkevin-dev-tasks M2               # 实现 id 为 M2 的 MileStone -- 危险、禁止操作
-/wkevin-dev-tasks all              # 实现 所有 [ ] 项（按 Milestone + Version 顺序）-- 危险、禁止操作
+/wkevin-dev-tasks M2               # 指定 MileStone id -- 危险、禁止
+/wkevin-dev-tasks all              # 所有 [ ] -- 危险、禁止
 ```
 
-`version` 必须能精确匹配 §2 中某个 Milestone 下的 Version 字符串（`v0.1` / `v0.5` / `v0.9` / `v1.0-rc` 等），否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。
+`version` 必须精确匹配 `tasks.md` §2 中某个 Version 字符串，否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。
 
 ## 工作流程
 
-1. 首先提取用户指定的待实现版本（$2），如果没有指定，则停下来询问用户。
-2. 针对 `docs/tasks.md` §2 中某个 Milestone 下的指定 Version，**按顺序**逐个实现 task
-   - 执行 task 的开发之前，评估 task 的复杂度，如果较高，则启用以下 claude code 功能的一个或多个：
-     - workflow（使用 ultracode 关键字）
-     - /goal
-     - /debug
-   - 包括但不限于：UC-XX-YY / IF-XX-YY，有可能有其他编号，以 tasks.md 文件中的实际为准
-   - 完成开发后修改 tasks.md 中相应 task 的完成状态 （`[] -> [x]`）
-   - 每完成一个 task 就做一次 git commit。**不做** commit 之外的事（不 push / 不 squash / 不 rebase / 不 amend 既有 commit）。
-3. 全部完成后，给出一个过程摘要。
+### 1. 解析 + 过滤
+
+- 解析 `$2` 为 task id 列表或 version
+- 若是 version：扫描 `tasks.md` 中该 version 的所有项，**只看 `[ ]`**（已 `[x]` 视为历史已实现，跳过）
+- 输出 `[version] 共 N 个 task，其中 [ ] = M 个待实现`
+  - M = 0 → 输出 `VERSION_COMPLETE: <version>`，停下
+  - M > 10 → 提示用户 "批量 N 个，按顺序还是指定子集？"，等回复
+- 已 `[!]` 标记的任务 → 列入"需重提决策"清单（在 progress snapshot 里也带上）
+
+### 2. 实现 + 提交
+
+**默认顺序**：
+
+1. BugFix 段（性能 / 正确性 bug，影响后续稳定性）
+2. IF 段（基础设施；UC 通常依赖这些）
+3. UC 段（用户可见功能）
+4. 段内按 `tasks.md` 文档顺序
+5. 发现 UC 依赖未实现的 IF → 临时插入该 IF（破坏顺序是 OK 的）
+
+**对每个 task**：
+
+1. 读相关上下文（文件、依赖、相关已实现 task）
+2. 实现
+3. **跑 verification**（见下）
+4. 改 `tasks.md`：`[ ] → [x]`（成功）或 `[ ] → [!]`（见"### 需要决策的任务"）
+5. `git add` + `git commit`（带 `Co-Authored-By: Claude <noreply@anthropic.com>`）
+
+**Baseline 处理**：
+
+- 已存在的失败测试（基线问题）不算本 task 引入 → commit body 里 cite baseline commit 即可
+- 类型 / lint 报红但与本 task 无关 → 同上 cite baseline
+- **新增的失败** 必须先修，commit 时明确说明根因
+
+### 3. 进度汇报
+
+- 每完成 **3 个 task**（或每完成一个 `[P3]`）输出一次 snapshot：
+
+  ```
+  ✓ 已完成 N/M：<task 列表>
+  ⏭️ 已跳过 K：[!] 任务列表（需重提决策）
+  ⏳ 剩余：<task 列表>
+  ```
+
+- batch 全部完成后给最终 summary：commit 列表 + 跳过的 `[!]` + 剩余 `[ ]`
+
+## 边界协议
+
+### 需要决策的任务（[P3] escape hatch）
+
+不是所有 task 都能"无人干预"完成。判断标准：
+
+- 库选型（Tiptap vs Lexical）
+- 跨多个 schema / 多个文件类型的架构决策
+- 用户偏好相关（默认主题色 / 默认 taxonomy）
+
+→ **暂停 batch**：
+
+1. 输出：决策问题 + 候选方案（每项优缺点）+ 推荐项
+2. 用 `AskUserQuestion` 收集回复
+3. 用户回复后继续
+
+不要"猜测最佳默认"继续推进——`[P3]` 选错了重做成本高。用户决策 OK 之后再做不算违反"批量无人干预"。
+
+### 中断与降级
+
+用户中途切换到其他任务（如修 build error）：
+
+- 当前 task → `[!]`，附一行 reason
+- 已完成 task 的 `[x]` 不回滚
+- 下次启动该 batch 时自动 surface `[!]`（参见"1. 解析 + 过滤"）
+- batch 结束后给"已完成 + 跳过 + 剩余"清单
 
 ## git 提交规范
 
@@ -49,4 +110,6 @@ description: 用户批量开发 task 的 skill，启动 docs/tasks.md 中的 tas
 | `test`     | 加 / 改测试                                 |
 | `chore`    | 配置 / 依赖 / 杂事                          |
 
-scope 强制用 `UC-XX-YY` 或 `IF-XX-YY`（不写 `M*-T*`）。Claude 生成的 commit **必须**带 `-m "Co-Authored-By: Claude <noreply@anthropic.com>"`。
+**scope 强制**用 `UC-XX-YY` 或 `IF-XX-YY`（**不写** `M*-T*` 或 `v0.X`；M-number / version 不出现在 commit scope）。Claude 生成的 commit **必须**带 `-m "Co-Authored-By: Claude <noreply@anthropic.com>"`。
+
+**不做**的事（commit 之外）：不 push / 不 squash / 不 rebase / 不 amend 既有 commit / 不交互式 `git rebase -i`。
