@@ -159,6 +159,10 @@
 
 ## 5. 跨文档引用一致性(cross-doc)
 
+> **依赖方向(核心原则)**:prd → add → tasks → sprint。**tasks 是 sprint 的上游**,**上游文档不引用下游文档内的内容**(sprint 章节锚点 / 具体状态符号)。允许 file-level 链接(`[sprint.md]` 形式)与角色描述("sprint.md = 当前进度")。
+>
+> **注意**:`tasks.md` 内部 `UC-XX-NN` / `IF-XX-NN` 是**自身 catalog**,**不算违规**;`add.md` 内部 `DA-N` 是 ADR 的 owner 自引用,也不违规。只检查**跨文档**引用 + 下游内容展开。
+
 | # | 检查项 | 命令 / 方法 | 严重度 |
 |---|---|---|---|
 | 5.1 | **tasks §1.1 UC 编号跟 PRD §4 UC 编号一致**(都用 `UC-mm-nn` 双数字) | `grep '^### UC-' docs/tasks.md` 跟 `docs/prd.md §4` 比对 | critical |
@@ -166,6 +170,8 @@
 | 5.3 | **tasks §3 决策依赖(D-1~D-N)跟 PRD §1.2 / §3 一致** | 比对决策表 | important |
 | 5.4 | **tasks agile 三段式跟 PRD §4 用同一种语言** | 人工抽检 2-3 条 | important |
 | 5.5 | **sprint.md §1 引用的 UC/IF 都在本文件 §1.1/§1.2 定义** | `comm -23 <(grep -oE "UC-[0-9]+-[0-9]+\|IF-[0-9]+-[0-9]+" docs/sprint.md \| sort -u) <(grep -oE "UC-[0-9]+-[0-9]+\|IF-[0-9]+-[0-9]+" docs/tasks.md \| sort -u)` 应为空 | critical |
+| **5.6** | **⚠️ 上游不引下游 — tasks 不引 sprint.md 章节锚点** | `grep -nE 'sprint\.md §\|sprint\.md#' docs/tasks.md` | **critical**(v3 新增) |
+| **5.7** | **⚠️ 上游不引下游 — tasks 不展开 sprint.md 章节内容**(如"见 sprint.md §3 当前状态"应改为"详见 sprint.md"file-level 链接) | 人工抽检:`[sprint.md]` 链接 + 角色描述 vs 具体章节锚点 | **important**(v3 新增) |
 | 5.6 | **sprint.md §2 Product Backlog 引用的 UC/IF 都在本文件 §1.1/§1.2 定义** | 同上(覆盖 sprint.md 全文) | critical |
 
 ---

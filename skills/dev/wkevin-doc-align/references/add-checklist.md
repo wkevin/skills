@@ -195,6 +195,10 @@
 
 ## 10. 跨文档引用一致性(cross-doc)
 
+> **依赖方向(核心原则)**:prd → add → tasks → sprint。**add 是 tasks/sprint 的上游**,**上游文档不引用下游文档内的内容**(UC/IF 编号、sprint 章节锚点)。允许 file-level 链接(`[tasks.md]` / `[sprint.md]` 形式)与角色描述。
+>
+> **注意**:`add.md` 内部 `DA-N` 引用是**自引用**(add.md 是 ADR 的 owner),**不算违规**;只检查**跨文档**引用。
+
 | # | 检查项 | 命令 / 方法 | 严重度 |
 |---|---|---|---|
 | 10.1 | **add §7 ADR 引用的 commit hash 必须能 `git show <hash>` 验证存在** | 对 N 条 ADR 的 commit 逐一 `git show` | critical |
@@ -202,6 +206,9 @@
 | 10.3 | **PRD §1 引用 ADR 编号在 add §7 存在** | `grep 'ADR-[0-9]' docs/prd.md` 验证每个引用 | important |
 | 10.4 | **squash commit(如 `4ef9c68`)在 ADR 表格里明确标 "(squash)"** — 否则读者 git log 查不到 | 人工抽检 | important |
 | 10.5 | **add §10 Critical Lens 编号(如 `CL-1`)在 PRD §9 风险表或 tasks §1.2 IF 实现细节有引用** — cross-doc 一致 | `grep 'CL-[0-9]' docs/prd.md docs/tasks.md` | nice-to-have |
+| **10.6** | **⚠️ 上游不引下游 — add 不引 tasks.md UC/IF 编号** | `grep -nE '(UC\|IF)-[0-9]+-[0-9]+' docs/add.md` | **critical**(v3 新增) |
+| **10.7** | **⚠️ 上游不引下游 — add 不引 sprint.md 任何内容**(含裸 `sprint.md` 引用,允许只在"see sprint.md"角色描述中使用 file-level 链接) | `grep -nE 'sprint\.md' docs/add.md` | **critical**(v3 新增) |
+| **10.8** | **add.md §1 / §4 / §6 / §7 实现细节不展开 tasks.md UC/IF 描述**(用语义化描述代替,如"添加 repo 流程"而非"UC-01-01") | 人工抽检 §1-§8 | **important**(v3 新增) |
 
 ---
 

@@ -166,6 +166,8 @@
 
 > PRD 不是孤立的。它引用 `docs/add.md` 的 ADR、引用 `docs/tasks.md` 的 UC/IF。
 > 任何引用不一致 = 文档间失同步,**必须**修。
+>
+> **依赖方向(核心原则)**:prd → add → tasks → sprint。**PRD 是 add/tasks/sprint 的上游**,**上游文档不引用下游文档内的内容**(UC/IF 编号、ADR 编号、sprint 章节锚点)。允许 file-level 链接(`[add.md]` 形式)与角色描述("X 是 Y 契约")。
 
 | # | 检查项 | 命令 / 方法 | 严重度 |
 |---|---|---|---|
@@ -176,6 +178,10 @@
 | 10.5 | **PRD 跟 tasks.md 的 agile 三段式用同一种语言**(都中文 "作为/我希望/以便" 或都英文 "As a/I want/So that") | 人工抽检 2-3 条 | important |
 | 10.6 | **PRD §3 决策依赖(D-1 ~ D-N)跟 tasks.md §3 决策一致** | 比对两份文档决策表 | important |
 | 10.7 | **PRD 不出现技术实现细节**(端口 / 文件路径 / 框架名)— 这些是 add.md 职责 | `grep -E 'FastAPI\|uvicorn\|pnpm\|port' docs/prd.md` ≤ 2(只允许 §1 提品牌名) | important |
+| **10.8** | **⚠️ 上游不引下游 — PRD 不引 add.md 内部内容** | `grep -nE 'add\.md §\|add\.md#\|DA-[0-9]+' docs/prd.md` | **critical**(v3 新增) |
+| **10.9** | **⚠️ 上游不引下游 — PRD 不引 tasks.md UC/IF 编号** | `grep -nE '(UC\|IF)-[0-9]+-[0-9]+' docs/prd.md` | **critical**(v3 新增) |
+| **10.10** | **⚠️ 上游不引下游 — PRD 不引 sprint.md 章节锚点** | `grep -nE 'sprint\.md §\|sprint\.md#' docs/prd.md` | **critical**(v3 新增) |
+| **10.11** | **PRD 不展开下游文档的具体内容**(展开 sprint.md 章节名 / add.md 决策表 / tasks.md UC 详细描述) | 人工抽检:prd.md 中下游文档是否仅作"角色描述"而非"内容引用" | **important**(v3 新增) |
 
 ---
 

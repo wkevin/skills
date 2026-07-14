@@ -31,6 +31,61 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 
 ---
 
+## 文档依赖方向(核心原则 ⚠️)
+
+四件套有**严格的依赖方向**——这是本 skill 的**硬约束**,不是建议:
+
+```
+   prd (上游)   ─→   add (上游)   ─→   tasks (上游)   ─→   sprint (下游)
+  (产品契约)        (架构契约)         (执行 catalog)         (当前进度)
+     │                 │                  │                     │
+  不能引 ↓           不能引 ↓           不能引 ↓              (可任意引上游)
+   add 内部          tasks 内部          sprint 内部
+   tasks 内部        sprint 内部
+   sprint 内部
+```
+
+**核心规则**:**上游文档不引用下游文档内的内容**。
+
+| 上游           | 不能引用下游的(内容)                  | 允许引用下游的(file-level) |
+| -------------- | ------------------------------------- | -------------------------- |
+| `prd.md`       | `add.md §X` / `add.md DA-N` / `tasks.md UC-XX-NN` / `tasks.md IF-XX-NN` / `sprint.md §X` | `[add.md]` / `[tasks.md]` / `[sprint.md]` 链接 + 角色描述("X 是 Y 契约") |
+| `add.md`       | `tasks.md UC-XX-NN` / `tasks.md IF-XX-NN` / `sprint.md` 任何内容 | 同上 |
+| `tasks.md`     | `sprint.md §X` / `sprint.md #anchor` | `[sprint.md]` 链接 + 角色描述 |
+| `sprint.md`    | (无下游,无约束)                       | 任意引用上游                |
+
+**反例(违规)**:
+- prd.md 写 "详见 add.md §DA-12" → 引用了下游 ADR ❌
+- add.md 写 "UC-01-01 添加 repo 流程" → 引用了下游 UC ❌
+- tasks.md 写 "见 sprint.md §3 当前状态" → 引用了下游章节 ❌
+- prd.md 写 "sprint.md = Sprint 计划 + Product Backlog + 当前状态" → 展开下游文档内容 ❌
+
+**正例(合规)**:
+- prd.md 写 "详见架构文档(单用户本地决策)" → file-level 指引 ✅
+- add.md 写 "AI 建议在 tag-editor 内以虚线 border + Sparkles 标记" → 描述语义,无下游 ID ✅
+- tasks.md 写 "见 [`sprint.md`](./sprint.md)" → file-level 链接 ✅
+
+**WHY**:
+- 下游文档会被频繁迭代(sprint.md 每周变,tasks.md 加新 UC);上游文档若硬编码下游编号,下游一变上游就断链
+- 维护责任清晰:下游定义什么编号 / 章节归下游管,上游不"占位"下游决策
+- 重构时改下游不会"莫名其妙破坏上游"
+
+**判定命令**(用于 Step 7 跨文档联动扫描):
+```bash
+# prd.md → 下游引用 (应为 0)
+grep -nE 'add\.md §|add\.md#|tasks\.md (UC|IF)-[0-9]+-[0-9]+|sprint\.md §|sprint\.md#' docs/prd.md
+
+# add.md → 下游引用 (应为 0)
+grep -nE '(UC|IF)-[0-9]+-[0-9]+|sprint\.md' docs/add.md
+
+# tasks.md → sprint.md 内部引用 (应为 0)
+grep -nE 'sprint\.md §|sprint\.md#' docs/tasks.md
+```
+
+**反模式提醒**:本约束跟"是否需要下游信息"无关。**需要引用时,改用语义描述**("该字段由三文件拆分保护" 而非 "IF-01-02 三文件拆分"),而不是写"详见 tasks.md §1.1 UC-01-01"。
+
+---
+
 ## Mode A:`evaluate`(纯评估)
 
 适合:sprint 收尾 sign-off / 接手别人文档先看 / 文档健康度审计。
@@ -67,7 +122,7 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 
 | 严重度           | 含义                           | 触发条件举例                                                     |
 | ---------------- | ------------------------------ | ---------------------------------------------------------------- |
-| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks §1 UC 带 `[x]`;Sprint 缺 Goal/起止日期;sprint.md §1 引用 tasks.md 未定义的 UC/IF |
+| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks §1 UC 带 `[x]`;Sprint 缺 Goal/起止日期;sprint.md §1 引用 tasks.md 未定义的 UC/IF;**上游文档引用下游文档内部内容(UC/IF/DA/§X 锚点)** |
 | **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3;Sprint 状态与 git log 脱节 |
 | **nice-to-have** | 锦上添花                       | mermaid 解读文字短;Sprint 缺代号;Product Backlog 编号未对齐 sprint-checklist §6.5 |
 
@@ -150,12 +205,28 @@ Step 10: 验证闭环(回到 evaluate 模式复评)
 | tasks IF 引用 ADD ADR | `grep 'ADR-[0-9]' docs/tasks.md` | 每个引用都在 add.md 存在 |
 | add ADR 引用 commit hash | `git show <hash>` 对 N 条逐一 | 全部存在 |
 | 死链 | 自查 | 0 |
+| **上游→下游内容引用**(⚠️ v3 新增,核心约束) | 见下方"上游不引下游"专项扫描 | 全部 0 |
+| **下游→上游引用一致性** | 反向核对下游 ID 是否在对应上游存在 | 全部存在 |
+
+**⚠️ 上游不引下游 专项扫描(v3 必跑)**:
+
+| 扫描项 | 命令 | 通过标准 |
+|---|---|---|
+| prd.md 引 add.md 内部 | `grep -nE 'add\.md §\|add\.md#\|DA-[0-9]+' docs/prd.md` | 0(允许裸文本提及"add.md"作角色描述) |
+| prd.md 引 tasks.md UC/IF | `grep -nE 'tasks\.md (UC\|IF)-[0-9]+-[0-9]+\|(UC\|IF)-[0-9]+-[0-9]+' docs/prd.md` | 0 |
+| prd.md 引 sprint.md 内部 | `grep -nE 'sprint\.md §\|sprint\.md#' docs/prd.md` | 0 |
+| add.md 引 tasks.md UC/IF | `grep -nE '(UC\|IF)-[0-9]+-[0-9]+' docs/add.md` | 0 |
+| add.md 引 sprint.md 任意 | `grep -nE 'sprint\.md' docs/add.md` | 0 |
+| tasks.md 引 sprint.md 内部 | `grep -nE 'sprint\.md §\|sprint\.md#' docs/tasks.md` | 0 |
+
+> **注意**:`add.md` 内部 `DA-N` 引用是**自引用**(add.md 是 ADR 的 owner),不算违规;`tasks.md` 内部 `UC/IF` 是**自身 catalog**,也不算违规。只检查**跨文档**引用。
 
 **联动错位检测**(高频问题):
 - PRD §4 UC 编号跟 tasks §1.1 UC 编号对不上(单数字 vs 双数字)
 - tasks §5 commit hash 跟 git log 对不上
 - add.md §7 ADR 引用的 commit hash 在 4ef9c68(squash)内 — 必须标注"(squash)"
 - PRD §7 跟 `sprint.md §1` Sprint 代号不一致
+- **上游文档出现下游 ID / 章节锚点**(v3 新增,见专项扫描)
 
 ### Step 8:修复路线图
 
@@ -277,6 +348,7 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 - ❌ **跨文档引用编号对不上就 commit** — PRD §4 UC-XX 必须跟 tasks.md §1.1 UC-XX-NN 一致(单数字 vs 双数字)
 - ❌ **没有 commit 编排直接动手** — 不分 Batch 会导致依赖倒置(PRD 引用了不存在的 ADR)
 - ❌ **跳过 Step 10 验证闭环** — 没有复评就 claim 完工,可能留 critical 不知道
+- ❌ **上游引下游内容** — 在 prd.md / add.md / tasks.md 引用下游文档的 ID(UC/IF/DA-N)、章节锚点(§X / #anchor)、或具体描述。违反"上游不引下游"硬约束(v3 核心原则)
 
 ---
 
