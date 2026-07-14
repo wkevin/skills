@@ -130,3 +130,28 @@
 本文件仅在评估 sprint.md 时加载。如果用户问"评估 tasks.md"——不要读此文件,跳到 [tasks-checklist.md](tasks-checklist.md)。
 
 本 skill 触发名:`/doc-align`。
+---
+
+## 7. sprint.md 可选章节清单(v3 经验)
+
+> **核心规则**:`sprint.md` 应当 **lean + 灵活** — 不要强加"§1 Sprint / §2 Product Backlog / §3 当前状态 / §4 Commit Reference Appendix" 死板结构。**项目可自由组织**(gh-curio v3 实战 = `## MileStone 01` / `## MileStone 02` / `## Product Backlog` 扁平结构)。
+
+| 章节 | 何时加 | 何时**不**加 | 失败案例 |
+| --- | --- | --- | --- |
+| **§1 Sprint 计划(Sprint N 列表)** | 项目有"短周期迭代"概念(2-4 周一个 Sprint) | 个人项目,无短周期迭代,只发"Milestone/Version" | — |
+| **§2 Product Backlog** | 有"未来候选"独立于 Milestone | 候选都合并到 Milestone 描述里,无独立 backlog | — |
+| **§3 当前状态(`[x]/[ ]` 列表)** | Sprint/Milestone 状态需显式追踪 | 状态用 commit message / git log 追踪,文档不重复 | — |
+| **§4 Commit Reference Appendix** | 需要"commit hash → UC/IF 映射"做 milestone ↔ 代码双向追溯 | 默认不加;**git log + `git log --grep` 已能查** | v3 实施时自动加 50 行,用户**全部删除** |
+| **§5+ 任何额外章节** | 真的需要 | 默认不加 | v3 反复栽跟头 |
+
+**WHY 不加 §4 Commit Reference**:commit 历史已经在 git 里 (`git log` / `git blame`);文档里复制一份 = 信息重复 + git log 一变文档就过期。**用 commit message 本身的 `feat(UC-XX-YY): ...` 格式**就够了,比文档附录更好查。
+
+**MileStone vs Sprint**:
+- **Sprint** = 2-4 周短迭代(agile Scrum 概念);适合团队 / 有 review 节奏的项目
+- **MileStone** = "v0.1 / v0.5 / v1.0" 长周期发布节点(gh-curio 用这个)
+- v3 实战:gh-curio 用 **MileStone** 而非 Sprint,文档结构是 `## MileStone 01` / `## MileStone 02` 扁平
+- **不要强加 Sprint 范式**:checklist §6 描述的是"短迭代"项目;单用户长期项目用 MileStone 更合适
+
+**§X 编号灵活原则**:
+- 不要强加 §1-§N;项目自创结构(MileStone 01/02)同样合规
+- 章节标题用项目自己的命名,不用"§1 Sprint 计划 / §2 Product Backlog" 这种通用模板
