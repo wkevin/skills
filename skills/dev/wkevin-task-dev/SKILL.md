@@ -1,5 +1,5 @@
 ---
-name: wkevin-dev-tasks
+name: wkevin-task-dev
 description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。读 sprint.md 取 Version + 进度 → 读 docs/tasks.md §1.1/§1.2 + docs/prd.md + docs/add.md 取 UC/IF 完整定义与上下文 → 实现后**仅更新 sprint.md**（勾 [x]），prd/add/tasks.md 在本 skill 中**只读**。skill workflow 自身定义了批量 commit 节奏——每个 task 完成一次 `git commit`，正常情况下不需要逐条询问用户确认 'commit'。若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"），仍以全局 memory 为准；否则按本 skill 的批量节奏执行。适用于长时间、无人值守的批量 task 开发。
 ---
 
@@ -8,17 +8,17 @@ description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X�
 **允许：**
 
 ```
-/wkevin-dev-tasks UC-03-02         # 实现单 task
-/wkevin-dev-tasks IF-04-01         # 实现单 task
-/wkevin-dev-tasks v0.5             # 实现指定 version(Sprint 覆盖的 Version)的所有 [ ]
-/wkevin-dev-tasks status           # 仅打印当前进度（不开发）
+/wkevin-task-dev UC-03-02         # 实现单 task
+/wkevin-task-dev IF-04-01         # 实现单 task
+/wkevin-task-dev v0.5             # 实现指定 version(Sprint 覆盖的 Version)的所有 [ ]
+/wkevin-task-dev status           # 仅打印当前进度（不开发）
 ```
 
 **禁止：**
 
 ```
-/wkevin-dev-tasks Sprint-2         # 指定 Sprint id -- 危险、禁止
-/wkevin-dev-tasks all              # 所有 [ ] -- 危险、禁止
+/wkevin-task-dev Sprint-2         # 指定 Sprint id -- 危险、禁止
+/wkevin-task-dev all              # 所有 [ ] -- 危险、禁止
 ```
 
 `version` 必须精确匹配 `sprint.md §1` 中某个 Sprint 段标注的 Version 字符串（如 `v0.5`），否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。

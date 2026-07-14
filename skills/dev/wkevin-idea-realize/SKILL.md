@@ -1,9 +1,9 @@
 ---
-name: wkevin-realize-idea
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-doc-align 评估基线。触发词:"/realize-idea"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
+name: wkevin-idea-realize
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-doc-align 评估基线。触发词:"/idea-realize"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
 ---
 
-# /realize-idea — 3 维度头脑风暴驱动的想法落地
+# /idea-realize — 3 维度头脑风暴驱动的想法落地
 
 把当前轮用户描述的想法,通过 **3 维度头脑风暴** 落到文档系统 —— 跟用户多轮交互把需求、方案、任务各自清晰化,然后**直接联动修改 prd.md / add.md / tasks.md / sprint.md 四个文档**。新产生的 UC/IF 进入 `tasks.md §1.1/§1.2`(完整定义)+ `sprint.md §2 Product Backlog`(等待排期)。
 
@@ -17,15 +17,15 @@ description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)�
 ## 接口
 
 ```sh
-/wkevin-realize-idea <任意模糊想法>
+/wkevin-idea-realize <任意模糊想法>
 ```
 
 **例**:
 
 ```sh
-/wkevin-realize-idea 我要赚到一个小目标
-/wkevin-realize-idea btw 能不能批量导入 repo
-/wkevin-realize-idea 加个暗色主题
+/wkevin-idea-realize 我要赚到一个小目标
+/wkevin-idea-realize btw 能不能批量导入 repo
+/wkevin-idea-realize 加个暗色主题
 ```
 
 skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法 6 轮)。
@@ -70,7 +70,7 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 - ❌ 用户要写代码实现(用 `dev:end-to-end` / `ultracode` / `dev:code` 模式)
 - ❌ 改动只是代码(无 PRD/ADD/Tasks 联动需求)—— 本 skill 不动代码
 - ❌ 要改 `design.md` / `roadmap.md` / `decisions/` 文件 —— 这些不在本 skill 范围
-- ❌ 用户已经规划好要做什么(如"开新版本 / 做 v0.X / 从 backlog 抽") —— 这是 wkevin-dev-tasks 的事,不是新想法
+- ❌ 用户已经规划好要做什么(如"开新版本 / 做 v0.X / 从 backlog 抽") —— 这是 wkevin-task-dev 的事,不是新想法
 
 ---
 
@@ -291,9 +291,9 @@ commit 后提示用户:
 位置:tasks.md §1.1/§1.2 完整定义 + sprint.md §2 Product Backlog 暂存
 
 后续可选:
-- 继续 /wkevin-realize-idea 加新想法
+- 继续 /wkevin-idea-realize 加新想法
 - 用 /wkevin-doc-align 评估文档质量(4 文件)
-- 用 /wkevin-dev-tasks 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
+- 用 /wkevin-task-dev 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
 ```
 
 ---
@@ -303,7 +303,7 @@ commit 后提示用户:
 1. **不修改代码** — WHY: 本 skill 只管文档;代码实应用 `dev:end-to-end` / `ultracode` 模式。
 2. **每个 UC 至少 2-3 个子项(或 UC + IF 配套)** — WHY: 来自 tasks-checklist §1.1.3 实现细节嵌套规范;UC 没实现细节 = 占位。
 3. **UC / IF 编号避免冲突** — WHY: 编号冲突会让 git log 和检索定位失效。
-4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 dev-tasks 完成实现的工作流;本 skill 只管"加想法"。
+4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 task-dev 完成实现的工作流;本 skill 只管"加想法"。
 5. **commit message subject ≤ 60 字** — WHY: git log 可读性 + Conventional Commits 规范。
 6. **PRD 瘦身** — WHY: 已迁到 ADD 的内容(数据模型 / 技术栈等)写回 PRD 会双源失同步。
 7. **联动改动不拆 commit**(默认) — WHY: 单 commit 保证原子性,避免中间状态文档失同步。
@@ -311,8 +311,8 @@ commit 后提示用户:
 9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: doc-align 不评估这两个文件;请改用 add.md / tasks.md。
 10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
-12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 dev-tasks 实现用),§2 是暂存状态(等 Sprint 排期)。
-13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wkevin-dev-tasks 或后续版本规划的事,不属于"新想法"。
+12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 task-dev 实现用),§2 是暂存状态(等 Sprint 排期)。
+13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wkevin-task-dev 或后续版本规划的事,不属于"新想法"。
 
 ## 模板
 
@@ -383,7 +383,7 @@ commit 后提示用户:
 
 ## Worked Example
 
-**用户**:`/wkevin-realize-idea btw 能不能批量导入 repo,现在只能一个个粘贴 URL`
+**用户**:`/wkevin-idea-realize btw 能不能批量导入 repo,现在只能一个个粘贴 URL`
 
 **Step 2 3 维度头脑风暴**:
 
@@ -481,9 +481,9 @@ git revert <commit-hash>
 ## 关联
 
 - **上游**:`wkevin-doc-align` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
-- **下游**:`wkevin-dev-tasks` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期移到 §1 才能被 dev-tasks 实现
+- **下游**:`wkevin-task-dev` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期移到 §1 才能被 task-dev 实现
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
 - **同族**:
   - **wkevin-add-idea**:另一种轻量想法入库模型 —— 只写 Backlog 一行(无 UC/IF 完整定义),适合快速随手记下想法
-  - **wkevin-realize-idea**(本 skill):深度想法落地模型 —— 3 维度头脑风暴 + 直接联动改 3 文档 + UC/IF 进 Backlog 暂存
-  - 两个 skill 的 Backlog 互通:wkevin-add-idea 写的"一行 idea"在需要展开时,可由 wkevin-realize-idea 做 3 维度头脑风暴补全
+  - **wkevin-idea-realize**(本 skill):深度想法落地模型 —— 3 维度头脑风暴 + 直接联动改 3 文档 + UC/IF 进 Backlog 暂存
+  - 两个 skill 的 Backlog 互通:wkevin-add-idea 写的"一行 idea"在需要展开时,可由 wkevin-idea-realize 做 3 维度头脑风暴补全

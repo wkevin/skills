@@ -84,7 +84,7 @@
 | 7.1 | **sprint.md §1 引用的 UC/IF 都在 `tasks.md §1.1/§1.2` 定义** | `comm -23 <(grep -oE "UC-[0-9]+-[0-9]+\|IF-[0-9]+-[0-9]+" docs/sprint.md \| sort -u) <(grep -oE "UC-[0-9]+-[0-9]+\|IF-[0-9]+-[0-9]+" docs/tasks.md \| sort -u)` 应为空 | critical |
 | 7.2 | **tasks.md §1.1/§1.2 的 UC/IF 至少在 sprint.md 中有引用或在 Product Backlog** | 反向 `comm -23` 比对;列出"已定义但未引用"的 UC/IF(应为远期 Backlog,允许少量) | important |
 | 7.3 | **Sprint 代号跟 PRD §7 里程碑表(如有)对齐** | 比对 `sprint.md §1` 与 `prd.md §7` | important |
-| 7.4 | **sprint.md §1 Sprint N 状态跟 dev-tasks 实际进度一致** | `git log --oneline \| grep feat(UC-XX-YY)` 比对 [x] | critical |
+| 7.4 | **sprint.md §1 Sprint N 状态跟 task-dev 实际进度一致** | `git log --oneline \| grep feat(UC-XX-YY)` 比对 [x] | critical |
 
 ---
 

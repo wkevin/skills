@@ -8,8 +8,8 @@ npx skills add https://github.com/wkevin/skills
 ◆  Select skills to install (space to toggle)
 │  ◻ Dev
 │  │ ◻ wkevin-arch-decoder
-│  │ ◻ wkevin-dev-tasks
-│  │ ◻ wkevin-realize-idea
+│  │ ◻ wkevin-task-dev
+│  │ ◻ wkevin-idea-realize
 │  └ ◻ wkevin-doc-align
 │  ◻ Utils
 │  └ ◻ wkevin-srt-translate
@@ -69,7 +69,7 @@ npx skills add https://github.com/wkevin/skills
 评估当前项目的文档，给出修改建议。
 ```
 
-### `wkevin-realize-idea` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
+### `wkevin-idea-realize` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
 
 **思考逻辑：**
 
@@ -93,10 +93,10 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-realize-idea 我要赚到一个小目标
+/wkevin-idea-realize 我要赚到一个小目标
 ```
 
-### `wkevin-dev-tasks` - 批量开发 sprint.md Sprint 段中的 task
+### `wkevin-task-dev` - 批量开发 sprint.md Sprint 段中的 task
 
 **思考逻辑：**
 
@@ -108,9 +108,9 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-dev-tasks UC-03-02         # 实现 id 为 UC-03-02 的 User Case
-/wkevin-dev-tasks IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
-/wkevin-dev-tasks v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
+/wkevin-task-dev UC-03-02         # 实现 id 为 UC-03-02 的 User Case
+/wkevin-task-dev IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
+/wkevin-task-dev v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
 ```
 
 ## 效率类 Skills

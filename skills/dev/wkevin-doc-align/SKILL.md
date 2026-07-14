@@ -24,10 +24,10 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 
 ## 何时**不要**使用
 
-- ❌ 用户要**加新需求**(已有三件套上加新 UC/IF/ADR)→ 用 [`wkevin-realize-idea`](../wkevin-realize-idea/SKILL.md)(增量改动范式)
+- ❌ 用户要**加新需求**(已有三件套上加新 UC/IF/ADR)→ 用 [`wkevin-idea-realize`](../wkevin-idea-realize/SKILL.md)(增量改动范式)
 - ❌ 用户要**改代码实现**→ 用 `dev:code` / `dev:end-to-end`
 - ❌ 项目没有 `docs/` 目录(先建文档骨架)
-- ❌ 文档结构跟 doc-align 不一致但用户只想加需求 → 先跑 `evaluate` 评估,verdict 是 PASS 后才能用 `realize-idea`
+- ❌ 文档结构跟 doc-align 不一致但用户只想加需求 → 先跑 `evaluate` 评估,verdict 是 PASS 后才能用 `idea-realize`
 
 ---
 
@@ -284,7 +284,7 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 
 | Skill | 关系 |
 |---|---|
-| [`wkevin-realize-idea`](../wkevin-realize-idea/SKILL.md) | 加新需求 → 用 realize-idea(增量联动,不变基线);transform 完成后才能用 realize-idea |
+| [`wkevin-idea-realize`](../wkevin-idea-realize/SKILL.md) | 加新需求 → 用 idea-realize(增量联动,不变基线);transform 完成后才能用 idea-realize |
 | `dev:code` / `dev:end-to-end` | 代码实现 → 本 skill 不动代码 |
 | `wkevin-arch-decoder` | 架构分析 → 从代码反推 ADD;transform 改造 ADD 时可参考 |
 | `skill-judge` | 通用 skill 评估 → 评估本 skill 自身用 |
@@ -292,5 +292,5 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 **完整工作流**:
 1. **基线评估**:`wkevin-doc-align --mode=evaluate`(确认现状 verdict)
 2. **基线改造**:`wkevin-doc-align --mode=transform`(把 REWRITE → PASS)
-3. **增量需求**:后续加需求 → `wkevin-realize-idea`(基于 PASS 基线做增量联动)
+3. **增量需求**:后续加需求 → `wkevin-idea-realize`(基于 PASS 基线做增量联动)
 4. **回滚 / 退一步**:若 transform 失败,保留 `docs/_draft/` 作为 partial state,人工清理
