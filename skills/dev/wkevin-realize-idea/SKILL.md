@@ -1,11 +1,11 @@
 ---
 name: wkevin-realize-idea
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md 三个文档,新产生的 UC/IF 自动进入 tasks.md §2.4 Backlog 等待排期。所有产物严格对齐 wkevin-vital-docs 评估基线。触发词:"/realize-idea"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,直接联动修改 docs/prd.md + docs/add.md + docs/tasks.md + docs/sprint.md 四个文档,新产生的 UC/IF 自动进入 tasks.md §1.1/§1.2(完整定义)+ sprint.md §2 Product Backlog(等待排期)。所有产物严格对齐 wkevin-vital-docs 评估基线。触发词:"/realize-idea"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
 ---
 
 # /realize-idea — 3 维度头脑风暴驱动的想法落地
 
-把当前轮用户描述的想法,通过 **3 维度头脑风暴** 落到文档系统 —— 跟用户多轮交互把需求、方案、任务各自清晰化,然后**直接联动修改 prd.md / add.md / tasks.md 三个文档**。新产生的 UC/IF 自动进入 `tasks.md §2.4 Backlog` 等待排期。
+把当前轮用户描述的想法,通过 **3 维度头脑风暴** 落到文档系统 —— 跟用户多轮交互把需求、方案、任务各自清晰化,然后**直接联动修改 prd.md / add.md / tasks.md / sprint.md 四个文档**。新产生的 UC/IF 进入 `tasks.md §1.1/§1.2`(完整定义)+ `sprint.md §2 Product Backlog`(等待排期)。
 
 > **核心理念**:头脑风暴 + 直接联动
 >
@@ -36,27 +36,27 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 | -------- | ---------------------------------------- | ---------------------------------------------------------------- |
 | **需求** | persona / 场景 / 价值 / 优先级 / UC 拆分 | `docs/prd.md`(§2 目标 / §4 场景)+ `docs/tasks.md §1.1 UC`        |
 | **方案** | 架构影响 / 决策点 / IF 拆分 / 视图更新   | `docs/add.md`(§1-§5 视图 / §7 Decision)+ `docs/tasks.md §1.2 IF` |
-| **任务** | 排期意向 / 依赖 / 粒度                   | `docs/tasks.md §2.4 Backlog`(暂存)                               |
+| **任务** | 排期意向 / 依赖 / 粒度                   | `docs/sprint.md §2 Product Backlog`(暂存)                        |
 
 **核心规则**:
 
 - **3 个维度必谈**(每维度至少 1 轮澄清,共 3-6 轮)
 - **讨论完才动手** —— 不要边聊边写,避免来回返工
-- **直接联动改 3 个文档** —— prd + add + tasks 一次性落地
-- **新 UC/IF 自动进 §2.4 Backlog** —— 没排进 Milestone 前都是 Backlog 状态
+- **直接联动改 4 个文档** —— prd + add + tasks + sprint 一次性落地
+- **新 UC/IF 进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** —— 没排进 Sprint 前都是 Backlog 状态
 
-## 文档系统(3 文件 + Backlog 暂存区)
+## 文档系统(4 文件,产品 catalog + Sprint 排期分离)
 
-| 文档                         | 职责                                                                         | 何时写入              |
-| ---------------------------- | ---------------------------------------------------------------------------- | --------------------- |
-| `docs/prd.md`                | 产品需求文档(PRD)— 产品向:愿景 / 目标 / 非目标 / 场景 / 范围外 / 风险        | 头脑风暴需求维度      |
-| `docs/add.md`                | 架构设计文档(ADD)— 技术向:Context + 5+1 view + Decision View + Critical Lens | 头脑风暴方案维度      |
-| `docs/tasks.md §1.1/§1.2`    | UC/IF 定义(骨架)— 用户向 UC + 系统向 IF                                      | 头脑风暴需求/方案维度 |
-| `docs/tasks.md §2.4 Backlog` | **暂存区** — 已头脑风暴但未排进 Milestone 的 UC/IF                           | **本 skill 自动写入** |
+| 文档                                | 职责                                                                         | 何时写入              |
+| ----------------------------------- | ---------------------------------------------------------------------------- | --------------------- |
+| `docs/prd.md`                       | 产品需求文档(PRD)— 产品向:愿景 / 目标 / 非目标 / 场景 / 范围外 / 风险        | 头脑风暴需求维度      |
+| `docs/add.md`                       | 架构设计文档(ADD)— 技术向:Context + 5+1 view + Decision View + Critical Lens | 头脑风暴方案维度      |
+| `docs/tasks.md §1.1/§1.2`           | UC/IF 定义(骨架)— 用户向 UC + 系统向 IF                                      | 头脑风暴需求/方案维度 |
+| `docs/sprint.md §2 Product Backlog` | **暂存区** — 已头脑风暴但未排进 Sprint 的 UC/IF                              | **本 skill 自动写入** |
 
-**关键**: 新产生的 UC/IF **同时**进 §1.1/§1.2(完整定义,给未来实现用)+ §2.4 Backlog(暂存状态)。
+**关键**: 新产生的 UC/IF **同时**进 `tasks.md §1.1/§1.2`(完整定义,给未来实现用)+ `sprint.md §2 Product Backlog`(暂存状态)。
 
-> **作用域**:本 skill **只**处理 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 三个文件 —— 这是 wkevin-vital-docs 评估基线。任何其他文件(如独立的 `design.md` / `decisions/000N-xxx.md` / `roadmap.md`)**不在本 skill 范围**。
+> **作用域**:本 skill **只**处理 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` / `docs/sprint.md` 四个文件 —— 这是 wkevin-vital-docs 评估基线。任何其他文件(如独立的 `design.md` / `decisions/000N-xxx.md` / `roadmap.md`)**不在本 skill 范围**。
 
 ## 何时使用
 
@@ -79,12 +79,12 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 ### Step 1:探测文档存在性
 
 ```bash
-ls docs/prd.md docs/add.md docs/tasks.md 2>&1
+ls docs/prd.md docs/add.md docs/tasks.md docs/sprint.md 2>&1
 ```
 
 | 情况     | 处理                                                  |
 | -------- | ----------------------------------------------------- |
-| 3 个全在 | 进 Step 2                                             |
+| 4 个全在 | 进 Step 2                                             |
 | 只有部分 | **先停**——告诉用户缺哪个,按 vital-docs 规范补建空模板 |
 | 全都不在 | **拒绝执行**——本 skill 只增量更新,不从零搭文档        |
 
@@ -201,13 +201,13 @@ docs/tasks.md:
   - **实现细节**:
     - 文件路径: src/importer/csv.ts
     - 复用现有单条 URL 解析逻辑
-- §2.4 Backlog 加:
+- §2 Product Backlog 加(在 sprint.md):
   - [ ] UC-05-01 批量导入 repo
   - [ ] IF-05-01 CSV 解析批处理
 
 联动一致性预检:
 - UC-05-01 与现有最大 UC ID UC-04-09 连续 ✓
-- UC-05-01 同时出现在 §1.1 和 §2.4(完整定义 + Backlog 暂存) ✓
+- UC-05-01 同时出现在 tasks.md §1.1 和 sprint.md §2(完整定义 + Backlog 暂存) ✓
 
 OK 就改?如要调整文案请说。
 ```
@@ -226,15 +226,15 @@ echo "$NEXT_UC"
 
 ### Step 4:联动编辑(按依赖序)
 
-按 **PRD → ADD → Tasks §1.1/§1.2 → Tasks §2.4 Backlog** 顺序编辑:
+按 **PRD → ADD → Tasks §1.1/§1.2 → Sprint §2 Product Backlog** 顺序编辑:
 
-| 顺序 | 文档               | 编辑要点                                    |
-| ---- | ------------------ | ------------------------------------------- |
-| 1    | PRD                | §2/§4 按需                                  |
-| 2    | ADD                | §1-§5 视图按需;§7 Decision 按需             |
-| 3    | Tasks §1.1         | UC agile 三段式(作为/我希望/以便)+ 实现细节 |
-| 4    | Tasks §1.2         | IF 特性描述 + 实现细节                      |
-| 5    | Tasks §2.4 Backlog | **同时**加入新 UC/IF(等待排期)              |
+| 顺序 | 文档                      | 编辑要点                                    |
+| ---- | ------------------------- | ------------------------------------------- |
+| 1    | PRD                       | §2/§4 按需                                  |
+| 2    | ADD                       | §1-§5 视图按需;§7 Decision 按需             |
+| 3    | Tasks §1.1                | UC agile 三段式(作为/我希望/以便)+ 实现细节 |
+| 4    | Tasks §1.2                | IF 特性描述 + 实现细节                      |
+| 5    | Sprint §2 Product Backlog | **同时**加入新 UC/IF(等待排期)              |
 
 ### Step 5:联动校验
 
@@ -242,27 +242,34 @@ echo "$NEXT_UC"
 # 1. 新 UC/IF ID 唯一?
 NEW_UC="UC-05-01"
 NEW_IF="IF-05-01"
-grep -c "^\- \*\*$NEW_UC" docs/tasks.md   # §1.1 完整定义 1 次
-grep -c "^\- \[ \] $NEW_UC" docs/tasks.md # §2.4 Backlog 1 次
-# §1.1 + §2.4 加起来 = 2 才算正确(完整定义 + Backlog 暂存)
+grep -c "^\- \*\*$NEW_UC" docs/tasks.md    # §1.1 完整定义 1 次
+grep -c "^\- \[ \] $NEW_UC" docs/sprint.md # §2 Product Backlog 1 次
+# §1.1 + sprint.md §2 加起来 = 2 才算正确(完整定义 + Backlog 暂存)
 
-# 2. UC 同时出现在 §1.1(完整定义)和 §2.4(Backlog)?
+# 2. UC 同时出现在 tasks.md §1.1(完整定义)和 sprint.md §2(Backlog)?
 awk '/^## §1\.1/,/^## §[12]\./' docs/tasks.md | grep -c "$NEW_UC"  # §1.1 应 = 1
-grep "^\- \[ \] $NEW_UC" docs/tasks.md | wc -l                       # §2.4 应 = 1
+grep "^\- \[ \] $NEW_UC" docs/sprint.md | wc -l                      # §2 应 = 1
 
 # 3. ADD §7 Decision ↔ Tasks UC/IF 引用一致?(如果有 §7 决策)
 grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/add.md | sort -u
+
+# 4. 跨文件一致性:sprint.md 引用的 UC/IF 都在 tasks.md 定义?
+ALL_DEFINED=$(grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/tasks.md | sort -u)
+ALL_REFERRED=$(grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/sprint.md | sort -u)
+comm -23 <(echo "$ALL_REFERRED") <(echo "$ALL_DEFINED")
+# 应为空(无 dangling UC/IF 引用)
 ```
 
 输出校验报告:
 
 ```
 联动校验结果:
-- UC-05-01 唯一(§1.1 完整定义):是 ✓
-- UC-05-01 在 §2.4 Backlog 暂存:是 ✓
-- IF-05-01 唯一(§1.2 完整定义):是 ✓
-- IF-05-01 在 §2.4 Backlog 暂存:是 ✓
+- UC-05-01 唯一(tasks.md §1.1 完整定义):是 ✓
+- UC-05-01 在 sprint.md §2 Product Backlog 暂存:是 ✓
+- IF-05-01 唯一(tasks.md §1.2 完整定义):是 ✓
+- IF-05-01 在 sprint.md §2 Product Backlog 暂存:是 ✓
 - ADD §7 决策数 ↔ Tasks UC/IF 引用:一致 ✓
+- sprint.md 引用的 UC/IF 都在 tasks.md 定义:一致 ✓
 
 OK 提交?
 ```
@@ -270,9 +277,9 @@ OK 提交?
 ### Step 6:提议 commit(联动版)
 
 ```bash
-# 单 commit(默认 — 3 文档联动必须原子)
-git add docs/prd.md docs/add.md docs/tasks.md
-git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 repo + IF-05-01 CSV 解析 (3 维度)"
+# 单 commit(默认 — 4 文档联动必须原子)
+git add docs/prd.md docs/add.md docs/tasks.md docs/sprint.md
+git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 repo + IF-05-01 CSV 解析 (3 维度, 联动 prd+add+tasks+sprint)"
 ```
 
 ### Step 7:后续动作提示(可选)
@@ -280,12 +287,13 @@ git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 repo + IF-05-01 CS
 commit 后提示用户:
 
 ```
-已落地:UC-05-01 批量导入 repo + IF-05-01 CSV 解析(在 Backlog 等排期)
+已落地:UC-05-01 批量导入 repo + IF-05-01 CSV 解析
+位置:tasks.md §1.1/§1.2 完整定义 + sprint.md §2 Product Backlog 暂存
 
 后续可选:
 - 继续 /wkevin-realize-idea 加新想法
-- 用 /wkevin-vital-docs 评估文档质量
-- 用 /wkevin-dev-tasks 把 Backlog 条目实现为代码(需先做版本规划,把 Backlog 移到 Milestone)
+- 用 /wkevin-vital-docs 评估文档质量(4 文件)
+- 用 /wkevin-dev-tasks 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
 ```
 
 ---
@@ -303,7 +311,7 @@ commit 后提示用户:
 9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: vital-docs 不评估这两个文件;请改用 add.md / tasks.md。
 10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
-12. **新 UC/IF 同时进 §1.1/§1.2 + §2.4** — WHY: §1.1/§1.2 是完整定义(给 dev-tasks 实现用),§2.4 是暂存状态(等排期)。
+12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 dev-tasks 实现用),§2 是暂存状态(等 Sprint 排期)。
 13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wkevin-dev-tasks 或后续版本规划的事,不属于"新想法"。
 
 ## 模板
@@ -369,8 +377,8 @@ commit 后提示用户:
 - ❌ **改了 Tasks UC 但 PRD §4 没加场景** — 实现细节有了,但产品向入口没同步
 - ❌ **联动改动拆多个 commit 但中间没推** — 别人 pull 时中间状态文档失同步
 - ❌ **UC 不是 agile 三段式**(写了 "I want to" 没翻译成 "我希望")— tasks-checklist §1.1.2 critical
-- ❌ **UC 带 `[x]` 状态** — 状态归 Milestone §2,不是 UC 本身;tasks-checklist §1.1.1 critical
-- ❌ **Milestone > 3** — 堆了十几个 M1~M14,合并成代号化 Milestone
+- ❌ **UC 带 `[x]` 状态** — 状态归 `sprint.md §1` Sprint 段,不是 UC 本身;tasks-checklist §1.1.1 critical
+- ❌ **Sprint 数量膨胀** — 一次性堆十几个 Sprint;合并为代号化 Sprint,active Sprint ≤ 1
 - ❌ **试图把"开新版本 / 做 v0.X / 从 backlog 抽"接进本 skill** — 这些是版本规划,不属于"新想法"
 
 ## Worked Example
@@ -430,7 +438,7 @@ docs/tasks.md:
   - **实现细节**:
     - 文件路径: src/importer/csv.ts
     - 复用现有单条 URL 解析逻辑
-- §2.4 Backlog 加:
+- §2 Product Backlog 加(在 sprint.md):
   - [ ] UC-05-01 批量导入 repo
   - [ ] IF-05-01 CSV 解析批处理
 
@@ -450,7 +458,7 @@ git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 + IF-05-01 CSV 解
 
 - ❌ 不写代码实现
 - ❌ 不改 `docs/` 之外的任何文件(README.md 等需同步的单独指示)
-- ❌ **不创建 / 修改 `design.md`、`roadmap.md`、`decisions/` 等 vital-docs 不评估的文件** —— 这些是历史遗留,本 skill 强制 3 文件 + Backlog 模型
+- ❌ **不创建 / 修改 `design.md`、`roadmap.md`、`decisions/` 等 vital-docs 不评估的文件** —— 这些是历史遗留,本 skill 强制 4 文件(prd + add + tasks + sprint)+ Product Backlog 模型
 - ❌ 不直接 commit(必须用户确认 message 后再 commit)
 - ❌ 不创建 `idea.md` / `research.md`(旧版幽灵文件)
 - ❌ 不重新创建 vital-docs 视为已迁出的 PRD 章节(数据模型 / 技术栈等应写 ADD)
@@ -473,7 +481,7 @@ git revert <commit-hash>
 ## 关联
 
 - **上游**:`wkevin-vital-docs` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
-- **下游**:`wkevin-dev-tasks` — 实现 `tasks.md §2 Milestone` 的 [ ] 项;**注意**:Backlog 条目要先做版本规划移到 Milestone 才能被 dev-tasks 实现
+- **下游**:`wkevin-dev-tasks` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期移到 §1 才能被 dev-tasks 实现
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
 - **同族**:
   - **wkevin-add-idea**:另一种轻量想法入库模型 —— 只写 Backlog 一行(无 UC/IF 完整定义),适合快速随手记下想法

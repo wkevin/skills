@@ -1,6 +1,6 @@
 ---
 name: wkevin-dev-tasks
-description: 批量实现 docs/tasks.md 中指定 version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。skill workflow 自身定义了批量 commit 节奏——每个 task 完成一次 `git commit`，正常情况下不需要逐条询问用户确认 'commit'。若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"），仍以全局 memory 为准；否则按本 skill 的批量节奏执行。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。读 sprint.md 取 Version + 进度 → 读 docs/tasks.md §1.1/§1.2 + docs/prd.md + docs/add.md 取 UC/IF 完整定义与上下文 → 实现后**仅更新 sprint.md**（勾 [x]），prd/add/tasks.md 在本 skill 中**只读**。skill workflow 自身定义了批量 commit 节奏——每个 task 完成一次 `git commit`，正常情况下不需要逐条询问用户确认 'commit'。若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"），仍以全局 memory 为准；否则按本 skill 的批量节奏执行。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -10,25 +10,25 @@ description: 批量实现 docs/tasks.md 中指定 version（v0.X）或单 task i
 ```
 /wkevin-dev-tasks UC-03-02         # 实现单 task
 /wkevin-dev-tasks IF-04-01         # 实现单 task
-/wkevin-dev-tasks v0.5             # 实现指定 version 的所有 [ ]
+/wkevin-dev-tasks v0.5             # 实现指定 version(Sprint 覆盖的 Version)的所有 [ ]
 /wkevin-dev-tasks status           # 仅打印当前进度（不开发）
 ```
 
 **禁止：**
 
 ```
-/wkevin-dev-tasks M2               # 指定 MileStone id -- 危险、禁止
+/wkevin-dev-tasks Sprint-2         # 指定 Sprint id -- 危险、禁止
 /wkevin-dev-tasks all              # 所有 [ ] -- 危险、禁止
 ```
 
-`version` 必须精确匹配 `tasks.md` §2 中某个 Version 字符串，否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。
+`version` 必须精确匹配 `sprint.md §1` 中某个 Sprint 段标注的 Version 字符串（如 `v0.5`），否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。
 
 ## 工作流程
 
 ### 1. 解析 + 过滤
 
 - 解析 `$2` 为 task id 列表或 version
-- 若是 version：扫描 `tasks.md` 中该 version 的所有项，**只看 `[ ]`**（已 `[x]` 视为历史已实现，跳过）
+- 若是 version：扫描 `sprint.md §1` 该 Version 覆盖的所有 Sprint 段，**只看 `[ ]`**（已 `[x]` 视为历史已实现，跳过）
 - 输出 `[version] 共 N 个 task，其中 [ ] = M 个待实现`
   - M = 0 → 输出 `VERSION_COMPLETE: <version>`，停下
   - M > 10 → 提示用户 "批量 N 个，按顺序还是指定子集？"，等回复
@@ -41,16 +41,18 @@ description: 批量实现 docs/tasks.md 中指定 version（v0.X）或单 task i
 1. BugFix 段（性能 / 正确性 bug，影响后续稳定性）
 2. IF 段（基础设施；UC 通常依赖这些）
 3. UC 段（用户可见功能）
-4. 段内按 `tasks.md` 文档顺序
+4. 段内按 `sprint.md` 文档顺序
 5. 发现 UC 依赖未实现的 IF → 临时插入该 IF（破坏顺序是 OK 的）
 
 **对每个 task**：
 
-1. 读相关上下文（文件、依赖、相关已实现 task）
+1. 读相关上下文(`docs/tasks.md §1.1/§1.2` 取 UC/IF 完整定义,`docs/prd.md` 取场景/价值,`docs/add.md` 取架构/决策)
 2. 实现
 3. **跑 verification**（见下）
-4. 改 `tasks.md`：`[ ] → [x]`（成功）或 `[ ] → [!]`（见"### 需要决策的任务"）
+4. 改 `sprint.md`：`[ ] → [x]`（成功）或 `[ ] → [!]`（见"### 需要决策的任务"）
 5. `git add` + `git commit`（带 `Co-Authored-By: Claude <noreply@anthropic.com>`）
+
+> **prd.md / add.md / tasks.md 在本 skill 中只读** —— 只动 `sprint.md` 勾 [x] 状态,不动 UC/IF 定义或 Sprint 计划。
 
 **Baseline 处理**：
 
@@ -104,12 +106,12 @@ description: 批量实现 docs/tasks.md 中指定 version（v0.X）或单 task i
 | Type       | 何时用                                      |
 | ---------- | ------------------------------------------- |
 | `feat`     | 新功能 / 新 UC / 新 IF                      |
-| `fix`      | 修 bug（通常对应 §2 "优化与 bug fix" 子节） |
+| `fix`      | 修 bug（通常对应 `sprint.md §1` Sprint 内 "优化与 bug fix" 子节） |
 | `refactor` | 重构（无新功能无 bug 修复）                 |
 | `docs`     | 纯文档变更                                  |
 | `test`     | 加 / 改测试                                 |
 | `chore`    | 配置 / 依赖 / 杂事                          |
 
-**scope 强制**用 `UC-XX-YY` 或 `IF-XX-YY`（**不写** `M*-T*` 或 `v0.X`；M-number / version 不出现在 commit scope）。Claude 生成的 commit **必须**带 `-m "Co-Authored-By: Claude <noreply@anthropic.com>"`。
+**scope 强制**用 `UC-XX-YY` 或 `IF-XX-YY`（**不写** `M*-T*` / `Sprint-N` / `v0.X`；Sprint-number / version 不出现在 commit scope）。Claude 生成的 commit **必须**带 `-m "Co-Authored-By: Claude <noreply@anthropic.com>"`。
 
 **不做**的事（commit 之外）：不 push / 不 squash / 不 rebase / 不 amend 既有 commit / 不交互式 `git rebase -i`。

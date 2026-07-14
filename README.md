@@ -36,21 +36,24 @@ npx skills add https://github.com/wkevin/skills
 
 详见 [README](skills/dev/wkevin-arch-decoder/README.md)。
 
-### `wkevin-vital-docs` - 评估文档三件套及提出改进意见
+### `wkevin-vital-docs` - 评估文档四件套及提出改进意见
 
 **思考逻辑：**
 
 项目级开发时，AI 会生成很多类型文档，时间一长，docs 文件夹下充斥着 decision-notes、brainstorm-notes、changelog…不但人类逐步无法阅读，而且 AI 也会上下文爆炸。
 
-这些过程文档通常只有短暂的参考意义，因为 AI 可能在下次迭代就推翻了上次的技术架构 —— 这些逐步都无法被人类感知所以我的方法论是：只保留对人类有参考意义，人类可以参与互动的文档，我确定了3个，称之为三件套：
+这些过程文档通常只有短暂的参考意义，因为 AI 可能在下次迭代就推翻了上次的技术架构 —— 这些逐步都无法被人类感知所以我的方法论是：只保留对人类有参考意义，人类可以参与互动的文档，我确定了4个，称之为四件套：
 
 1. prd：产品需求
 2. add：架构设计
-3. task：任务与开发计划（里程碑）
+3. tasks：UC/IF 定义（产品 catalog）
+4. sprint：Sprint 计划 + Product Backlog（工程排期）
+
+> 产品 catalog(tasks.md)跟 Sprint 排期(sprint.md)分离是 agile 方法论的核心 —— "想做什么" 跟 "现在做什么" 是两个独立问题。
 
 **工作原理：**
 
-- 评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 是否符合 PRD + ADD + Tasks 方法论。
+- 评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` / `docs/sprint.md` 是否符合 PRD + ADD + Tasks + Sprint 方法论。
 - 输出 critical / important / nice-to-have 三级 issue 列表 + PASS / FIX / REWRITE verdict。**不是写作工具**,只评估不修改一字。
 - 用户可根据输出决策要不要重构或修改文档
 
@@ -66,7 +69,7 @@ npx skills add https://github.com/wkevin/skills
 评估当前项目的文档，给出修改建议。
 ```
 
-### `wkevin-realize-idea` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks）
+### `wkevin-realize-idea` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
 
 **思考逻辑：**
 
@@ -74,8 +77,8 @@ npx skills add https://github.com/wkevin/skills
 
 **工作原理：**
 
-- 核心特性：3 维度头脑风暴 + 直接联动改 3 文档。
-  - 跟用户多轮交互，把 idea 的**需求 / 方案 / 任务**3 个维度各自清晰化（共 3-6 轮 `AskUserQuestion`），然后**直接联动修改 `prd.md` / `add.md` / `tasks.md` 三个文档**。新产生的 UC/IF 同时进入 `tasks.md §1.1/§1.2`（完整定义）+ `§2.4 Backlog`（等待排期）。
+- 核心特性：3 维度头脑风暴 + 直接联动改 4 文档。
+  - 跟用户多轮交互，把 idea 的**需求 / 方案 / 任务**3 个维度各自清晰化（共 3-6 轮 `AskUserQuestion`），然后**直接联动修改 `prd.md` / `add.md` / `tasks.md` / `sprint.md` 四个文档**。新产生的 UC/IF 同时进入 `tasks.md §1.1/§1.2`（完整定义）+ `sprint.md §2 Product Backlog`（等待排期）。
   - skill 内部决定 3 维度讨论深度（简单想法 3 轮，复杂想法 6 轮），不需要用户预先指定 [Type] / Mode / 排期。
 - **不接**"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作 —— 那是版本规划的事，不属于"新想法"。
 
@@ -85,7 +88,7 @@ npx skills add https://github.com/wkevin/skills
 | -------- | ---------------------------------------- | -------------------------------------- |
 | **需求** | persona / 场景 / 价值 / 优先级 / UC 拆分 | `prd.md` §2/§4 + `tasks.md §1.1 UC`    |
 | **方案** | 架构影响 / 决策点 / IF 拆分 / 视图更新   | `add.md` §1-§5/§7 + `tasks.md §1.2 IF` |
-| **任务** | 排期意向 / 依赖 / 粒度                   | `tasks.md §2.4 Backlog`（暂存）        |
+| **任务** | 排期意向 / 依赖 / 粒度                   | `sprint.md §2 Product Backlog`（暂存） |
 
 **使用方法：**
 
@@ -93,14 +96,14 @@ npx skills add https://github.com/wkevin/skills
 /wkevin-realize-idea 我要赚到一个小目标
 ```
 
-### `wkevin-dev-tasks` - 批量开发 tasks.md 中的 task
+### `wkevin-dev-tasks` - 批量开发 sprint.md Sprint 段中的 task
 
 **思考逻辑：**
 
-当 `tasks.md` 里累积了一堆待开发的 UC/IF 后,人工逐个去实现效率太低,容易遗漏。批量启动 AI 自动化实现是更高效的方式 —— AI 一次性拉取指定 Version 或 task id 列表,按依赖顺序逐个实现,每个 task 完成就 commit 一次,过程中无需确认,适合作业给 AI 长跑。
+当 `sprint.md §2 Product Backlog` 里累积了一堆待开发的 UC/IF,并被排进 §1 Sprint 段后,人工逐个去实现效率太低,容易遗漏。批量启动 AI 自动化实现是更高效的方式 —— AI 一次性拉取指定 Version 或 task id 列表,按依赖顺序逐个实现,每个 task 完成就 commit 一次,过程中无需确认,适合作业给 AI 长跑。
 
 **工作原理：**
-读取 `docs/tasks.md` §2 中的指定 Version(精确匹配 `v0.5` / `v1.0-rc` 等)或单个 task id(`UC-XX-YY` / `IF-XX-YY`),按顺序逐个实现,完成后把对应 task 状态 `[]` → `[x]` 并做一次 git commit(`feat(UC-XX-YY): ...` 风格)。整个流程不需中途打断,适合长时间无人工干预的批量开发。
+读取 `sprint.md §1` 中指定 Version(精确匹配 `v0.5` / `v1.0-rc` 等)或单个 task id(`UC-XX-YY` / `IF-XX-YY`),从 `tasks.md`/`prd.md`/`add.md` 取 UC/IF 完整定义与上下文(只读),按顺序逐个实现,完成后**仅在 `sprint.md` 把对应 task 状态 `[]` → `[x]`** 并做一次 git commit(`feat(UC-XX-YY): ...` 风格)。`prd.md` / `add.md` / `tasks.md` 在本 skill 中**只读**。整个流程不需中途打断,适合长时间无人工干预的批量开发。
 
 **使用方法：**
 

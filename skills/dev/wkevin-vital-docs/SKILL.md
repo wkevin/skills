@@ -1,6 +1,6 @@
 ---
 name: wkevin-vital-docs
-description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Milestone ≤ 3、Critical Lens ≥ 3 毛病等。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或 milestone 收尾 sign-off,或接手别人文档先评估再决定是否按此规范继续。
+description: 评估项目最重要的四件套文档——prd.md / add.md / tasks.md / sprint.md——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Sprint 起止日期+Goal、Critical Lens ≥ 3 毛病等。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或 Sprint 收尾 sign-off,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
 # /vital-docs — 三件套文档评估器 / 改造器
@@ -19,7 +19,7 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 | 用户说"评估 / 评审 / 检查 / audit / 评分" | `evaluate` |
 | 用户说"按评估意见改造 / 修复 / sign-off 没过要修" | `transform` |
 | 用户说"写新 add.md"(从零) | `transform`(全章从零写) |
-| milestone 收尾 sign-off | `evaluate` |
+| sprint 收尾 sign-off | `evaluate` |
 | 接手别人文档,先评估再决定是否按此规范继续 | `evaluate` |
 
 ## 何时**不要**使用
@@ -33,7 +33,7 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 
 ## Mode A:`evaluate`(纯评估)
 
-适合:milestone 收尾 sign-off / 接手别人文档先看 / 文档健康度审计。
+适合:sprint 收尾 sign-off / 接手别人文档先看 / 文档健康度审计。
 
 ### Step 1:定位要评估的文件
 
@@ -42,6 +42,7 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 - `docs/prd.md` / `docs/PRD.md`
 - `docs/add.md` / `docs/ADD.md`
 - `docs/tasks.md`
+- `docs/sprint.md`(Sprint 计划 + Product Backlog)
 
 如果某些文件缺失 → 输出 `MISSING: filename` 并降低该文件 verdict。
 
@@ -51,9 +52,10 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 
 | 评估目标 | MANDATORY 读取                                                 | Do NOT 读取      |
 | -------- | -------------------------------------------------------------- | ---------------- |
-| PRD      | [references/prd-checklist.md](references/prd-checklist.md)     | add / tasks 清单 |
-| ADD      | [references/add-checklist.md](references/add-checklist.md)     | prd / tasks 清单 |
-| Tasks    | [references/tasks-checklist.md](references/tasks-checklist.md) | prd / add 清单   |
+| PRD      | [references/prd-checklist.md](references/prd-checklist.md)     | add / tasks / sprint 清单 |
+| ADD      | [references/add-checklist.md](references/add-checklist.md)     | prd / tasks / sprint 清单 |
+| Tasks    | [references/tasks-checklist.md](references/tasks-checklist.md) | prd / add / sprint 清单   |
+| Sprint   | [references/sprint-checklist.md](references/sprint-checklist.md) | prd / add / tasks 清单 |
 
 **NEVER 一次性读三个清单**——按用户问哪个读哪个,避免上下文浪费。
 
@@ -65,9 +67,9 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 
 | 严重度           | 含义                           | 触发条件举例                                                     |
 | ---------------- | ------------------------------ | ---------------------------------------------------------------- |
-| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks §1 UC 带 `[x]`;Milestone > 3 |
-| **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3            |
-| **nice-to-have** | 锦上添花                       | mermaid 解读文字短;Backlog 缺失但候选很多;Milestone 缺代号     |
+| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks §1 UC 带 `[x]`;Sprint 缺 Goal/起止日期;sprint.md §1 引用 tasks.md 未定义的 UC/IF |
+| **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3;Sprint 状态与 git log 脱节 |
+| **nice-to-have** | 锦上添花                       | mermaid 解读文字短;Sprint 缺代号;Product Backlog 编号未对齐 sprint-checklist §6.5 |
 
 ### Step 5:输出评估报告
 
@@ -127,7 +129,7 @@ Step 10: 验证闭环(回到 evaluate 模式复评)
 | §3 非目标缺失 | 无 | 新 §3 | 从零写"明确不做" | +30 行 |
 | §4 UC 不是三段式 | 旧 §3 目标用户 | 新 §4 用户场景 | 拆分重写 | ±0 |
 | §5 技术方案混入 PRD | 旧 §5(9 子节)| add.md §3-§5 | 整段挪 | -145 行 |
-| §7 里程碑缺失 | 无 | 新 §7 | 引用 tasks §2 代号 | +15 行 |
+| §7 里程碑缺失 | 无 | 新 §7 | 引用 `sprint.md §1` Sprint 代号 | +15 行 |
 | §8 成功指标缺失 | 旧 §2.5"已落地 vs 未接住"| 新 §8 | 重写为可量化 KPI | +20 行 |
 
 **处理方式分类**:
@@ -153,7 +155,7 @@ Step 10: 验证闭环(回到 evaluate 模式复评)
 - PRD §4 UC 编号跟 tasks §1.1 UC 编号对不上(单数字 vs 双数字)
 - tasks §5 commit hash 跟 git log 对不上
 - add.md §7 ADR 引用的 commit hash 在 4ef9c68(squash)内 — 必须标注"(squash)"
-- PRD §7 Milestone 跟 tasks §2 Milestone 代号不一致
+- PRD §7 跟 `sprint.md §1` Sprint 代号不一致
 
 ### Step 8:修复路线图
 
@@ -194,13 +196,14 @@ docs: rewrite PRD/ADD/Tasks to vital-docs schema
 
 - prd.md: 412 → N lines, restructure to §1-§9 schema
   - New §2 SMART goals, §3 non-goals, §4 user scenarios (agile 3-segment),
-    §6 out-of-scope, §7 milestone, §8 success KPIs
+    §6 out-of-scope, §7 milestone/Sprint, §8 success KPIs
   - Moved old §5 tech architecture to ADD §3-§5
 - add.md: 0 → N lines, new file
   - §0 Context + §1-§5 Five Views + §6 Scenarios + §7 Decision View (18 ADR)
   - §8 Behavior View + §9 Synthesis + §10 Critical Lens (strict 3)
 - tasks.md: N → N lines, UC/IF paradigm
-  - Milestone codes: M1 Joy / M2 Sadness / M3 Fear
+- sprint.md: 新建文件, Sprint 计划 + Product Backlog
+  - Milestone/Sprint codes: Sprint 1 Joy / Sprint 2 Sadness / Sprint 3 Fear
   - N UC + N IF + N backlog
   - §N Commit Reference Appendix
 
@@ -266,7 +269,7 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 - ❌ **只检查章节存在性**——"§3 在不在"是必要不充分,要看内容质量
 - ❌ **接受空话 WHY**——"为了简单 / 性能 / 扩展性"全部记 critical
 - ❌ **给未跑清单的文档打 PASS**——必须每个问题都回答
-- ❌ **混用中英文术语**——评估报告里术语对齐(UC / IF / Milestone 用英文,其余中文)
+- ❌ **混用中英文术语**——评估报告里术语对齐(UC / IF / Sprint / Version 用英文,其余中文)
 
 ### transform 模式反模式
 

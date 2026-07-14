@@ -122,7 +122,7 @@
 | 7.1 | **存在** §7 里程碑现状 | | critical（缺失 = 不知道项目进行到哪） |
 | 7.2 | 表格形式（里程碑 / 完成度 / 状态） | | important |
 | 7.3 | 状态客观（不夸大，不全 ✓ 假装都做完了） | | critical |
-| 7.4 | 与 tasks.md §2 Milestones 一致（不能两边对不上） | | critical |
+| 7.4 | 与 `sprint.md §1` Sprint / Version 一致(不能两边对不上) | | critical |
 
 ---
 
@@ -170,8 +170,8 @@
 | # | 检查项 | 命令 / 方法 | 严重度 |
 |---|---|---|---|
 | 10.1 | **PRD §4 UC 编号跟 tasks.md §1.1 UC 编号一致**(都用 `UC-mm-nn` 双数字业务分组格式) | `grep '^### UC-' docs/prd.md` 跟 `docs/tasks.md` 比对 | critical |
-| 10.2 | **PRD §7 Milestone 代号跟 tasks.md §2 Milestone 代号一致**(代号 + 主题 + Versions 三字段) | `grep 'M[0-9] ' docs/prd.md` 跟 `docs/tasks.md §2` 比对 | critical |
-| 10.3 | **PRD §6 范围外每条引用 tasks.md §2.4 Backlog TB 编号**(`TB.1 ~ TB.N`) | `grep 'TB\.' docs/prd.md` 看是否每条 6-x 都有 TB 引用 | important |
+| 10.2 | **PRD §7 Milestone/Sprint 代号跟 `sprint.md §1` Sprint 代号一致** | `grep 'Sprint\|M[0-9]' docs/prd.md` 跟 `docs/sprint.md §1` 比对 | critical |
+| 10.3 | **PRD §6 范围外每条引用 `sprint.md §2` Product Backlog 编号**(`UC-NN-NN [P3]` 或 `TB.N`) | `grep 'TB\.\|UC-[0-9]' docs/prd.md` 看是否每条 6-x 都有引用 | important |
 | 10.4 | **PRD §1 引用 add.md ADR 编号时,add.md §7 存在对应 ADR** | `grep 'ADR-[0-9]' docs/prd.md` 验证每个引用都在 `docs/add.md` | important |
 | 10.5 | **PRD 跟 tasks.md 的 agile 三段式用同一种语言**(都中文 "作为/我希望/以便" 或都英文 "As a/I want/So that") | 人工抽检 2-3 条 | important |
 | 10.6 | **PRD §3 决策依赖(D-1 ~ D-N)跟 tasks.md §3 决策一致** | 比对两份文档决策表 | important |
