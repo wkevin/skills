@@ -82,11 +82,11 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 ls docs/prd.md docs/add.md docs/tasks.md docs/sprint.md 2>&1
 ```
 
-| 情况     | 处理                                                  |
-| -------- | ----------------------------------------------------- |
-| 4 个全在 | 进 Step 2                                             |
+| 情况     | 处理                                                 |
+| -------- | ---------------------------------------------------- |
+| 4 个全在 | 进 Step 2                                            |
 | 只有部分 | **先停**——告诉用户缺哪个,按 doc-align 规范补建空模板 |
-| 全都不在 | **拒绝执行**——本 skill 只增量更新,不从零搭文档        |
+| 全都不在 | **拒绝执行**——本 skill 只增量更新,不从零搭文档       |
 
 ### Step 2:3 维度头脑风暴(多轮澄清)
 
@@ -279,7 +279,7 @@ OK 提交?
 ```bash
 # 单 commit(默认 — 4 文档联动必须原子)
 git add docs/prd.md docs/add.md docs/tasks.md docs/sprint.md
-git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 repo + IF-05-01 CSV 解析 (3 维度, 联动 prd+add+tasks+sprint)"
+git commit -m "idea: 加 UC-05-01 批量导入 repo + IF-05-01 CSV 解析 (3 维度, 联动 prd+add+tasks+sprint)"
 ```
 
 ### Step 7:后续动作提示(可选)
@@ -449,7 +449,7 @@ OK 就改?
 
 ```bash
 git add docs/prd.md docs/add.md docs/tasks.md
-git commit -m "idea(3d-brainstorm): 加 UC-05-01 批量导入 + IF-05-01 CSV 解析 (3 维度)"
+git commit -m "idea: 加 UC-05-01 批量导入 + IF-05-01 CSV 解析 (3 维度)"
 ```
 
 ---
