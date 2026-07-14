@@ -70,7 +70,7 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 - ❌ 用户要写代码实现(用 `dev:end-to-end` / `ultracode` / `dev:code` 模式)
 - ❌ 改动只是代码(无 PRD/ADD/Tasks 联动需求)—— 本 skill 不动代码
 - ❌ 要改 `design.md` / `roadmap.md` / `decisions/` 文件 —— 这些不在本 skill 范围
-- ❌ 用户已经规划好要做什么(如"开新版本 / 做 v0.X / 从 backlog 抽") —— 这是 wkevin-task-dev 的事,不是新想法
+- ❌ 用户已经规划好要做什么(如"开新版本 / 做 v0.X / 从 backlog 抽") —— 这是 wkevin-sprint-shape 的事,不是新想法
 
 ---
 
@@ -293,7 +293,8 @@ commit 后提示用户:
 后续可选:
 - 继续 /wkevin-idea-flesh 加新想法
 - 用 /wkevin-doc-align 评估文档质量(4 文件)
-- 用 /wkevin-task-dev 实现 Backlog 条目(先把条目从 sprint.md §2 移到 §1 Sprint 段)
+- 用 /wkevin-sprint-shape 排 Sprint(从 §2 Backlog 挑 10-20 task 塑形到 §1 Sprint 段)
+- 用 /wkevin-task-dev 实现 §1 Sprint 段的 [ ] 项
 ```
 
 ---
@@ -312,7 +313,7 @@ commit 后提示用户:
 10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
 12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 task-dev 实现用),§2 是暂存状态(等 Sprint 排期)。
-13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wkevin-task-dev 或后续版本规划的事,不属于"新想法"。
+13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wkevin-sprint-shape 或后续版本规划的事,不属于"新想法"。
 
 ## 模板
 
@@ -481,9 +482,14 @@ git revert <commit-hash>
 ## 关联
 
 - **上游**:`wkevin-doc-align` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
-- **下游**:`wkevin-task-dev` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期移到 §1 才能被 task-dev 实现
+- **下游**:
+  - `wkevin-sprint-shape` — 从本 skill 写入的 `sprint.md §2 Product Backlog` 挑 10-20 UC/IF,塑形到 `§1 Sprint` 段
+  - `wkevin-task-dev` — 实现 `sprint.md §1` Sprint 段的 [ ] 项;**注意**:Product Backlog 条目要先做 Sprint 排期(sprint-shape)移到 §1 才能被 task-dev 实现
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
-- **同族**:
+- **同族塑形链**:
+  - `wkevin-idea-flesh`(本 skill):深度想法落地 —— 3 维度头脑风暴 → 联动改 3 文档 → UC/IF 进 Backlog
+  - `wkevin-sprint-shape`:版本塑形 —— 从 Backlog 挑 10-20 task → Sprint 段带代号/Goal/Version
+  - `wkevin-task-dev`:批量实现 —— Sprint 段内 [ ] → [x]
+- **同族轻量**:
   - **wkevin-add-idea**:另一种轻量想法入库模型 —— 只写 Backlog 一行(无 UC/IF 完整定义),适合快速随手记下想法
-  - **wkevin-idea-flesh**(本 skill):深度想法落地模型 —— 3 维度头脑风暴 + 直接联动改 3 文档 + UC/IF 进 Backlog 暂存
   - 两个 skill 的 Backlog 互通:wkevin-add-idea 写的"一行 idea"在需要展开时,可由 wkevin-idea-flesh 做 3 维度头脑风暴补全

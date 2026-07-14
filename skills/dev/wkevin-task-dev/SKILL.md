@@ -115,3 +115,14 @@ description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X�
 **scope 强制**用 `UC-XX-YY` 或 `IF-XX-YY`（**不写** `M*-T*` / `Sprint-N` / `v0.X`；Sprint-number / version 不出现在 commit scope）。Claude 生成的 commit **必须**带 `-m "Co-Authored-By: Claude <noreply@anthropic.com>"`。
 
 **不做**的事（commit 之外）：不 push / 不 squash / 不 rebase / 不 amend 既有 commit / 不交互式 `git rebase -i`。
+
+## 关联
+
+- **上游**:
+  - `wkevin-sprint-shape` — 把 backlog 塑形到 `sprint.md §1 Sprint` 段,本 skill 按 `[ ]` 顺序实现;**前提**:本 skill 看到的 [ ] 项必须先被 sprint-shape 塑形到 §1（§2 Backlog 项本 skill 不接）
+  - `wkevin-idea-flesh` — 间接上游;idea-flesh 写 `tasks.md §1.1/§1.2` UC/IF 定义,本 skill 读这些定义
+- **下游**:无;本 skill 是塑形链终点
+- **同族塑形链**:
+  - `wkevin-idea-flesh` → 把模糊想法 flesh out 到 PRD/ADD/Tasks + Backlog
+  - `wkevin-sprint-shape` → 从 Backlog 挑 10-20 task 塑形到 §1 Sprint 段（代号 / Goal / Version）
+  - `wkevin-task-dev`（本 skill）→ 把 §1 Sprint 段内 [ ] 实际开发成 [x]

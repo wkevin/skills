@@ -10,6 +10,7 @@ npx skills add https://github.com/wkevin/skills
 │  │ ◻ wkevin-arch-decoder
 │  │ ◻ wkevin-task-dev
 │  │ ◻ wkevin-idea-flesh
+│  │ ◻ wkevin-sprint-shape
 │  └ ◻ wkevin-doc-align
 │  ◻ Utils
 │  └ ◻ wkevin-srt-translate
@@ -94,6 +95,31 @@ npx skills add https://github.com/wkevin/skills
 
 ```sh
 /wkevin-idea-flesh 我要赚到一个小目标
+```
+
+### `wkevin-sprint-shape` - 从 backlog 塑形一个 Sprint（拆首次实现/升级/fix 三子节）
+
+**思考逻辑：**
+
+`wkevin-idea-flesh` 把模糊想法落到 `sprint.md §2 Product Backlog` 后，`wkevin-task-dev` 实现 `sprint.md §1 Sprint` 段内的 task——但中间缺一步："**哪些 UC/IF 该进哪个 Sprint？**"。人工排 Sprint 容易忽略依赖关系、凑不出主题，最后 Sprint 段像 task 列表没灵魂。
+
+本 skill 在两者之间做 **agile Sprint Planning 的工程化**：通过「优先级 + 依赖图 + 主题聚类」三因子算法，从 backlog 挑 10-20 个 UC/IF，塑形一个 Sprint 段（代号 / 起止日期 / Goal / Version / 🟡 Planning 状态），**仅修改 `sprint.md`**，绝不改 PRD/ADD/Tasks。
+
+**工作原理：**
+
+- **三因子塑形算法**：
+  - **优先级**：`tasks.md §1.1/§1.2` 标 `[P0/P1/P2/P3]` → 映射到 Sprint/Milestone/Production 三层候选池（内部 filter，不写文件）
+  - **依赖图**：`tasks.md` 实现细节里显式"依赖"字段 + 扫描其他 UC/IF 编号交叉引用（推断）→ 拓扑排序生成 scaffold 序列
+  - **主题聚类**：UC/IF 标题 + agile 三段式 + 实现细节分词聚类 → 主导主题 = Sprint 代号 + Goal
+- **Sprint 内拆三子节**（doc-align §1.2.1）：首次实现 / 升级 / bug fix，每条标注前缀。
+- **硬约束**：每个 Sprint 10-20 task（Scrum velocity 上限），Active Sprint ≤ 1（doc-align §1.4.1），Sprint 状态默认 🟡 Planning（不擅自激活）。
+
+**使用方法：**
+
+```sh
+/wkevin-sprint-shape 做 v0.5,主题是批量导入
+/wkevin-sprint-shape 规划下一版,10 个 task
+/wkevin-sprint-shape 修改 Sprint 2,加 UC-04-05
 ```
 
 ### `wkevin-task-dev` - 批量开发 sprint.md Sprint 段中的 task
