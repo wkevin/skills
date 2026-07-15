@@ -279,7 +279,7 @@ OK 提交?
 ```bash
 # 单 commit(默认 — 4 文档联动必须原子)
 git add docs/prd.md docs/add.md docs/tasks.md docs/sprint.md
-git commit -m "idea: 加 UC-05-01 批量导入 repo + IF-05-01 CSV 解析 (3 维度, 联动 prd+add+tasks+sprint)"
+git commit -m "idea: 批量导入 repo（UC-05-01, IF-05-01）；CSV 解析（IF-05-02）"
 ```
 
 ### Step 7:后续动作提示(可选)
