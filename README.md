@@ -18,6 +18,8 @@ npx skills add https://github.com/wkevin/skills
 
 ## 开发类 Skills
 
+![](./dev.drawio.svg)
+
 ### `wkevin-arch-decoder` - 架构解码器(从代码反推设计哲学)
 
 **思考逻辑：**
