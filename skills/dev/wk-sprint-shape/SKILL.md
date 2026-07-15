@@ -1,11 +1,11 @@
 ---
 name: wk-sprint-shape
-description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因子算法,挑选 10-20 个 UC/IF,塑形一个新 Sprint 段(代号 + 起止日期 + Goal + Version + 🟡 Planning 状态),或修改已有 Sprint。每次塑形或修改都仅修改 docs/sprint.md §1,读 docs/tasks.md §1.1/§1.2 取 UC/IF 完整定义(只读),绝不改 PRD/ADD/Tasks。算法核心:依赖链 scaffold 拓扑排序 + 跨任务交叉引用推断依赖 + Sprint/Milestone/Production 三层候选池过滤 + 主题聚类生成代号与 Goal。触发词:"/sprint-shape"、"排个 sprint"、"塑个 sprint"、"开 v0.X"、"做下一版"、"规划下个 sprint"、"从 backlog 抽 10 个 task"。
+description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因子算法,挑选 10-20 个 UC/IF,塑形一个新 Sprint 段(代号 + 版本 + task 列表),或修改已有 Sprint。每次塑形或修改都仅修改 docs/sprint.md §1,读 docs/tasks.md §1.1/§1.2 取 UC/IF 完整定义(只读),绝不改 PRD/ADD/Tasks。算法核心:依赖链 scaffold 拓扑排序 + 跨任务交叉引用推断依赖 + Sprint/Milestone/Production 三层候选池过滤 + 主题聚类生成代号。**输出格式最小化**:段名带版本,不加 emoji / Version / 起止 / Goal 等冗余字段,三子节只在 ≥2 个非空时生成,否则平铺。触发词:"/sprint-shape"、"排个 sprint"、"塑个 sprint"、"开 v0.X"、"做下一版"、"规划下个 sprint"、"从 backlog 抽 10 个 task"。
 ---
 
 # /sprint-shape — 从 backlog 塑形一个 Sprint
 
-把当前轮用户描述的 sprint/version 规划意图,通过 **三因子塑形算法**(优先级 + 依赖图 + 主题聚类)落到 `docs/sprint.md §1` —— 仅修改 sprint.md,读 `tasks.md §1.1/§1.2` 取 UC/IF 完整定义。每次塑形或修改产出**一个 Sprint 段**(代号 / 起止日期 / Goal / Version / 状态 / 10-20 UC-IF 列表),UC/IF 在 Sprint 内拆 **首次实现 / 升级 / bug fix 三子节**。
+把当前轮用户描述的 sprint/version 规划意图,通过 **三因子塑形算法**(优先级 + 依赖图 + 主题聚类)落到 `docs/sprint.md §1` —— 仅修改 sprint.md,读 `tasks.md §1.1/§1.2` 取 UC/IF 完整定义。每次塑形或修改产出**一个 Sprint 段**(代号 + 版本 + task 列表)。
 
 > **核心定位**:Sprint 塑形(agile Sprint Planning 的工程化版本)
 >
@@ -13,7 +13,7 @@ description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因�
 > | -------------------------------------- | ----------------------------------------------------- |
 > | 用户说"做 v0.5",AI 随手挑 10 个 task   | 用户给目标,AI 按 P 优先级 + 依赖链 scaffold + 主题聚类 |
 > | 改了 Sprint 但跟 Active Sprint 重复    | 联动校验:不重复 + 依赖链完整 + UC/IF 都已定义         |
-> | 写了 Sprint 段但不分首次/升级/fix      | Sprint 内拆三子节(对齐 doc-align §1.2.1)             |
+> | 输出臃肿(emoji + 4 字段 + 三子节)   | **输出最小化**:段名带版本,冗余字段只在 ≥2 子节时生成 |
 
 ## 接口
 
@@ -34,9 +34,9 @@ description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因�
 
 | 模式 | 触发 | 行为 |
 | --- | --- | --- |
-| **新建 Sprint** | "做 vX.X"、"开新 sprint"、"从 backlog 抽 N 个 task" | 从 Product Backlog 挑 10-20 task,创建新 Sprint 段(🟡 Planning) |
+| **新建 Sprint** | "做 vX.X"、"开新 sprint"、"从 backlog 抽 N 个 task" | 从 Product Backlog 挑 10-20 task,创建新 Sprint 段(最小化输出) |
 | **修改 Sprint** | "改 Sprint N"、"Sprint 1 加 UC-XX-YY"、"Sprint 2 调一下" | 增删/调整指定 Sprint 段内的 task;状态语义不变 |
-| **状态推进** | "激活 Sprint 1"、"Sprint 1 done" | 状态机推进(🟡 Planning → 🔵 Active → 🟢 Done);不改 task 列表 |
+| **状态推进** | "激活 Sprint 1"、"Sprint 1 done" | 不动 sprint.md 文件;由用户手改文档(在段头加 `Active` 关键词)或走 task-dev(状态语义由用户最终负责) |
 
 skill 内部根据意图自动选择模式,简单意图直接执行,模糊意图走 1-2 轮澄清。
 
@@ -68,9 +68,10 @@ skill 内部根据意图自动选择模式,简单意图直接执行,模糊意图
 | `docs/prd.md` / `docs/add.md` | **不碰** | — |
 
 **关键不变量**:
-- Active Sprint ≤ 1(doc-align §1.4.1)—— 创建新 Sprint 时,若有 🔵 Active,提示先把当前 Active 推进到 🟢 Done / ⚫ Cancelled
-- 新 Sprint 状态默认 🟡 Planning(用户可在 commit 后手动改 🔵 Active)
-- 每个 Sprint 拆三子节:首次实现 / 升级 / bug fix(doc-align §1.2.1)
+- Active Sprint ≤ 1(doc-align §1.4.1)—— 创建新 Sprint 时,若有 Active,提示用户先推进
+- 输出最小化:不加 emoji / 独立 Version / 起止 / Goal 字段(段名带版本,任务列表自解释)
+- 三子节(首次/升级/bug fix)**只在 ≥2 个非空时**生成;单子节情况直接平铺,避免无意义子节头
+- 历史 Sprint 段(sprint01-04)保留 legacy 完整字段,doc-align 评估时区分 legacy / current 两种风格
 
 ## 何时使用
 
@@ -110,7 +111,7 @@ ls docs/sprint.md docs/tasks.md 2>&1
 Q1. 塑形模式:
    - 新建 Sprint(从 backlog 挑 10-20 task 塑形)
    - 修改 Sprint N(增删/调整 task 或改 Goal/代号)
-   - 状态推进(把 Sprint N 从 🟡 Planning → 🔵 Active 或 → 🟢 Done)
+   - 状态推进(把 Sprint N 从 Planning 推到 Active 或 Done)
 
 Q2. (新建时)Version 归属 + 起止日期:
    - Version: v0.X(用户指定或 skill 建议下一递增版本)
@@ -232,24 +233,16 @@ Production pool(可选):
 
 [sprint.md §1 新增段]
 
-### Sprint 3 — Bulk-Onboard 🟡 Planning
-- **Version**: v0.5
-- **起止**: 2026-07-14 → 2026-07-28
-- **Goal**: 批量导入 repo 流程完整可用,管理员可一次性导入 ≥ 10 个 repo < 30s
+### Sprint 3 — Bulk-Onboard (v0.5)
 
-#### 首次实现
 - [ ] UC-04-05 [P1] 用户密码强度校验(作为 终端用户,我希望 注册时密码必须 ≥ 8 位 + 数字字母,以便 提升账号安全)
 - [ ] UC-05-01 [P3] 批量导入 repo(作为 知识库管理员,我希望 上传 CSV 一次性导入多 repo,以便 不用逐个粘贴 URL)
 - [ ] IF-05-01 [P3] CSV 解析批处理
 
-#### 升级
-- (空)
-
-#### bug fix
-- (空)
+(若 3 类 ≥ 2 个非空 才拆子节;此处仅"首次实现"非空,平铺)
 
 联动一致性预检:
-- Sprint 数:0 → 1,Active=0,未超过 doc-align §1.4.1 上限 ✓
+- Sprint 数:0 → 1,未超 doc-align §1.4.1 上限 ✓
 - 引用 UC/IF 都在 tasks.md §1.1/§1.2 定义:✓ (3/3)
 - 依赖 scaffold:UC-04-05 依赖 UC-04-01(已 Done 在 Sprint 1)✓
 - 主题聚类:主导 = "批量导入"(3/3 task)✓
@@ -277,7 +270,8 @@ echo "$NEXT_SPRINT"
 
 ```bash
 # 1. Sprint 数量 ≤ 1 Active(doc-align §1.4.1)
-ACTIVE_COUNT=$(awk '/^### Sprint/{flag=1} flag && /🔵 Active/{count++; flag=0} END{print count}' docs/sprint.md)
+# 用户手改时在段头加 'Active' 关键词
+ACTIVE_COUNT=$(awk '/^### Sprint/{flag=1} flag && /Active/{count++; flag=0} END{print count}' docs/sprint.md)
 [ "$ACTIVE_COUNT" -le 1 ] || echo "WARN: Active Sprint > 1"
 
 # 2. 新 Sprint 引用 UC/IF 都在 tasks.md 定义?
@@ -308,8 +302,8 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 
 1. **仅修改 `docs/sprint.md`**(§1 + 可选 §2 Backlog 清理)—— WHY: 与 task-dev 写入边界对齐;PRD/ADD/Tasks 是 idea-flesh 的职责。
 2. **每个新 Sprint 10-20 task**(默认)—— WHY: Scrum 团队典型 velocity;过多 = sprint 失控,过少 = 浪费迭代。
-3. **Sprint 内拆首次实现 / 升级 / bug fix 三子节**—— WHY: doc-align §1.2.1 + §1.2.3 critical;doc-align 会检查。
-4. **新 Sprint 状态默认 🟡 Planning**—— WHY: 用户后续手动推到 🔵 Active;本 skill 不擅自激活(激活 = 业务承诺)。
+3. **Sprint 内三子节拆分只在 ≥2 个非空时生成**—— WHY: 单子类非空时拆子节是无意义冗余;硬约束保持 doc-align §1.2.1 的精神但放宽到按需拆分。
+4. **新 Sprint 状态由用户手改**—— WHY: 状态机推进(Planning → Active → Done)是业务承诺,本 skill 不擅自激活;用户可在 commit 后手改段头加 `Active` 关键词。
 5. **Active Sprint ≤ 1**—— WHY: doc-align §1.4.1;多 Active 并行会让 commit 节奏混乱。
 6. **不创建任务本身**(只搬运已有 UC/IF)—— WHY: 新 UC/IF 由 idea-flesh 负责;本 skill 只做"从池子挑 task 入 Sprint"。
 7. **不实现任务**—— WHY: 实现是 task-dev 的职责;本 skill 只塑形,不动代码。
@@ -321,31 +315,24 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 
 ## 模板
 
-### Sprint 段(三字段 + 三子节,doc-align §1.1 + §1.2)
+### Sprint 段(最小化输出)
 
 ```markdown
-### Sprint {N} — {代号} 🟡 Planning
-
-- **Version**: v{X.Y}
-- **起止**: {YYYY-MM-DD} → {YYYY-MM-DD}
-- **Goal**: {一句话描述本次 Sprint 目标,说明价值/动机,不是任务清单}
-
-#### 首次实现
+### Sprint {N} — {代号} (v{X.Y})
 
 - [ ] {UC-NN-NN | IF-MM-NN} [{P0|P1|P2|P3}] {标题}
-  - {agile 三段式:作为/我希望/以便 适用于 UC;IF 一句话描述}
-  - {可选:实现细节摘要 1-2 行}
-
-#### 升级
-
-- [ ] upgrade: {UC-NN-NN | IF-MM-NN} {标题}
-  - {增量改进点}
-
-#### bug fix
-
-- [ ] fix: {UC-NN-NN | IF-MM-NN} {标题}
-  - {issue / 缺陷描述 + 修复方向}
+- [ ] upgrade: {UC-NN-NN | IF-MM-NN} {标题}     (仅当存在 upgrade 类 task)
+- [ ] fix: {UC-NN-NN | IF-MM-NN} {标题}         (仅当存在 bug fix 类 task)
+- [ ] {UC-NN-NN | IF-MM-NN} [{P0|P1|P2|P3}] {标题}
+...
 ```
+
+**三子节规则**:仅当 ≥2 个子类(首次实现 / 升级 / bug fix)非空时,才拆 `#### 首次实现` / `#### 升级` / `#### bug fix` 子节。子类计数规则:
+- `首次实现` = 历史 Sprint 未出现过的 UC/IF
+- `升级` = 历史 Sprint 出现过,本次为增量改进(标 `upgrade:` 前缀)
+- `bug fix` = 修已知 bug(标 `fix:` 前缀)
+
+单子类非空情况(典型:`首次实现` 7 条,`升级` 0 条,`bug fix` 0 条)直接平铺,不要 2 个空子节占行。
 
 ### Sprint Backlog 清理(纳入新 Sprint 后,从 §2 移除)
 
@@ -359,13 +346,13 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 ## 联动反模式
 
 - ❌ **跳过依赖检查** — Scaffold 残缺,Sprint 开始才发现前置缺失
-- ❌ **task 数 < 10 或 > 20** — 不符合 Scrum velocity,doc-align 会标记
-- ❌ **不拆三子节**(首次/升级/fix 混在一起)— doc-align §1.2.1 critical
-- ❌ **新 Sprint 状态直接 🔵 Active** — 跳过 Planning 阶段,业务承诺过早
+- ❌ **task 数 < 10 或 > 20** — 不符合 Scrum velocity,doc-align 会标记(用户明确接受 < 10 时记录)
+- ❌ **3 子类都强加**(即使子类空)— 输出臃肿,需用户手动删
+- ❌ **新 Sprint 状态直接 Active** — 业务承诺过早
 - ❌ **同时多 Active Sprint** — doc-align §1.4.1 违规
 - ❌ **改动 PRD/ADD/Tasks** — 越权;那是 idea-flesh 的工作
 - ❌ **不检查 §2 Backlog 联动清理** — 新 Sprint 收了 task 但 §2 还有同一行 = 重复
-- ❌ **跳过主题聚类** — Sprint 没有 Goal,只剩 task 列表,失去 Sprint 灵魂
+- ❌ **跳过主题聚类** — Sprint 没有代号/版本,只剩 task 列表,失去 Sprint 灵魂
 - ❌ **代号风格不一致** — 有的 "Bulk Onboard" 有的 "bulk-onboard",与已有 Sprint 代号风格对齐
 
 ## Worked Example
@@ -379,9 +366,9 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 - 模式: 新建 Sprint
 - Version: v0.5
 - 代号: Bulk-Onboard(skill 建议)
-- 起止: 2026-07-14 → 2026-07-28(默认 2 周)
-- Goal: 批量导入 repo 流程完整可用
 ```
+
+(默认起止 2 周 / Goal 隐含在段名 — 用户明确要求才生成)
 
 **Step 3-6 三因子塑形**(摘要):
 
@@ -424,7 +411,7 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10 task, 主题批量导�
 - ❌ 不实现 task(task-dev 的事)
 - ❌ 不修改 PRD/ADD/Tasks(只读)
 - ❌ 不创建新 §X 章节(§3/§4 等)
-- ❌ 不擅自激活 Sprint(默认 🟡 Planning)
+- ❌ 不擅自激活 / 推进 Sprint 状态(用户手改或走 task-dev)
 - ❌ 不评估文档质量(doc-align 的事)
 - ❌ 不写代码或修改 `src/` 等实现文件
 - ❌ 不处理"已实现的 task 但 sprint.md 未勾 [x]"的同步(那是 task-dev 或人工)
