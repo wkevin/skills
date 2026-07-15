@@ -232,7 +232,7 @@ def classify_subtask(task_id, git_log):
 
 ## §7 与 doc-align 的契约
 
-本 skill 输出必须 pass `wkevin-doc-align` 的 evaluate 模式,关键检查项:
+本 skill 输出必须 pass `wk-doc-align` 的 evaluate 模式,关键检查项:
 
 | doc-align 检查 | 本 skill 输出 |
 | --- | --- |

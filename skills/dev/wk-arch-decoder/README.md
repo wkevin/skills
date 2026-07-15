@@ -1,4 +1,4 @@
-# wkevin-arch-decoder (架构解码器)
+# wk-arch-decoder (架构解码器)
 
 > 代码仓库架构深度分析 skill —— 从代码反推设计哲学与决策取舍
 
@@ -66,12 +66,12 @@ Phase 6  完整性校验
 
 ### v2.1 (改名) — 2026-06-08
 
-⭐ **改名**:`wkevin-5-views` → `wkevin-arch-decoder`(架构解码器)
+⭐ **改名**:`wkevin-5-views` → `wk-arch-decoder`(架构解码器)
 
 **原因**:v2.0 升级后,五视图只占工作流 1/7(Phase 1),"5-views" 已不能代表 skill 全貌。"decoder"(解码)对应新加的"理解/解码设计哲学"定位。核心任务不是"看清代码有什么",而是"**理解作者为什么这么写**"。
 
 **改动**:
-- 目录:`skills/dev/wkevin-5-views/` → `skills/dev/wkevin-arch-decoder/`
+- 目录:`skills/dev/wkevin-5-views/` → `skills/dev/wk-arch-decoder/`
 - `5-views-method.md` 保留为内部参考,改名为 `reference-5-views.md`,头部加 v1.0 定位说明
 - `SKILL.md` frontmatter `name` 同步、`description` 增加"架构解码"触发词
 - `SKILL.md` 标题改为"架构解码器 - 从代码反推设计哲学"

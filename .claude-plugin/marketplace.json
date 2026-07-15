@@ -1,5 +1,5 @@
 {
-  "name": "wkevin-skills",
+  "name": "wkevin's skills",
   "owner": {
     "name": "wkevin",
     "email": "wkevin27@gmail.com"
@@ -15,10 +15,11 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/dev/wkevin-arch-decoder",
-        "./skills/dev/wkevin-dev-tasks",
-        "./skills/dev/wkevin-new-idea",
-        "./skills/dev/wkevin-vital-docs"
+        "./skills/dev/wk-arch-decoder",
+        "./skills/dev/wk-doc-align",
+        "./skills/dev/wk-idea-flesh",
+        "./skills/dev/wk-sprint-shape",
+        "./skills/dev/wk-task-dev"
       ]
     },
     {
@@ -27,7 +28,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/utils/wkevin-srt-translate"
+        "./skills/utils/wk-srt-translate"
       ]
     }
   ]

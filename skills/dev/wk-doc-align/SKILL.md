@@ -1,5 +1,5 @@
 ---
-name: wkevin-doc-align
+name: wk-doc-align
 description: 评估项目最重要的四件套文档——prd.md / add.md / tasks.md / sprint.md——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Sprint 起止日期+Goal、Critical Lens ≥ 3 毛病等。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或 Sprint 收尾 sign-off,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
@@ -24,7 +24,7 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 
 ## 何时**不要**使用
 
-- ❌ 用户要**加新需求**(已有三件套上加新 UC/IF/ADR)→ 用 [`wkevin-idea-flesh`](../wkevin-idea-flesh/SKILL.md)(增量改动范式)
+- ❌ 用户要**加新需求**(已有三件套上加新 UC/IF/ADR)→ 用 [`wk-idea-flesh`](../wk-idea-flesh/SKILL.md)(增量改动范式)
 - ❌ 用户要**改代码实现**→ 用 `dev:code` / `dev:end-to-end`
 - ❌ 项目没有 `docs/` 目录(先建文档骨架)
 - ❌ 文档结构跟 doc-align 不一致但用户只想加需求 → 先跑 `evaluate` 评估,verdict 是 PASS 后才能用 `idea-flesh`
@@ -415,13 +415,13 @@ Plan: /home/wkevin/.claude/plans/<plan-name>.md
 
 | Skill | 关系 |
 |---|---|
-| [`wkevin-idea-flesh`](../wkevin-idea-flesh/SKILL.md) | 加新需求 → 用 idea-flesh(增量联动,不变基线);transform 完成后才能用 idea-flesh |
+| [`wk-idea-flesh`](../wk-idea-flesh/SKILL.md) | 加新需求 → 用 idea-flesh(增量联动,不变基线);transform 完成后才能用 idea-flesh |
 | `dev:code` / `dev:end-to-end` | 代码实现 → 本 skill 不动代码 |
-| `wkevin-arch-decoder` | 架构分析 → 从代码反推 ADD;transform 改造 ADD 时可参考 |
+| `wk-arch-decoder` | 架构分析 → 从代码反推 ADD;transform 改造 ADD 时可参考 |
 | `skill-judge` | 通用 skill 评估 → 评估本 skill 自身用 |
 
 **完整工作流**:
-1. **基线评估**:`wkevin-doc-align --mode=evaluate`(确认现状 verdict)
-2. **基线改造**:`wkevin-doc-align --mode=transform`(把 REWRITE → PASS)
-3. **增量需求**:后续加需求 → `wkevin-idea-flesh`(基于 PASS 基线做增量联动)
+1. **基线评估**:`wk-doc-align --mode=evaluate`(确认现状 verdict)
+2. **基线改造**:`wk-doc-align --mode=transform`(把 REWRITE → PASS)
+3. **增量需求**:后续加需求 → `wk-idea-flesh`(基于 PASS 基线做增量联动)
 4. **回滚 / 退一步**:若 transform 失败,保留 `docs/_draft/` 作为 partial state,人工清理

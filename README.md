@@ -7,20 +7,20 @@ npx skills add https://github.com/wkevin/skills
 ......
 ◆  Select skills to install (space to toggle)
 │  ◻ Dev
-│  │ ◻ wkevin-arch-decoder
-│  │ ◻ wkevin-task-dev
-│  │ ◻ wkevin-idea-flesh
-│  │ ◻ wkevin-sprint-shape
-│  └ ◻ wkevin-doc-align
+│  │ ◻ wk-arch-decoder
+│  │ ◻ wk-doc-align
+│  │ ◻ wk-idea-flesh
+│  │ ◻ wk-sprint-shape
+│  └ ◻ wk-task-dev
 │  ◻ Utils
-│  └ ◻ wkevin-srt-translate
+│  └ ◻ wk-srt-translate
 ```
 
 ## 开发类 Skills
 
 ![](./dev.drawio.svg)
 
-### `wkevin-arch-decoder` - 架构解码器(从代码反推设计哲学)
+### `wk-arch-decoder` - 架构解码器(从代码反推设计哲学)
 
 **思考逻辑：**
 
@@ -37,9 +37,9 @@ npx skills add https://github.com/wkevin/skills
 - 后置「决策视图(Roads Not Taken)+ 行为视图(AI 项目专属,扫 prompt / token / LLM 自主性)+ 凝结(反向 mental model)+ 批判性视角(强制 3 个毛病)」。
 - 最终可用于人工手写方案的补充,弥补手写方案的修订不及时、与代码不一致等问题。
 
-详见 [README](skills/dev/wkevin-arch-decoder/README.md)。
+详见 [README](skills/dev/wk-arch-decoder/README.md)。
 
-### `wkevin-doc-align` - 评估文档四件套及提出改进意见
+### `wk-doc-align` - 评估文档四件套及提出改进意见
 
 **思考逻辑：**
 
@@ -63,7 +63,7 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-doc-align
+/wk-doc-align
 ```
 
 或靠提示词触发
@@ -72,7 +72,7 @@ npx skills add https://github.com/wkevin/skills
 评估当前项目的文档，给出修改建议。
 ```
 
-### `wkevin-idea-flesh` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
+### `wk-idea-flesh` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
 
 **思考逻辑：**
 
@@ -96,14 +96,14 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-idea-flesh 我要赚到一个小目标
+/wk-idea-flesh 我要赚到一个小目标
 ```
 
-### `wkevin-sprint-shape` - 从 backlog 塑形一个 Sprint（拆首次实现/升级/fix 三子节）
+### `wk-sprint-shape` - 从 backlog 塑形一个 Sprint（拆首次实现/升级/fix 三子节）
 
 **思考逻辑：**
 
-`wkevin-idea-flesh` 把模糊想法落到 `sprint.md §2 Product Backlog` 后，`wkevin-task-dev` 实现 `sprint.md §1 Sprint` 段内的 task——但中间缺一步："**哪些 UC/IF 该进哪个 Sprint？**"。人工排 Sprint 容易忽略依赖关系、凑不出主题，最后 Sprint 段像 task 列表没灵魂。
+`wk-idea-flesh` 把模糊想法落到 `sprint.md §2 Product Backlog` 后，`wk-task-dev` 实现 `sprint.md §1 Sprint` 段内的 task——但中间缺一步："**哪些 UC/IF 该进哪个 Sprint？**"。人工排 Sprint 容易忽略依赖关系、凑不出主题，最后 Sprint 段像 task 列表没灵魂。
 
 本 skill 在两者之间做 **agile Sprint Planning 的工程化**：通过「优先级 + 依赖图 + 主题聚类」三因子算法，从 backlog 挑 10-20 个 UC/IF，塑形一个 Sprint 段（代号 / 起止日期 / Goal / Version / 🟡 Planning 状态），**仅修改 `sprint.md`**，绝不改 PRD/ADD/Tasks。
 
@@ -119,12 +119,12 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-sprint-shape 做 v0.5,主题是批量导入
-/wkevin-sprint-shape 规划下一版,10 个 task
-/wkevin-sprint-shape 修改 Sprint 2,加 UC-04-05
+/wk-sprint-shape 做 v0.5,主题是批量导入
+/wk-sprint-shape 规划下一版,10 个 task
+/wk-sprint-shape 修改 Sprint 2,加 UC-04-05
 ```
 
-### `wkevin-task-dev` - 批量开发 sprint.md Sprint 段中的 task
+### `wk-task-dev` - 批量开发 sprint.md Sprint 段中的 task
 
 **思考逻辑：**
 
@@ -136,14 +136,14 @@ npx skills add https://github.com/wkevin/skills
 **使用方法：**
 
 ```sh
-/wkevin-task-dev UC-03-02         # 实现 id 为 UC-03-02 的 User Case
-/wkevin-task-dev IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
-/wkevin-task-dev v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
+/wk-task-dev UC-03-02         # 实现 id 为 UC-03-02 的 User Case
+/wk-task-dev IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
+/wk-task-dev v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
 ```
 
 ## 效率类 Skills
 
-### `wkevin-srt-translate` - 字幕翻译
+### `wk-srt-translate` - 字幕翻译
 
 SRT 字幕文件翻译 skill —— 使用并行 AI subagents 加速字幕翻译，按语义边界拆 chunk、并行翻译、按序拼接。
 

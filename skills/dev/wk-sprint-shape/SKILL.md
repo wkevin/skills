@@ -1,5 +1,5 @@
 ---
-name: wkevin-sprint-shape
+name: wk-sprint-shape
 description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因子算法,挑选 10-20 个 UC/IF,塑形一个新 Sprint 段(代号 + 起止日期 + Goal + Version + 🟡 Planning 状态),或修改已有 Sprint。每次塑形或修改都仅修改 docs/sprint.md §1,读 docs/tasks.md §1.1/§1.2 取 UC/IF 完整定义(只读),绝不改 PRD/ADD/Tasks。算法核心:依赖链 scaffold 拓扑排序 + 跨任务交叉引用推断依赖 + Sprint/Milestone/Production 三层候选池过滤 + 主题聚类生成代号与 Goal。触发词:"/sprint-shape"、"排个 sprint"、"塑个 sprint"、"开 v0.X"、"做下一版"、"规划下个 sprint"、"从 backlog 抽 10 个 task"。
 ---
 
@@ -18,16 +18,16 @@ description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因�
 ## 接口
 
 ```sh
-/wkevin-sprint-shape <塑形意图>
+/wk-sprint-shape <塑形意图>
 ```
 
 **例**:
 
 ```sh
-/wkevin-sprint-shape 做 v0.5,主题是批量导入
-/wkevin-sprint-shape 规划下一版,10 个 task
-/wkevin-sprint-shape 修改 Sprint 2,加 UC-04-05
-/wkevin-sprint-shape 给 Sprint 1 加个 bug fix IF-02-03
+/wk-sprint-shape 做 v0.5,主题是批量导入
+/wk-sprint-shape 规划下一版,10 个 task
+/wk-sprint-shape 修改 Sprint 2,加 UC-04-05
+/wk-sprint-shape 给 Sprint 1 加个 bug fix IF-02-03
 ```
 
 **塑形意图模式**:
@@ -80,11 +80,11 @@ skill 内部根据意图自动选择模式,简单意图直接执行,模糊意图
 
 ## 何时不要使用
 
-- ❌ 项目没有 `docs/sprint.md` 或 `docs/tasks.md`(先跑 `wkevin-doc-align` 建文档骨架)
-- ❌ 文档结构跟 doc-align 不一致(先跑 `wkevin-doc-align` 的 `transform` 模式改齐)
-- ❌ 用户要**加新需求/新 UC/IF**(用 `wkevin-idea-flesh`,不是 sprint-shape)
-- ❌ 用户要**实现 Sprint 内的 task**(用 `wkevin-task-dev`,不是 sprint-shape)
-- ❌ 用户要**评估文档质量**(用 `wkevin-doc-align`,不是 sprint-shape)
+- ❌ 项目没有 `docs/sprint.md` 或 `docs/tasks.md`(先跑 `wk-doc-align` 建文档骨架)
+- ❌ 文档结构跟 doc-align 不一致(先跑 `wk-doc-align` 的 `transform` 模式改齐)
+- ❌ 用户要**加新需求/新 UC/IF**(用 `wk-idea-flesh`,不是 sprint-shape)
+- ❌ 用户要**实现 Sprint 内的 task**(用 `wk-task-dev`,不是 sprint-shape)
+- ❌ 用户要**评估文档质量**(用 `wk-doc-align`,不是 sprint-shape)
 
 ---
 
@@ -370,7 +370,7 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 
 ## Worked Example
 
-**用户**:`/wkevin-sprint-shape 做 v0.5,主题批量导入,10 个 task`
+**用户**:`/wk-sprint-shape 做 v0.5,主题批量导入,10 个 task`
 
 **Step 2 意图识别**:
 
@@ -441,17 +441,17 @@ git checkout HEAD~1 -- docs/sprint.md
 git revert <commit-hash>
 ```
 
-回滚后建议跑 `wkevin-doc-align` 的 `evaluate` 模式确认 sprint.md 没破坏基线。
+回滚后建议跑 `wk-doc-align` 的 `evaluate` 模式确认 sprint.md 没破坏基线。
 
 ## 关联
 
 - **上游**:
-  - [`wkevin-idea-flesh`](../wkevin-idea-flesh/SKILL.md) — 把新 UC/IF 落到 tasks.md + sprint.md §2 Backlog,本 skill 从 §2 挑 task
-  - [`wkevin-doc-align`](../wkevin-doc-align/SKILL.md) — 评估 sprint.md 是否对齐 §1 Sprint + §2 Backlog 范式;本 skill 输出必须 pass 评估
+  - [`wk-idea-flesh`](../wk-idea-flesh/SKILL.md) — 把新 UC/IF 落到 tasks.md + sprint.md §2 Backlog,本 skill 从 §2 挑 task
+  - [`wk-doc-align`](../wk-doc-align/SKILL.md) — 评估 sprint.md 是否对齐 §1 Sprint + §2 Backlog 范式;本 skill 输出必须 pass 评估
 - **下游**:
-  - [`wkevin-task-dev`](../wkevin-task-dev/SKILL.md) — 实现本 skill 塑形的 §1 Sprint 段内 [ ] task;Prd/Add/Tasks 只读
+  - [`wk-task-dev`](../wk-task-dev/SKILL.md) — 实现本 skill 塑形的 §1 Sprint 段内 [ ] task;Prd/Add/Tasks 只读
 - **同族 pipeline**(塑形链):
-  - `wkevin-idea-flesh` → 把模糊想法 flesh out 到设计文档
-  - `wkevin-sprint-shape`(本 skill) → 把 backlog 塑形到 Sprint 段
-  - `wkevin-task-dev` → 把 Sprint 段的 [ ] 实际开发成 [x]
-- **配套**:本 skill 写完后若 Sprint 量大,建议跑 `wkevin-doc-align` 的 `evaluate` 模式做最终 sign-off
+  - `wk-idea-flesh` → 把模糊想法 flesh out 到设计文档
+  - `wk-sprint-shape`(本 skill) → 把 backlog 塑形到 Sprint 段
+  - `wk-task-dev` → 把 Sprint 段的 [ ] 实际开发成 [x]
+- **配套**:本 skill 写完后若 Sprint 量大,建议跑 `wk-doc-align` 的 `evaluate` 模式做最终 sign-off
