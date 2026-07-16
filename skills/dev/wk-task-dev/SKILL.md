@@ -50,8 +50,15 @@ description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X�
 2. 实现
 3. **跑 verification**（见下）
 4. 改 `sprint.md`：`[ ] → [x]`（成功）或 `[ ] → [!]`（见"### 需要决策的任务"）
-5. `git add` + `git commit`（带 `Co-Authored-By: Claude <noreply@anthropic.com>`）
+5. **`git add <本 task 改的代码文件> docs/sprint.md` + `git commit`**（带 `Co-Authored-By: Claude <noreply@anthropic.com>`）
 
+> **sprint.md `[x]/[!]` 翻牌必须在同一个 commit 里**(per-task commit)。
+>
+> 一个 `[ ]` task = 一个 `[x]` flip = 一个 commit。理由:
+>
+> - `git blame docs/sprint.md` 应该精确到每个 task 何时收尾
+> - `git log --grep='<UC-XX-YY>'` 与 sprint.md 状态天然对齐,**无需对照** commit body 与文档状态
+> - 中途中断(切换到其他任务)时,已完成 task 的 `[x]` 不会再被误批量 rollback
 > **prd.md / add.md / tasks.md 在本 skill 中只读** —— 只动 `sprint.md` 勾 [x] 状态,不动 UC/IF 定义或 Sprint 计划。
 
 **Baseline 处理**：
