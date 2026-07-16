@@ -293,7 +293,7 @@ done
 
 ```bash
 git add docs/sprint.md
-git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)"
+git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)"
 ```
 
 ---
@@ -309,7 +309,7 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 7. **不实现任务**—— WHY: 实现是 task-dev 的职责;本 skill 只塑形,不动代码。
 8. **依赖 scaffold 完整**(前驱在新 Sprint 或 Done)—— WHY: 否则 Sprint 开始后才发现前置缺失,等于 Sprint 失败。
 9. **Sprint 起止日期连贯**(不与历史 Sprint 重叠或大空隙)—— WHY: doc-align §6.2 nice-to-have;连贯的迭代节奏便于 retrospective。
-10. **commit message subject ≤ 60 字 + sprint 前缀**—— WHY: git log 可读性 + 与 idea-flesh/task-dev 风格一致。
+10. **commit message subject ≤ 60 字 + `sprint-shape:` 前缀**—— WHY: git log 可读性 + 直接体现所使用的 skill(`idea:` / `idea-flesh:` / `sprint-shape:` / `task-dev:` / `fix:` 等前缀对应不同 skill 或路径,git log 一眼可分辨);与传统 `sprint:` 前缀区分。
 11. **不创建新 §X 章节**(§3 Milestone Backlog / §4 Production Backlog)—— WHY: doc-align §2 + sprint-checklist.md §2 评估基线按 §1/§2;改结构要同步 doc-align,成本高。
 12. **主题聚类不强制**(用户可指定 Goal)—— WHY: 启发式是辅助,人最终拍板。
 
@@ -400,7 +400,7 @@ git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题聚类)
 
 ```bash
 git add docs/sprint.md
-git commit -m "sprint: 加 Sprint 3 Bulk-Onboard v0.5 (10 task, 主题批量导入)"
+git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10 task, 主题批量导入)"
 ```
 
 ---
