@@ -18,6 +18,11 @@ npx skills add https://github.com/wkevin/skills
 
 ## 开发类 Skills
 
+<p align="center">
+  <strong style="font-size:1.5em; color:#0d9488;">AI First -</strong>
+  <span style="font-size:1.4em; color:#f97316;">从想法到版本，人只做创造和决策，剩下的都交给 Agent。</span>
+</p>
+
 ![](./dev.drawio.svg)
 
 ### `wk-arch-decoder` - 架构解码器(从代码反推设计哲学)
