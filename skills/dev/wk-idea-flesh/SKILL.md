@@ -348,7 +348,39 @@ git add docs/prd.md
 # (flesh 跑完不产生任何 commit)
 ```
 
-commit message 按 §1.x 改动泛指:**"idea: <一句话描述 (UC/IF id 或升级范围)>"**。
+commit message 按 **3 段式**结构(subject + 3 段 body):
+
+```
+idea: <一句话描述 (UC/IF id 或升级范围)>
+
+>> original idea:
+
+<用户原始输入的完整原文,多个段落/条目都保留,不要总结/重写。引用必须 verbatim>
+
+>> 头脑风暴:
+
+需求: <需求维度的产出 — 形态 / persona / 场景 / 价值 / UC 拆分 / 优先级>
+方案: <方案维度的产出 — 架构影响 / 决策点 / 视图 / IF 拆分>
+任务: <任务维度的产出 — 排期 / 依赖 / 粒度>
+
+>> 文档改动
+
+- <file1> §<section> / <subsection>: <具体描述>
+- <file2> §<section>: <具体描述>
+- <不动项说明> (例如: prd.md 不动 / Sprint 6 已塑形)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**WHY 3 段式**:
+- `>> original idea` 段保留用户**完整原文**作为可追溯原始诉求(后续 git blame 时能立刻看到当时诉求,不被脑暴过程覆盖)
+- `>> 头脑风暴` 段固化 3 维度结论,让 commit reader 不必读对话历史就能理解决策理由
+- `>> 文档改动` 段是 doc-only commit 的核心交付清单,精准到 § 坐标 + 简述
+
+**变体**:
+- 纯迭代升级(只动 tasks.md 一段文):3 段都精简,`>> 文档改动` 只 1-2 行
+- 极小 polish(4 文档全不动):不 commit
+- 已 commit 的历史 commit 用此格式后,`git log --format=%B` 全文检索 "original idea" 即可追溯全部用户原始诉求
 
 ### Step 7:后续动作提示(可选)
 
@@ -373,7 +405,7 @@ commit 后提示用户:
 2. **每个 UC 至少 2-3 个子项(或 UC + IF 配套)** — WHY: 来自 tasks-checklist §1.1.3 实现细节嵌套规范;UC 没实现细节 = 占位。
 3. **UC / IF 编号避免冲突** — WHY: 编号冲突会让 git log 和检索定位失效。
 4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 task-dev 完成实现的工作流;本 skill 只管"加想法"。
-5. **commit message subject ≤ 60 字** — WHY: git log 可读性 + Conventional Commits 规范。
+5. **commit message subject ≤ 60 字 + 3 段式 body** — WHY: git log 可读性 + Conventional Commits 规范;3 段式结构(`>> original idea` / `>> 头脑风暴` / `>> 文档改动`)让后续 reader 不必读对话历史就能理解决策理由 + 追溯用户原始诉求(详见 Step 6 commit 模板)。
 6. **PRD 瘦身** — WHY: 已迁到 ADD 的内容(数据模型 / 技术栈等)写回 PRD 会双源失同步。
 7. **联动改动不拆 commit**(默认) — WHY: 单 commit 保证原子性,避免中间状态文档失同步。
 8. **不创建独立 `decisions/000N-xxx.md` 文件** — WHY: doc-align 不评估该路径;ADD §7 Decision View 才是 ADR 内容的归宿。
