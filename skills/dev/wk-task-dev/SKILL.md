@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`;父 bullet 状态辅助标记 `[~]` in-progress / `[!]` 阻塞 也可同 commit 翻,无需独立[N/M] 计数)。prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`;父 bullet 状态辅助标记 `[~]` in-progress / `[!]` 阻塞 也可同 commit 翻,无需独立[N/M] 计数)。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 子任务列表**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -129,7 +129,7 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 | Type       | 何时用                                                 |
 | ---------- | ------------------------------------------------------ |
 | `feat`     | 新功能 / 新 UC / 新 IF                                 |
-| `fix`      | 修 bug(对应 User Case / Inner Feature UC 段文"实现细节"中的"fix:"子项) |
+| `fix`      | 修 bug(对应 User Case / Inner Feature UC 段文"方案参考 / 实现建议 / DOD"提到的问题) |
 | `refactor` | 重构(无新功能无 bug 修复)                              |
 | `docs`     | 纯文档变更                                             |
 | `test`     | 加 / 改测试                                            |
