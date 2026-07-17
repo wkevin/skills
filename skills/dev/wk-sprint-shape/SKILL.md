@@ -352,7 +352,8 @@ git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题�
 
 ## Worked Example
 
-**用户**:`/wk-sprint-shape 做 v0.5,主题批量导入,10 个 task`
+<details>
+<summary><strong>用户</strong>: <code>/wk-sprint-shape 做 v0.5,主题批量导入,10 个 task</code> — 展开完整三因子塑形示例</summary>
 
 **Step 2 意图识别**:
 
@@ -397,6 +398,8 @@ git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题�
 git add docs/sprint.md
 git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10 task, 主题批量导入)"
 ```
+
+</details>
 
 ---
 
