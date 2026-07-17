@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`,或 `[—]/[N/M]` → `[x]`),prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`;父 bullet 状态辅助标记 `[~]` in-progress / `[!]` 阻塞 也可同 commit 翻,无需独立[N/M] 计数)。prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -27,12 +27,12 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
 
 ### 1. 解析 + 过滤
 
-- 解析 `$2` 为 task id 列表或 version
-- 若是 version:扫 `**/wk-task-dev UC-XX-YY**` 对应 version 覆盖的所有 UC/IF + `## Backlog` Backlog 桶 3 polish 段的 [ ],**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
-- 输出 `[version] 共 N 个 task,其中 [ ] = M 个待实现`
-  - M = 0 → 输出 `VERSION_COMPLETE: <version>`,停下
-  - M > 10 → 提示用户 "批量 N 个,按顺序还是指定子集?",等回复
+- 解析 `$2` 为 task id 列表
+- 若是 task id(UC-XX-YY / IF-XX-NN):读该 task 的 User Case / Inner Feature 段文 + 子任务列表,**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
+- 若是 `/status`:仅打印当前进度(不开发);聚合 `[ ]/[x]/[~]/[!]` 状态分布
+- 若是其他字符串(包括 `v0.X` 旧入口):输出 `TASK_NOT_FOUND: <arg>`,停下
 - 已 `[!]` 标记的任务 → 列入"需重提决策"清单(在 progress snapshot 里也带上)
+- M > 10 → 提示用户 "批量 N 个,按顺序还是指定子集?",等回复
 
 ### 2. 实现 + 提交
 
@@ -55,8 +55,7 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
    - **(c) 类型 / lint 通过**:与本 task 改动的文件相关的类型检查 + lint 通过;无关报错 cite baseline
 4. 改 `docs/tasks.md`(同 commit):
    - 子任务 `- [ ]` → `- [x]`
-   - 父 bullet inline `[P?][N/M]` → `[P?][x]`(当所有子任务完成时)
-   - 特殊情况:`[ ] → [!]`(需决策)/`[ ] → [~]`(中断)
+   - 特殊情况:`[ ] → [!]`(需决策)/ `[ ] → [~]`(中断);父 bullet inline 状态同 commit 翻
 5. **`git add <本 task 改的代码文件> docs/tasks.md` + `git commit`**(带 `Co-Authored-By: Claude <noreply@anthropic.com>`)
 
 > **tasks.md `[x]/[!]` 翻牌必须在同一个 commit 里**(per-task commit)。
@@ -66,7 +65,7 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
 > - `git blame docs/tasks.md` 应该精确到每个 task 何时收尾
 > - `git log --grep='<UC-XX-YY>'` 与 tasks.md 状态天然对齐,**无需对照** commit body 与文档状态
 > - 中途中断(切换到其他任务)时,已完成 task 的 [x] 不会再被误批量 rollback
->   **prd.md / add.md 在本 skill 中只读** —— 只动 `tasks.md` 子任务 `[-]` ↔ `[x]` 状态,不动 UC/IF 定义或 Version 表。
+>   **prd.md / add.md 在本 skill 中只读** —— 只动 `tasks.md` 子任务 `[-]` ↔ `[x]` 状态,不动 UC/IF 定义(Version 概念已废弃)。
 
 **Baseline 处理**:
 
@@ -144,5 +143,5 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 
 - **上游**:
   - `wk-idea-flesh` — 写 `tasks.md Backlog` raw / `User Case / Inner Feature 段` UC/IF 定义 + 子任务列表;**前提**:本 skill 接的 `[ ]` 子任务必须已在 User Case / Inner Feature 段文(Backlog raw 行不接,需 flesh 升级后才接)
-  - `wk-task-dev`(本 skill)→ 把 User Case / Inner Feature 段 子任务列表 `[ ]` 翻成 `[x]`(同 commit 翻父 inline `[N/M]` → `[x]`)
+  - `wk-task-dev`(本 skill)→ 把 User Case / Inner Feature 段 子任务列表 `[ ]` 翻成 `[x]`(同 commit,父 bullet inline `[~]`/`[!]` 状态也可翻)
 - **下游**:无;本 skill 是塑形链终点
