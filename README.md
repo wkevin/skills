@@ -10,7 +10,6 @@ npx skills add https://github.com/wkevin/skills
 │  │ ◻ wk-arch-decoder
 │  │ ◻ wk-doc-align
 │  │ ◻ wk-idea-flesh
-│  │ ◻ wk-sprint-shape
 │  └ ◻ wk-task-dev
 │  ◻ Utils
 │  └ ◻ wk-srt-translate
@@ -44,24 +43,23 @@ npx skills add https://github.com/wkevin/skills
 
 详见 [README](skills/dev/wk-arch-decoder/README.md)。
 
-### `wk-doc-align` - 评估文档四件套及提出改进意见
+### `wk-doc-align` - 评估文档三件套及提出改进意见
 
 **思考逻辑：**
 
 项目级开发时，AI 会生成很多类型文档，时间一长，docs 文件夹下充斥着 decision-notes、brainstorm-notes、changelog…不但人类逐步无法阅读，而且 AI 也会上下文爆炸。
 
-这些过程文档通常只有短暂的参考意义，因为 AI 可能在下次迭代就推翻了上次的技术架构 —— 这些逐步都无法被人类感知所以我的方法论是：只保留对人类有参考意义，人类可以参与互动的文档，我确定了4个，称之为四件套：
+这些过程文档通常只有短暂的参考意义，因为 AI 可能在下次迭代就推翻了上次的技术架构 —— 这些逐步都无法被人类感知所以我的方法论是：只保留对人类有参考意义，人类可以参与互动的文档，我确定了 3 个，称之为三件套：
 
 1. prd：产品需求
 2. add：架构设计
-3. tasks：UC/IF 定义（产品 catalog）
-4. sprint：Sprint 计划 + Product Backlog（工程排期）
+3. tasks：UC/IF 定义 + 状态 + Backlog（自包含 catalog）
 
-> 产品 catalog(tasks.md)跟 Sprint 排期(sprint.md)分离是 agile 方法论的核心 —— "想做什么" 跟 "现在做什么" 是两个独立问题。
+> tasks.md 自包含 catalog + 状态机 4 形态(`[ ]/[x]/[~]/[!]`) + Backlog(3 桶按设计成熟度) —— 不再有独立的 sprint.md。
 
 **工作原理：**
 
-- 评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` / `docs/sprint.md` 是否符合 PRD + ADD + Tasks + Sprint 方法论。
+- 评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 是否符合 PRD + ADD + Tasks 方法论。
 - 输出 critical / important / nice-to-have 三级 issue 列表 + PASS / FIX / REWRITE verdict。**不是写作工具**,只评估不修改一字。
 - 用户可根据输出决策要不要重构或修改文档
 
@@ -77,7 +75,7 @@ npx skills add https://github.com/wkevin/skills
 评估当前项目的文档，给出修改建议。
 ```
 
-### `wk-idea-flesh` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks/sprint）
+### `wk-idea-flesh` - 3 维度头脑风暴驱动的想法落地（拆分到 prd/add/tasks）
 
 **思考逻辑：**
 
@@ -85,18 +83,18 @@ npx skills add https://github.com/wkevin/skills
 
 **工作原理：**
 
-- 核心特性：3 维度头脑风暴 + 直接联动改 4 文档。
-  - 跟用户多轮交互，把 idea 的**需求 / 方案 / 任务**3 个维度各自清晰化（共 3-6 轮 `AskUserQuestion`），然后**直接联动修改 `prd.md` / `add.md` / `tasks.md` / `sprint.md` 四个文档**。新产生的 UC/IF 同时进入 `tasks.md §1.1/§1.2`（完整定义）+ `sprint.md §2 Product Backlog`（等待排期）。
+- 核心特性：3 维度头脑风暴 + 按各自触发原则联动改 3 文档。
+  - 跟用户多轮交互，把 idea 的**需求 / 方案 / 任务**3 个维度各自清晰化（共 3-6 轮 `AskUserQuestion`），然后**直接联动修改 `prd.md` / `add.md` / `tasks.md` 三个文档**（每个文档按自身触发原则判断是否要改，**没有"必动"**）。新产生的 UC/IF 进入 `tasks.md User Case / Inner Feature` 段文（完整定义 + 子任务列表 `[ ]`）+ 从 `tasks.md Backlog` 移除对应 raw 行（flesh 闭环）。
   - skill 内部决定 3 维度讨论深度（简单想法 3 轮，复杂想法 6 轮），不需要用户预先指定 [Type] / Mode / 排期。
 - **不接**"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作 —— 那是版本规划的事，不属于"新想法"。
 
 3 维度头脑风暴（每个维度必谈）：
 
-| 维度     | 讨论什么                                 | 落到哪个文档                           |
-| -------- | ---------------------------------------- | -------------------------------------- |
-| **需求** | persona / 场景 / 价值 / 优先级 / UC 拆分 | `prd.md` §2/§4 + `tasks.md §1.1 UC`    |
-| **方案** | 架构影响 / 决策点 / IF 拆分 / 视图更新   | `add.md` §1-§5/§7 + `tasks.md §1.2 IF` |
-| **任务** | 排期意向 / 依赖 / 粒度                   | `sprint.md §2 Product Backlog`（暂存） |
+| 维度     | 讨论什么                                 | 落到哪个文档                                                                                 |
+| -------- | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **需求** | persona / 场景 / 价值 / 优先级 / UC 拆分 | `prd.md` §2/§4 + `tasks.md User Case 段`                                                     |
+| **方案** | 架构影响 / 决策点 / IF 拆分 / 视图更新   | `add.md` §1-§5/§7 + `tasks.md Inner Feature 段`                                              |
+| **任务** | 排期意向 / 依赖 / 粒度                   | `tasks.md Backlog`（raw 想法暂存，3 桶）/ User Case & Inner Feature 子任务列表（`[ ]` 拆解） |
 
 **使用方法：**
 
@@ -104,46 +102,22 @@ npx skills add https://github.com/wkevin/skills
 /wk-idea-flesh 我要赚到一个小目标
 ```
 
-### `wk-sprint-shape` - 从 backlog 塑形一个 Sprint（拆首次实现/升级/fix 三子节）
+### `wk-task-dev` - 批量实现 tasks.md 子任务列表 `[ ]` 的 task
 
 **思考逻辑：**
 
-`wk-idea-flesh` 把模糊想法落到 `sprint.md §2 Product Backlog` 后，`wk-task-dev` 实现 `sprint.md §1 Sprint` 段内的 task——但中间缺一步："**哪些 UC/IF 该进哪个 Sprint？**"。人工排 Sprint 容易忽略依赖关系、凑不出主题，最后 Sprint 段像 task 列表没灵魂。
-
-本 skill 在两者之间做 **agile Sprint Planning 的工程化**：通过「优先级 + 依赖图 + 主题聚类」三因子算法，从 backlog 挑 10-20 个 UC/IF，塑形一个 Sprint 段（代号 / 起止日期 / Goal / Version / 🟡 Planning 状态），**仅修改 `sprint.md`**，绝不改 PRD/ADD/Tasks。
+当 `tasks.md` 的 User Case / Inner Feature 段文里累积了一堆待开发的子任务（`[ ]`），人工逐个去实现效率太低，容易遗漏。批量启动 AI 自动化实现是更高效的方式 —— AI 一次性拉取指定 task id 列表（`UC-XX-YY` / `IF-XX-YY`），按依赖顺序逐个实现，每个 task 完成就 commit 一次，过程中无需确认，适合作业给 AI 长跑。
 
 **工作原理：**
-
-- **三因子塑形算法**：
-  - **优先级**：`tasks.md §1.1/§1.2` 标 `[P0/P1/P2/P3]` → 映射到 Sprint/Milestone/Production 三层候选池（内部 filter，不写文件）
-  - **依赖图**：`tasks.md` 实现细节里显式"依赖"字段 + 扫描其他 UC/IF 编号交叉引用（推断）→ 拓扑排序生成 scaffold 序列
-  - **主题聚类**：UC/IF 标题 + agile 三段式 + 实现细节分词聚类 → 主导主题 = Sprint 代号 + Goal
-- **Sprint 内拆三子节**（doc-align §1.2.1）：首次实现 / 升级 / bug fix，每条标注前缀。
-- **硬约束**：每个 Sprint 10-20 task（Scrum velocity 上限），Active Sprint ≤ 1（doc-align §1.4.1），Sprint 状态默认 🟡 Planning（不擅自激活）。
+读取 `tasks.md User Case / Inner Feature` 段文中指定 task id（`UC-XX-YY` / `IF-XX-YY`），从 `prd.md` 取场景/价值 + `add.md` 取架构/决策（只读），按依赖顺序逐个实现，完成后**仅在 `tasks.md` 把对应子任务 `- [ ]` → `- [x]`** 并做一次 git commit（`feat(UC-XX-YY): ...` 风格）。`prd.md` / `add.md` 在本 skill 中**只读**。整个流程不需中途打断，适合长时间无人工干预的批量开发。
 
 **使用方法：**
 
 ```sh
-/wk-sprint-shape 做 v0.5,主题是批量导入
-/wk-sprint-shape 规划下一版,10 个 task
-/wk-sprint-shape 修改 Sprint 2,加 UC-04-05
-```
-
-### `wk-task-dev` - 批量开发 sprint.md Sprint 段中的 task
-
-**思考逻辑：**
-
-当 `sprint.md §2 Product Backlog` 里累积了一堆待开发的 UC/IF,并被排进 §1 Sprint 段后,人工逐个去实现效率太低,容易遗漏。批量启动 AI 自动化实现是更高效的方式 —— AI 一次性拉取指定 Version 或 task id 列表,按依赖顺序逐个实现,每个 task 完成就 commit 一次,过程中无需确认,适合作业给 AI 长跑。
-
-**工作原理：**
-读取 `sprint.md §1` 中指定 Version(精确匹配 `v0.5` / `v1.0-rc` 等)或单个 task id(`UC-XX-YY` / `IF-XX-YY`),从 `tasks.md`/`prd.md`/`add.md` 取 UC/IF 完整定义与上下文(只读),按顺序逐个实现,完成后**仅在 `sprint.md` 把对应 task 状态 `[]` → `[x]`** 并做一次 git commit(`feat(UC-XX-YY): ...` 风格)。`prd.md` / `add.md` / `tasks.md` 在本 skill 中**只读**。整个流程不需中途打断,适合长时间无人工干预的批量开发。
-
-**使用方法：**
-
-```sh
-/wk-task-dev UC-03-02         # 实现 id 为 UC-03-02 的 User Case
-/wk-task-dev IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature
-/wk-task-dev v0.5             # 实现 v0.5 version 的所有 tasks（含 UC、IF）
+/wk-task-dev UC-03-02         # 实现 id 为 UC-03-02 的 User Case 子任务
+/wk-task-dev IF-04-01         # 实现 id 为 IF-04-01 的 Inner Feature 子任务
+/wk-task-dev status           # 仅打印当前进度(不开发)
+/wk-task-dev all tasks        # 实现所有未开发 task
 ```
 
 ## 效率类 Skills
