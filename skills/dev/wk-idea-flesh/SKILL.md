@@ -1,6 +1,6 @@
 ---
 name: wk-idea-flesh
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,4 个文档(prd/add/tasks/sprint)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md §1.1/§1.2 看 UC/IF 定义(新/升级/删除),sprint.md §2/§3 看排期/状态变更。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 §1.1/§1.2 既有条目而不是另开新 ID。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / btw, ..."、或任何模糊想法描述。
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,4 个文档(prd/add/tasks/sprint)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md §1.1/§1.2 看 UC/IF 定义(新/升级/删除),sprint.md §2/§3 看排期/状态变更。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 §1.1/§1.2 既有条目而不是另开新 ID。**核心因果**:idea 落地后 prd/add/tasks 任何一处增加新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级),都必须在 sprint.md §2 Backlog 同步留一条对应条目 — sprint.md 是"待办池"角色,任何地方出现新工作必须回流到待办池,否则后续 task-dev 会漏。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / 已有 IF 加新步骤 / btw, ..."、或任何模糊想法描述。
 ---
 
 # /idea-flesh — 3 维度头脑风暴驱动的想法落地
@@ -412,7 +412,7 @@ commit 后提示用户:
 9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: doc-align 不评估这两个文件;请改用 add.md / tasks.md。
 10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
-12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY: §1.1/§1.2 是完整定义(给 task-dev 实现用),§2 是暂存状态(等 Sprint 排期)。
+12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY:sprint.md §2 是"待办池"角色,任何地方出现新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级)都必须回流到 §2,否则后续 task-dev 会疏漏 —— §1.x 是完整定义(给 task-dev 实现用),§2 是暂存状态(等 Sprint 排期),两者强绑定。
 13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wk-sprint-shape 或后续版本规划的事,不属于"新想法"。
 
 ## 模板
