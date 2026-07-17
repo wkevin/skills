@@ -5,7 +5,7 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 
 # /doc-align — 三件套文档评估器 / 改造器
 
-评估 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 是否符合 PRD + ADD + Tasks 三文档方法论。**两种模式**:
+**两种模式**:
 
 - **`evaluate`**(默认):只评估已有文档,输出 issue 列表 + verdict
 - **`transform`**:评估 + 修复路线图 + 章节对位 + 联动扫描 + commit 编排 → 闭环到 PASS
