@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。读 sprint.md 取 Version + 进度 → 读 docs/tasks.md §1.1/§1.2 + docs/prd.md + docs/add.md 取 UC/IF 完整定义与上下文 → 实现后**仅更新 sprint.md**（勾 [x]），prd/add/tasks.md 在本 skill 中**只读**。skill workflow 自身定义了批量 commit 节奏——每个 task 完成一次 `git commit`，正常情况下不需要逐条询问用户确认 'commit'。若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"），仍以全局 memory 为准；否则按本 skill 的批量节奏执行。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X）或单 task id（UC-XX-YY / IF-XX-YY）的所有 [ ] 项。读 sprint.md 取进度 → 读 tasks.md §1.1/§1.2 + prd.md + add.md 取 UC/IF 上下文 → 实现后**仅更新 sprint.md 勾 [x]**，prd/add/tasks 只读。触发词："/task-dev"、"实现 v0.X"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -80,6 +80,12 @@ description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X�
 - batch 全部完成后给最终 summary：commit 列表 + 跳过的 `[!]` + 剩余 `[ ]`
 
 ## 边界协议
+
+### Commit 节奏与全局 memory 互斥
+
+本 skill workflow 自身定义批量 commit 节奏 —— 每个 task 完成一次 `git commit`,**正常情况下不需要逐条询问用户确认 'commit'**。
+
+若全局 `git-requires-confirmation` memory 设了强约束（"严格等待用户确认才 commit"）,**以全局 memory 为准**,本 skill 的批量节奏失效,逐 task 停下来等用户确认。这是用户层面的硬护栏,本 skill 不绕开。
 
 ### 需要决策的任务（[P3] escape hatch）
 
