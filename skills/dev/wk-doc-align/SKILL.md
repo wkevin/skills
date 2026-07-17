@@ -10,8 +10,6 @@ description: 评估项目最重要的四件套文档——prd.md / add.md / task
 - **`evaluate`**(默认):只评估已有文档,输出 issue 列表 + verdict
 - **`transform`**:评估 + 修复路线图 + 章节对位 + 联动扫描 + commit 编排 → 闭环到 PASS
 
-> **新增 transform 模式的原因**:v1 仅做评估,用户拿到 issue 列表后还要自己写大量修复步骤(章节搬迁、跨文档联动、commit 编排),skill 没覆盖。v2 把"评估 + 修复"做成完整工作流。
-
 ## 何时使用
 
 | 触发场景 | 模式 |
