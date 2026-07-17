@@ -297,20 +297,28 @@ git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题�
 
 ---
 
-## 硬约束(含 WHY)
+## 硬约束(含 WHY + 反例)
 
 1. **仅修改 `docs/sprint.md`**(§1 + 可选 §2 Backlog 清理)—— WHY: 与 task-dev 写入边界对齐;PRD/ADD/Tasks 是 idea-flesh 的职责。
+   反例: 改动 PRD/ADD/Tasks —— 越权,是 idea-flesh 的工作;新 Sprint 收了 task 但 §2 还有同一行 = 重复,必须联动清理。
 2. **每个新 Sprint 10-20 task**(默认)—— WHY: Scrum 团队典型 velocity;过多 = sprint 失控,过少 = 浪费迭代。
+   反例: task 数 < 10 或 > 20 不符合 Scrum velocity,doc-align 会标记(用户明确接受 < 10 时要在 commit body 记录)。
 3. **Sprint 内三子节拆分只在 ≥2 个非空时生成**—— WHY: 单子类非空时拆子节是无意义冗余;硬约束保持 doc-align §1.2.1 的精神但放宽到按需拆分。
+   反例: 3 子类(首次实现 / 升级 / bug fix)都强加,即使子类空 —— 输出臃肿,用户得手动删。
 4. **新 Sprint 状态由用户手改**—— WHY: 状态机推进(Planning → Active → Done)是业务承诺,本 skill 不擅自激活;用户可在 commit 后手改段头加 `Active` 关键词。
+   反例: 新 Sprint 状态直接 Active —— 业务承诺过早。
 5. **Active Sprint ≤ 1**—— WHY: doc-align §1.4.1;多 Active 并行会让 commit 节奏混乱。
+   反例: 同时多 Active Sprint —— doc-align §1.4.1 违规。
 6. **不创建任务本身**(只搬运已有 UC/IF)—— WHY: 新 UC/IF 由 idea-flesh 负责;本 skill 只做"从池子挑 task 入 Sprint"。
 7. **不实现任务**—— WHY: 实现是 task-dev 的职责;本 skill 只塑形,不动代码。
 8. **依赖 scaffold 完整**(前驱在新 Sprint 或 Done)—— WHY: 否则 Sprint 开始后才发现前置缺失,等于 Sprint 失败。
+   反例: 跳过依赖检查 —— Scaffold 残缺,Sprint 开始才发现前置缺失。
 9. **Sprint 起止日期连贯**(不与历史 Sprint 重叠或大空隙)—— WHY: doc-align §6.2 nice-to-have;连贯的迭代节奏便于 retrospective。
 10. **commit message subject ≤ 60 字 + `sprint-shape:` 前缀**—— WHY: git log 可读性 + 直接体现所使用的 skill(`idea:` / `idea-flesh:` / `sprint-shape:` / `task-dev:` / `fix:` 等前缀对应不同 skill 或路径,git log 一眼可分辨);与传统 `sprint:` 前缀区分。
 11. **不创建新 §X 章节**(§3 Milestone Backlog / §4 Production Backlog)—— WHY: doc-align §2 + sprint-checklist.md §2 评估基线按 §1/§2;改结构要同步 doc-align,成本高。
 12. **主题聚类不强制**(用户可指定 Goal)—— WHY: 启发式是辅助,人最终拍板。
+    反例: 跳过主题聚类且不指定代号/Goal —— Sprint 没有代号/版本,只剩 task 列表,失去 Sprint 灵魂。
+13. **代号风格与已有 Sprint 对齐**—— WHY: 代号风格不一致(有的 "Bulk Onboard" 有的 "bulk-onboard")会让 sprint.md 阅读感割裂;沿用项目已有风格(Ubuntu 小写连字符 / Pascal-Case 等)。
 
 ## 模板
 
@@ -341,18 +349,6 @@ git commit -m "sprint-shape: 加 Sprint 3 Bulk-Onboard v0.5 (10-20 task, 主题�
 
 # 新(Sprint 3 已收,§2 删除该行)
 ```
-
-## 联动反模式
-
-- ❌ **跳过依赖检查** — Scaffold 残缺,Sprint 开始才发现前置缺失
-- ❌ **task 数 < 10 或 > 20** — 不符合 Scrum velocity,doc-align 会标记(用户明确接受 < 10 时记录)
-- ❌ **3 子类都强加**(即使子类空)— 输出臃肿,需用户手动删
-- ❌ **新 Sprint 状态直接 Active** — 业务承诺过早
-- ❌ **同时多 Active Sprint** — doc-align §1.4.1 违规
-- ❌ **改动 PRD/ADD/Tasks** — 越权;那是 idea-flesh 的工作
-- ❌ **不检查 §2 Backlog 联动清理** — 新 Sprint 收了 task 但 §2 还有同一行 = 重复
-- ❌ **跳过主题聚类** — Sprint 没有代号/版本,只剩 task 列表,失去 Sprint 灵魂
-- ❌ **代号风格不一致** — 有的 "Bulk Onboard" 有的 "bulk-onboard",与已有 Sprint 代号风格对齐
 
 ## Worked Example
 
