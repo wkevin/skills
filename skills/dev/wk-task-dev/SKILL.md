@@ -48,7 +48,10 @@ description: 批量实现 docs/sprint.md §1 Sprint 段中指定 Version（v0.X�
 
 1. 读相关上下文(`docs/tasks.md §1.1/§1.2` 取 UC/IF 完整定义,`docs/prd.md` 取场景/价值,`docs/add.md` 取架构/决策)
 2. 实现
-3. **跑 verification**（见下）
+3. **跑 verification**（通过标准见下,**三条全过才算 verification OK**）：
+   - **(a) 新增测试通过**:本 task 新加的测试（如有）必须跑过;无新测试的纯 refactor / docs task 跳过此项
+   - **(b) 既有测试不 regress**:相关测试套件全绿;如有 baseline 失败需 cite baseline commit
+   - **(c) 类型 / lint 通过**:与本 task 改动的文件相关的类型检查 + lint 通过;无关报错 cite baseline
 4. 改 `sprint.md`：`[ ] → [x]`（成功）或 `[ ] → [!]`（见"### 需要决策的任务"）
 5. **`git add <本 task 改的代码文件> docs/sprint.md` + `git commit`**（带 `Co-Authored-By: Claude <noreply@anthropic.com>`）
 
