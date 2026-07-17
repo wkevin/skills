@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md §1.1 / §1.2 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 或 Version v0.X 入口)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` + 父 bullet 状态前置 markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`,或 `[—]/[N/M]` → `[x]`),prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 v0.X"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`,或 `[—]/[N/M]` → `[x]`),prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -10,7 +10,7 @@ description: 批量实现 docs/tasks.md §1.1 / §1.2 段文内**子任务列表
 ```
 /wk-task-dev UC-03-02         # 实现单 task
 /wk-task-dev IF-04-01         # 实现单 task
-/wk-task-dev v0.5             # 实现指定 version(Version 表覆盖的所有 [ ])
+# /wk-task-dev v0.X 已禁用(tasks.md 无 Version 段;用 UC-XX-YY / IF-XX-NN 单 task 入口)
 /wk-task-dev status           # 仅打印当前进度(不开发)
 ```
 
@@ -21,14 +21,14 @@ description: 批量实现 docs/tasks.md §1.1 / §1.2 段文内**子任务列表
 /wk-task-dev Sprint-N         # sprint 概念已废弃
 ```
 
-`version` 必须精确匹配 `docs/tasks.md ## Version` 表中 Version 字符串(如 `v0.5`),否则输出 `VERSION_NOT_FOUND: <arg>` 并停止。
+> 注:旧 `version` 入口已删除。Version 不在 tasks.md 自包含;以单 task id 入口为准。
 
 ## 工作流程
 
 ### 1. 解析 + 过滤
 
 - 解析 `$2` 为 task id 列表或 version
-- 若是 version:扫 `docs/tasks.md ## Version` 对应 version 覆盖的所有 UC/IF + `## §0 Backlog` §0.3 polish 段的 [ ],**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
+- 若是 version:扫 `**/wk-task-dev UC-XX-YY**` 对应 version 覆盖的所有 UC/IF + `## Backlog` Backlog 桶 3 polish 段的 [ ],**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
 - 输出 `[version] 共 N 个 task,其中 [ ] = M 个待实现`
   - M = 0 → 输出 `VERSION_COMPLETE: <version>`,停下
   - M > 10 → 提示用户 "批量 N 个,按顺序还是指定子集?",等回复
@@ -47,7 +47,7 @@ description: 批量实现 docs/tasks.md §1.1 / §1.2 段文内**子任务列表
 
 **对每个 task**:
 
-1. 读相关上下文(`docs/tasks.md §1.1/§1.2` 取 UC/IF 完整定义,`docs/prd.md` 取场景/价值,`docs/add.md` 取架构/决策)
+1. 读相关上下文(`docs/tasks.md User Case / Inner Feature` 取 UC/IF 完整定义,`docs/prd.md` 取场景/价值,`docs/add.md` 取架构/决策)
 2. 实现
 3. **跑 verification**(通过标准见下,**三条全过才算 verification OK**):
    - **(a) 新增测试通过**:本 task 新加的测试(如有)必须跑过;无新测试的纯 refactor / docs task 跳过此项
@@ -119,9 +119,9 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 - 下次启动该 batch 时自动 surface `[!]` / `[~]`(参见"1. 解析 + 过滤")
 - batch 结束后给"已完成 + 跳过 + 剩余"清单
 
-### §0 Backlog 不接(历史 §2 不接的迁移)
+### Backlog 不接(历史 §2 不接的迁移)
 
-`docs/tasks.md ## §0 Backlog` 的 raw 行(§0.1 raw + §0.2 占位)**本 skill 不接** —— 必须先由 `wk-idea-flesh` 升级到 §1.x(完整 UC/IF 三段式定义 + 子任务列表 `[ ]`)才能接。任务提交流程:`§0 raw → flesh → §1.x 段文(+ 子任务列表 [ ]) → task-dev` 三步链。这与历史 §2 Backlog 不接规则一致,迁移无缝。
+`docs/tasks.md Backlog` 桶 1 / 桶 2 raw 行**本 skill 不接** —— 必须先由 `wk-idea-flesh` 升级到 User Case / Inner Feature(完整 UC/IF 三段式定义 + 子任务列表 `[ ]`)才能接。任务提交流程:`Backlog 桶 1/2 raw → flesh → User Case / Inner Feature 段文(+ 子任务列表 [ ]) → task-dev` 三步链。Backlog 桶 3(`已方案设计/有 Task ID`)也不接,直接由对应 User Case / Inner Feature 段文读,不通过 Backlog 间接找。
 
 ## git 提交规范
 
@@ -130,7 +130,7 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 | Type       | 何时用                                                 |
 | ---------- | ------------------------------------------------------ |
 | `feat`     | 新功能 / 新 UC / 新 IF                                 |
-| `fix`      | 修 bug(对应 §1.1/§1.2 UC 段文"实现细节"中的"fix:"子项) |
+| `fix`      | 修 bug(对应 User Case / Inner Feature UC 段文"实现细节"中的"fix:"子项) |
 | `refactor` | 重构(无新功能无 bug 修复)                              |
 | `docs`     | 纯文档变更                                             |
 | `test`     | 加 / 改测试                                            |
@@ -143,6 +143,6 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 ## 关联
 
 - **上游**:
-  - `wk-idea-flesh` — 写 `tasks.md §0 Backlog` raw / `§1.x` UC/IF 定义 + 子任务列表;**前提**:本 skill 接的 `[ ]` 子任务必须已在 §1.x 段文(§0 raw 行不接,需 flesh 升级后才接)
-  - `wk-task-dev`(本 skill)→ 把 §1.x 子任务列表 `[ ]` 翻成 `[x]`(同 commit 翻父 inline `[N/M]` → `[x]`)
+  - `wk-idea-flesh` — 写 `tasks.md Backlog` raw / `User Case / Inner Feature 段` UC/IF 定义 + 子任务列表;**前提**:本 skill 接的 `[ ]` 子任务必须已在 User Case / Inner Feature 段文(Backlog raw 行不接,需 flesh 升级后才接)
+  - `wk-task-dev`(本 skill)→ 把 User Case / Inner Feature 段 子任务列表 `[ ]` 翻成 `[x]`(同 commit 翻父 inline `[N/M]` → `[x]`)
 - **下游**:无;本 skill 是塑形链终点

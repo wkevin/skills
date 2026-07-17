@@ -1,6 +1,6 @@
 ---
 name: wk-doc-align
-description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 + Backlog + Version)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
+description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 + Backlog)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
 # /doc-align — 三件套文档评估器 / 改造器
@@ -32,7 +32,7 @@ description: 评估项目最重要的三件套文档——prd.md / add.md / task
 
 ```
    prd (上游)   ─→   add (上游)   ─→   tasks (下游,自包含)
-  (产品契约)        (架构契约)         (catalog + 状态 + Backlog + Version)
+  (产品契约)        (架构契约)         (catalog + 状态 + Backlog)
      │                 │                  │
   不能引 ↓           不能引 ↓          (可任意引上游)
    add 内部          tasks 内部 UC/IF
@@ -75,10 +75,10 @@ grep -nE 'add\.md §|add\.md#|tasks\.md (UC|IF)-[0-9]+-[0-9]+' docs/prd.md
 grep -nE '(UC|IF)-[0-9]+-[0-9]+' docs/add.md
 
 # tasks.md → 自包含,无下游约束
-# (校验 §0 Backlog 引用的 UC/IF 都在 §1.x,§Version 唯一 active)
+# (校验 Backlog 引用的 UC/IF 都在 User Case / Inner Feature 段,§Version 唯一 active)
 ```
 
-**反模式提醒**:本约束跟"是否需要下游信息"无关。**需要引用时,改用语义描述**("该字段由三文件拆分保护" 而非 "IF-01-02 三文件拆分"),而不是写"详见 tasks.md §1.1 UC-01-01"。
+**反模式提醒**:本约束跟"是否需要下游信息"无关。**需要引用时,改用语义描述**("该字段由三文件拆分保护" 而非 "IF-01-02 三文件拆分"),而不是写"详见 tasks.md User Case UC-01-01"。
 
 ---
 
@@ -91,7 +91,7 @@ grep -nE '(UC|IF)-[0-9]+-[0-9]+' docs/add.md
 | #   | 反模式                                                                   | 案例                                                           | 替代方案                                                                         |
 | --- | ------------------------------------------------------------------------ | -------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | 1   | **加 "**最后更新**: YYYY-MM-DD / **配套**: [prd.md] ..." 前言**          | 3 个文件头部都加了一段 "## 配套: [...]" "## 最后更新: ..."     | 完全不加。版本控制有 git;交叉引用 main 文件名就够                                |
-| 2   | **tasks.md 主动加 §3 决策依赖(从 §1.x 抽)**                              | 实施时新增 70 行,用户全部删除                                  | tasks.md 应**以 §1.x catalog + 状态为主**。决策依赖是 nice-to-have,按需保留      |
+| 2   | **tasks.md 主动加 §3 决策依赖(从 User Case / Inner Feature 段 抽)**                              | 实施时新增 70 行,用户全部删除                                  | tasks.md 应**以 User Case / Inner Feature 段 catalog + 状态为主**。决策依赖是 nice-to-have,按需保留      |
 | 4   | **PRD 严格 §1-§9 编号**                                                  | 实施时 §7 里程碑 / §8 成功指标 / §9 风险 死板编号,用户合并重排 | §X 编号**是建议不是强制**。项目可自由合并(§7 里程碑并入 §6 roadmap;§8 风险变 §7) |
 | 5   | **tasks.md 用 `## 1. 功能特性 > ### 1.1 User Case > #### UC-01` 深嵌套** | 实施时 4 级嵌套,用户展平为 `## User Case / ### UC-01`          | **扁平化**:`## User Case` / `## Inner Feature` / `### UC-01`                     |
 | 6   | **每个主文档头部都加 "## 文档定位" 段(讲依赖方向)**                      | 实施时 3 处都加,user 把内容挪到了 `docs/README.md` 集中        | "文档定位" + "依赖方向" 集中在 `docs/README.md`,主文档不重复                     |
@@ -153,8 +153,8 @@ grep -nE '(UC|IF)-[0-9]+-[0-9]+' docs/add.md
 
 | 严重度           | 含义                          | 触发条件举例                                                                                                                                                                      |
 | ---------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks §1 父 bullet 状态 `[x]` 与子任务全部 [x] 不一致;**上游文档引用下游文档内部内容(UC/IF/DA/§X 锚点)**;tasks.md `## Version` 当前 active version > 1 |
-| **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3;Sprint 状态与 git log 脱节                                                                                                    |
+| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks 父 bullet 状态 `[x]` 与子任务全部 [x] 不一致;**上游文档引用下游文档内部内容(UC/IF/DA/§X 锚点)**;tasks.md Backlog raw 行引用了未在 User Case / Inner Feature 定义的 UC/IF |
+| **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3                                                                                                                                |
 | **nice-to-have** | 锦上添花                      | mermaid 解读文字短;Sprint 缺代号;Product Backlog 编号未对齐 sprint-checklist §6.5                                                                                                 |
 
 ### Step 5:输出评估报告
@@ -264,7 +264,7 @@ Step 10: 验证闭环(回到 evaluate 模式复评)
 
 **联动错位检测**(高频问题):
 
-- PRD §4 UC 编号跟 tasks §1.1 UC 编号对不上(单数字 vs 双数字)
+- PRD §4 UC 编号跟 User Case UC 编号对不上(单数字 vs 双数字)
 - tasks §5 commit hash 跟 git log 对不上
 - add.md §7 ADR 引用的 commit hash 在 4ef9c68(squash)内 — 必须标注"(squash)"
 - **上游文档出现下游 ID / 章节锚点**(v3 新增,见专项扫描)
@@ -277,7 +277,7 @@ Step 10: 验证闭环(回到 evaluate 模式复评)
 | -------- | ------------------------------------ | ------------------------ | ----------------------------------- | ----------------- |
 | Batch 1  | add.md 骨架 / 新增(独立)             | 2-3h                     | 无                                  | 与 PRD §1-§5 并行 |
 | Batch 2  | add.md §7 18 ADR + §10 Critical Lens | 3-4h                     | 依赖 git log 完整扫                 | 串行              |
-| Batch 3  | PRD 章节对位 + 重写                  | 2-3h                     | 依赖 add.md §0-§2                   | 串行              |
+| Batch 3  | PRD 章节对位 + 重写                  | 2-3h                     | 依赖 add.md §0-§2(ADD 内部结构,沿用)                   | 串行              |
 | Batch 4  | tasks.md UC/IF 范式转换              | 3-4h                     | 依赖 PRD §4 UC 编号 + add.md §7 ADR | 串行              |
 | Batch 5  | 交叉验证 + 一次性 commit             | 1h                       | 必须串行                            | —                 |
 | **总计** |                                      | **12-15h**(1.5-2 工作日) |                                     |                   |
@@ -388,7 +388,7 @@ docs: rewrite PRD/ADD/Tasks to doc-align schema
 ### transform 模式反模式
 
 - ❌ **半改半新进 git** — 必须用 `docs/_draft/` 中间目录 + 一次性 commit
-- ❌ **跨文档引用编号对不上就 commit** — PRD §4 UC-XX 必须跟 tasks.md §1.1 UC-XX-NN 一致(单数字 vs 双数字)
+- ❌ **跨文档引用编号对不上就 commit** — PRD §4 UC-XX 必须跟 tasks.md User Case UC-XX-NN 一致(单数字 vs 双数字)
 - ❌ **没有 commit 编排直接动手** — 不分 Batch 会导致依赖倒置(PRD 引用了不存在的 ADR)
 - ❌ **跳过 Step 10 验证闭环** — 没有复评就 claim 完工,可能留 critical 不知道
 - ❌ **上游引下游内容** — 在 prd.md / add.md / tasks.md 引用下游文档的 ID(UC/IF/DA-N)、章节锚点(§X / #anchor)、或具体描述。违反"上游不引下游"硬约束(v3 核心原则)
