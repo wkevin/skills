@@ -114,19 +114,11 @@ grep -nE 'sprint\.md §|sprint\.md#' docs/tasks.md
 | 7 | **每节做"职责单一"检查** | §10 Critical Lens 只列 3 毛病;不要塞 5+ 毛病变成"§10 Known Production Gaps" — checklist 11.10 严格 3 |
 | 8 | **文档头只保留 H1 标题** | 不加"## 最后更新 / 配套 / 文档定位" blockquote 段 — 这些放 README |
 
-### v3 实战复盘:用户手工调整做了什么
+### v3 实战复盘
 
-> commit `ca3cb2` 复盘:
-
-| 文件 | 用户删除的 | 用户保留的 |
-| --- | --- | --- |
-| `prd.md` | §0 文档定位 / 配套 / 最后更新前言 4 行;§6 范围外 8 行(合到 §6 roadmap 表格) | §1-§8 内容,重新编号 1-8 |
-| `add.md` | "## 最后更新 + 配套" 4 行 | 视图导航 + 全部 §1-§10 |
-| `tasks.md` | "## 最后更新 + 配套 + 文档范式" 多行 blockquote;§3 决策依赖整段;§4 M*-T* 映射附录整段 | §1 UC/IF catalog 主体(扁平化) |
-| `sprint.md` | §1-§4 标题结构;§4 Commit Reference Appendix 整段;最后更新 1 行 | MileStone 01/02 扁平结构 |
-| `docs/README.md` | — | **新增** "## 文档定位" 段(把 4 个文件头部都重复的内容集中到这里) |
-
-**WHY 用户会手工调整**:v3 实施的输出虽然"全面"但"繁杂",每个文件都堆了前言 + 跨文档索引 + 额外章节。**信息密度高 ≠ 可读**。transform 模式应输出"够用即可",多余内容交给用户按需添加。
+> transform 模式在 v3 实施后被用户手工瘦身,具体删除/保留清单见 [references/v3-lessons.md](./references/v3-lessons.md)。
+>
+> **核心结论**:**信息密度高 ≠ 可读**。transform 模式应输出"够用即可",多余内容交给用户按需添加。
 
 ---
 
