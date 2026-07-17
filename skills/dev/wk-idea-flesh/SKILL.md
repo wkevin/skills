@@ -399,21 +399,36 @@ commit 后提示用户:
 
 ---
 
-## 硬约束(含 WHY)
+## 硬约束(含 WHY + 反例)
 
 1. **不修改代码** — WHY: 本 skill 只管文档;代码实应用 `dev:end-to-end` / `ultracode` 模式。
+   反例: 联动改完文档顺手改 `src/`。
 2. **每个 UC 至少 2-3 个子项(或 UC + IF 配套)** — WHY: 来自 tasks-checklist §1.1.3 实现细节嵌套规范;UC 没实现细节 = 占位。
+   反例: UC 写 "I want to" 没翻译成 "我希望" 三段式;UC 段无实现细节嵌套。
 3. **UC / IF 编号避免冲突** — WHY: 编号冲突会让 git log 和检索定位失效。
 4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 task-dev 完成实现的工作流;本 skill 只管"加想法"。
+   反例: UC 段带 `[x]` —— 状态归 `sprint.md §1`。
 5. **commit message subject ≤ 60 字 + 3 段式 body** — WHY: git log 可读性 + Conventional Commits 规范;3 段式结构(`>> original idea` / `>> 头脑风暴` / `>> 文档改动`)让后续 reader 不必读对话历史就能理解决策理由 + 追溯用户原始诉求(详见 Step 6 commit 模板)。
 6. **PRD 瘦身** — WHY: 已迁到 ADD 的内容(数据模型 / 技术栈等)写回 PRD 会双源失同步。
+   反例: 把数据模型 / 技术栈重新写回 PRD(doc-align 视为已迁出章节)。
 7. **联动改动不拆 commit**(默认) — WHY: 单 commit 保证原子性,避免中间状态文档失同步。
+   反例: prd/add/tasks/sprint 拆多个 commit 但中间没推,别人 pull 时中间状态文档失同步。
 8. **不创建独立 `decisions/000N-xxx.md` 文件** — WHY: doc-align 不评估该路径;ADD §7 Decision View 才是 ADR 内容的归宿。
-9. **不创建 `design.md` / `roadmap.md` 文件** — WHY: doc-align 不评估这两个文件;请改用 add.md / tasks.md。
-10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整。
+9. **不创建 `design.md` / `roadmap.md` / `idea.md` / `research.md` 文件** — WHY: doc-align 不评估这些文件;design / roadmap 请改用 add.md / tasks.md,idea / research 是旧版幽灵文件。
+10. **3 维度必谈** — WHY: 头脑风暴的核心是 3 维度各自清晰化,跳过任一维度会导致产物不完整,后续补全成本高。
+    反例: 只谈需求不谈方案/任务。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
+    反例: 只在 sprint.md §2 写一行 `[ ]`,prd/add/tasks 不动。
 12. **新 UC/IF 同时进 tasks.md §1.1/§1.2 + sprint.md §2 Product Backlog** — WHY:sprint.md §2 是"待办池"角色,任何地方出现新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级)都必须回流到 §2,否则后续 task-dev 会疏漏 —— §1.x 是完整定义(给 task-dev 实现用),§2 是暂存状态(等 Sprint 排期),两者强绑定。
+    反例: 加了新 UC/IF 但 sprint.md §2 漏写。
 13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wk-sprint-shape 或后续版本规划的事,不属于"新想法"。
+14. **4 文档独立按需,无必动** — WHY: 改动集由 3-dim 头脑风暴结论决定,不是惯例。polish 想法可能只动 1 个或不动,甚至 4 文档全不动。
+    反例: 默认 tasks + sprint 必动 + 有动作就改 prd/add;也不要看到一处改就条件反射"也动 sprint.md" —— 每个文档触发原则是独立判断。
+15. **跨文档联动需完整** — WHY: 联动不完整会留下半成品:改了 PRD §2 目标但 Tasks 没拆 UC = 提了目标但没拆任务;改了 ADD §7 Decision 但 Tasks 没拆 UC/IF = 决策失追溯;改了 Tasks UC 但 PRD §4 没加场景 = 实现细节有了但产品向入口没同步。
+16. **迭代升级优先:改原条目不开新 ID** — WHY: 新 UC/IF 与已有 ID 在行为上重复会导致历史重叠,git blame 失追溯。升级走 §1.x 改段文路径,**禁止开新 ID 复制行为**。
+    反例: 想法是"已有 UC-XY 的 behavior 升级",却开 UC-X+1-Y 而不改 UC-XY。
+17. **active Sprint ≤ 1** — WHY: 多 active Sprint 会让 commit 节奏混乱;一次性堆十几个 Sprint 应合并为代号化 Sprint。
+18. **不改 `docs/` 之外的任何文件** — WHY: README.md 等需同步的应单独指示;`design.md` / `roadmap.md` / `decisions/` 等 doc-align 不评估的文件不在本 skill 范围。
 
 ## 模板
 
@@ -468,33 +483,11 @@ commit 后提示用户:
 **Consequences**: 选了之后带来的正向 / 负向影响
 ```
 
-## 联动反模式
+## 不做的事(边界声明)
 
-- ❌ **跳过任一维度**(只谈需求不谈方案/任务)— 产物不完整,后续补全成本高
-- ❌ **盲改 4 个文档**(默认 tasks + sprint 必动 + 有动作就改 prd/add)— **4 文档独立按需,没必动**;polish 想法可能只动 1 个或不动
-- ❌ **只想点一下 prd 而不写 UC**(改了 PRD §2 目标但 Tasks 没拆 UC)— 提了目标但没拆任务
-- ❌ **只想点一下 Decision 而不写 IF**(改了 ADD §7 Decision 但 Tasks 没拆 UC/IF)— 决策失追溯
-- ❌ **只想点一下 UC 而不写场景**(改了 Tasks UC 但 PRD §4 没加场景)— 实现细节有了,但产品向入口没同步
-- ❌ **改了 §1.x 但忘了同触发原则的 §2/§3** —— 例如加新 UC 但 sprint.md §2 Backlog 漏写,或翻 §3 [~] 漏写。**每个文档触发原则是独立判断**,不要看到一处改就条件反射"也动 sprint.md"
-- ❌ **只写 Backlog 一行**(不联动改 3 文档)— 失去头脑风暴价值(仅适用于新增 ID 路径)
-- ❌ **新 UC/IF 没同时进 Backlog** — 失去 Backlog 暂存意义(仅适用于新增 ID)
-- ❌ **无脑新增 ID**(想法是 "已有 UC-XY 的 behavior 升级",却开 UC-X+1-Y 而不改 UC-XY)— 历史重叠,git blame 失追溯。升级走 §1.x 改段文路径,**禁止开新 ID 复制行为**
-- ❌ **联动改动拆多个 commit 但中间没推** — 别人 pull 时中间状态文档失同步
-- ❌ **UC 不是 agile 三段式**(写了 "I want to" 没翻译成 "我希望")— tasks-checklist §1.1.2 critical
-- ❌ **UC 带 `[x]` 状态** — 状态归 `sprint.md §1` Sprint 段,不是 UC 本身;tasks-checklist §1.1.1 critical
-- ❌ **Sprint 数量膨胀** — 一次性堆十几个 Sprint;合并为代号化 Sprint,active Sprint ≤ 1
-- ❌ **试图把"开新版本 / 做 v0.X / 从 backlog 抽"接进本 skill** — 这些是版本规划,不属于"新想法"
-
-
-## 不做的事
-
-- ❌ 不写代码实现
-- ❌ 不改 `docs/` 之外的任何文件(README.md 等需同步的单独指示)
-- ❌ **不创建 / 修改 `design.md`、`roadmap.md`、`decisions/` 等 doc-align 不评估的文件** —— 这些是历史遗留,本 skill 强制 4 文件(prd + add + tasks + sprint)+ Product Backlog 模型
-- ❌ 不直接 commit(必须用户确认 message 后再 commit)
-- ❌ 不创建 `idea.md` / `research.md`(旧版幽灵文件)
-- ❌ 不重新创建 doc-align 视为已迁出的 PRD 章节(数据模型 / 技术栈等应写 ADD)
-- ❌ **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** —— 这些是版本规划,不属于"新想法"
+> 上文 §硬约束 已覆盖主要反例。本节为对外明示的边界声明,仅 1 条:
+>
+> - **不直接 commit** —— 必须用户确认 message 后再 commit(本 skill 提议 commit,用户拍板)
 
 ## 回滚
 
