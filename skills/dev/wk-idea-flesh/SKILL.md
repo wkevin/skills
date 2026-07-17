@@ -432,56 +432,16 @@ commit 后提示用户:
 
 ## 模板
 
-### Tasks UC 三段式(agile,中文标签)
-
-```markdown
-- **UC-{xx}-{yy}** [{P0|P1|P2|P3}]
-  - **作为** {具体角色 / 场景,不是 "user" 这种空泛词}
-  - **我希望** {动作 + 对象}
-  - **以便** {价值 / 动机}
-  - **实现细节**:
-    - {文件路径 / 函数名 / 配置值}
-```
-
-### Tasks IF 特性描述
-
-```markdown
-- **IF-{mm}-{nn}** [{P0|P1|P2|P3}]
-  - **{特性一句话描述}**
-  - **实现细节**:
-    - {技术点 / 路径}
-```
-
-### Tasks Backlog
-
-```markdown
-- [ ] UC-{xx}-{yy} {一句话描述}
-- [ ] IF-{mm}-{nn} {一句话描述}
-```
-
-### PRD §2 新增目标
-
-```markdown
-8. **{动词}** — {一句话描述}
-```
-
-### PRD §4 新增场景(联动 UC)
-
-```markdown
-- **{角色}** {动作}
-  - {价值描述}
-```
-
-### ADD §7 Decision View 新决策
-
-```markdown
-### 7.{N} {新决策标题}
-
-**Status**: Accepted
-**Context**: 当时面对什么问题、考虑了哪些备选方案
-**Decision**: 最终选了什么 + 为什么
-**Consequences**: 选了之后带来的正向 / 负向影响
-```
+> 写入 doc 时 verbatim 复用,见 [references/templates.md](./references/templates.md)。
+>
+> | 产物 | 模板 |
+> | --- | --- |
+> | 新 UC | Tasks UC 三段式 |
+> | 新 IF | Tasks IF 特性描述 |
+> | Backlog 条目 | Tasks Backlog |
+> | 新 PRD §2 目标 | PRD §2 新增目标 |
+> | 新 PRD §4 场景 | PRD §4 新增场景 |
+> | 新 ADR | ADD §7 Decision View 新决策 |
 
 ## 不做的事(边界声明)
 
