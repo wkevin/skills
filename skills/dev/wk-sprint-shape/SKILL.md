@@ -36,9 +36,10 @@ description: 从 backlog 通过「优先级 + 依赖图 + 主题聚类」三因�
 | --- | --- | --- |
 | **新建 Sprint** | "做 vX.X"、"开新 sprint"、"从 backlog 抽 N 个 task" | 从 Product Backlog 挑 10-20 task,创建新 Sprint 段(最小化输出) |
 | **修改 Sprint** | "改 Sprint N"、"Sprint 1 加 UC-XX-YY"、"Sprint 2 调一下" | 增删/调整指定 Sprint 段内的 task;状态语义不变 |
-| **状态推进** | "激活 Sprint 1"、"Sprint 1 done" | 不动 sprint.md 文件;由用户手改文档(在段头加 `Active` 关键词)或走 task-dev(状态语义由用户最终负责) |
 
 skill 内部根据意图自动选择模式,简单意图直接执行,模糊意图走 1-2 轮澄清。
+
+> **关于状态推进**(Planning → Active → Done):本 skill **不**处理状态机推进 —— 那是用户业务承诺,应手动在 Sprint 段头加 `Active` 关键词,或走 `wk-task-dev`。详见 [references/status-transition.md](./references/status-transition.md)。
 
 ## 算法核心(三因子)
 
@@ -77,7 +78,6 @@ skill 内部根据意图自动选择模式,简单意图直接执行,模糊意图
 
 - 用户说"做下一版 / 开 v0.X / 排个 sprint / 从 backlog 抽 N 个 task"
 - 用户要修改已有 Sprint 的内容(加 task / 改 Goal / 改代号)
-- 用户要推进 Sprint 状态机(Planning → Active → Done)
 
 ## 何时不要使用
 
@@ -111,7 +111,6 @@ ls docs/sprint.md docs/tasks.md 2>&1
 Q1. 塑形模式:
    - 新建 Sprint(从 backlog 挑 10-20 task 塑形)
    - 修改 Sprint N(增删/调整 task 或改 Goal/代号)
-   - 状态推进(把 Sprint N 从 Planning 推到 Active 或 Done)
 
 Q2. (新建时)Version 归属 + 起止日期:
    - Version: v0.X(用户指定或 skill 建议下一递增版本)
