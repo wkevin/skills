@@ -98,13 +98,25 @@ for i, line in enumerate(lines):
         continue
     if arg and id_ != arg:
         continue
-    # 回退:如 title 为空,读 我希望 首句
+    # 回退:如 title 为空,读 我希望 / 特性描述 短标题
     if not title:
         for j in range(i + 1, min(i + 10, len(lines))):
             if '**我希望**' in lines[j]:
                 tm = re.search(r'\*\*我希望\*\*\s*(.*)', lines[j])
                 if tm:
-                    title = tm.group(1).strip()[:30]
+                    # 取前 20 字符(更短更可读)
+                    s = tm.group(1).strip()
+                    # 取前一个完整句号/逗号前
+                    short = re.split(r'(?<=[。.!?])\s*|[,，]', s, maxsplit=1)[0]
+                    title = short[:20]
+                break
+            if '**特性描述**' in lines[j]:
+                tm = re.search(r'\*\*特性描述\*\*\s*[:：]\s*(.*)', lines[j])
+                if tm:
+                    s = tm.group(1).strip()
+                    # 取前 20 字符,以句号/逗号切断
+                    short = re.split(r'(?<=[。.!?])\s*|[,，]', s, maxsplit=1)[0]
+                    title = short[:20]
                 break
     parents.append((id_, title))
 
@@ -120,7 +132,7 @@ for i, line in enumerate(lines):
         cur_seg = sm.group(1)
         in_opt_section = False
         continue
-    if '**优化升级**(可选)' in line:
+    if line.strip().startswith('- **优化升级**') or line.strip().startswith('  - **优化升级**'):
         in_opt_section = True
         continue
     if in_opt_section:
