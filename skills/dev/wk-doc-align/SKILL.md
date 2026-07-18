@@ -1,6 +1,6 @@
 ---
 name: wk-doc-align
-description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 4 形态 `[ ]/[x]/[~]/[!]` + Backlog)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。**任务段文结构**:tasks.md UC/IF 段文只应有 `方案参考 / 实现建议 / DOD / 子任务列表`,**禁出现 `**实现细节**:** 段(flesh 不写实现细节,留给 dev 自主决策)。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
+description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 4 形态 `[ ]/[x]/[~]/[!]` + Backlog)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。**任务段文结构**:tasks.md UC/IF 段文只应有 `方案参考 / 实现建议 / DOD / 优化升级`,**禁出现 `**实现细节**:** 段(flesh 不写实现细节,留给 dev 自主决策)。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
 # /doc-align — 三件套文档评估器 / 改造器
@@ -153,7 +153,7 @@ grep -nE '(UC|IF)-[0-9]+-[0-9]+' docs/add.md
 
 | 严重度           | 含义                          | 触发条件举例                                                                                                                                                                      |
 | ---------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks 父 bullet 状态 `[x]` 与子任务全部 [x] 不一致;**上游文档引用下游文档内部内容(UC/IF/DA/§X 锚点)**;tasks.md Backlog raw 行引用了未在 User Case / Inner Feature 定义的 UC/IF |
+| **critical**     | 文档失去方法论价值,不修不可用 | 缺 §3 非目标;ADD 无 WHY 列;Tasks 父 bullet 状态 `[x]` 与 **优化升级** 段全部 [x] 不一致;**上游文档引用下游文档内部内容(UC/IF/DA/§X 锚点)**;tasks.md Backlog raw 行引用了未在 User Case / Inner Feature 定义的 UC/IF |
 | **important**    | 关键质量问题,修后明显提升     | WHY 列是空话;UC 不是 agile 三段式;Critical Lens < 3                                                                                                                                |
 | **nice-to-have** | 锦上添花                      | mermaid 解读文字短;Sprint 缺代号;Product Backlog 编号未对齐 sprint-checklist §6.5                                                                                                 |
 

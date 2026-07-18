@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子任务列表** `[ ]` 的项(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(子任务 `- [ ]` → `- [x]` markdown checkbox,如 `- [ ] **UC-XX-YY** [P?]` → `- [x] **UC-XX-YY** [P?]`;父 bullet 状态辅助标记 `[~]` in-progress / `[!]` 阻塞 也可同 commit 翻,无需独立[N/M] 计数)。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 子任务列表**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**优化升级** `[ ]` 的项(同 commit 翻父 bullet inline `[~]`/`[!]` 状态)(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + 段文 **优化升级** 段 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(`- [ ]` 优化升级 → `- [x]`,同 commit 翻父 bullet `[ ]/[~]/[!]/[x]` 4 形态状态)。dev agent 自主决定实现路径,只对照 DOD 验收 + 段文 **优化升级** 项;prd/add 只读。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收 + 优化升级;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
 ---
 
 ## 用法
@@ -28,7 +28,7 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
 ### 1. 解析 + 过滤
 
 - 解析 `$2` 为 task id 列表
-- 若是 task id(UC-XX-YY / IF-XX-NN):读该 task 的 User Case / Inner Feature 段文 + 子任务列表,**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
+- 若是 task id(UC-XX-YY / IF-XX-NN):读该 task 的 User Case / Inner Feature 段文 + **优化升级** 列表(`- [ ]`),**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
 - 若是 `/status`:仅打印当前进度(不开发);聚合 `[ ]/[x]/[~]/[!]` 状态分布
 - 若是其他字符串(包括 `v0.X` 旧入口):输出 `TASK_NOT_FOUND: <arg>`,停下
 - 已 `[!]` 标记的任务 → 列入"需重提决策"清单(在 progress snapshot 里也带上)
@@ -54,7 +54,7 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
    - **(b) 既有测试不 regress**:相关测试套件全绿;如有 baseline 失败需 cite baseline commit
    - **(c) 类型 / lint 通过**:与本 task 改动的文件相关的类型检查 + lint 通过;无关报错 cite baseline
 4. 改 `docs/tasks.md`(同 commit):
-   - 子任务 `- [ ]` → `- [x]`
+   - **优化升级** 段 `- [ ]` → `- [x]`
    - 特殊情况:`[ ] → [!]`(需决策)/ `[ ] → [~]`(中断);父 bullet inline 状态同 commit 翻
 5. **`git add <本 task 改的代码文件> docs/tasks.md` + `git commit`**(带 `Co-Authored-By: Claude <noreply@anthropic.com>`)
 
@@ -65,7 +65,7 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**子
 > - `git blame docs/tasks.md` 应该精确到每个 task 何时收尾
 > - `git log --grep='<UC-XX-YY>'` 与 tasks.md 状态天然对齐,**无需对照** commit body 与文档状态
 > - 中途中断(切换到其他任务)时,已完成 task 的 [x] 不会再被误批量 rollback
->   **prd.md / add.md 在本 skill 中只读** —— 只动 `tasks.md` 子任务 `[-]` ↔ `[x]` 状态,不动 UC/IF 定义(Version 概念已废弃)。
+>   **prd.md / add.md 在本 skill 中只读** —— 只动 `tasks.md` **优化升级** 段 `[-]` ↔ `[x]` + 父 bullet 状态 4 形态翻牌,不动 UC/IF 定义(Version 概念已废弃)。
 
 **Baseline 处理**:
 
@@ -120,7 +120,7 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 
 ### Backlog 不接(历史 §2 不接的迁移)
 
-`docs/tasks.md Backlog` 桶 1 / 桶 2 raw 行**本 skill 不接** —— 必须先由 `wk-idea-flesh` 升级到 User Case / Inner Feature(完整 UC/IF 三段式定义 + 子任务列表 `[ ]`)才能接。任务提交流程:`Backlog 桶 1/2 raw → flesh → User Case / Inner Feature 段文(+ 子任务列表 [ ]) → task-dev` 三步链。Backlog 桶 3(`已方案设计/有 Task ID`)也不接,直接由对应 User Case / Inner Feature 段文读,不通过 Backlog 间接找。
+`docs/tasks.md Backlog` 桶 1 / 桶 2 raw 行**本 skill 不接** —— 必须先由 `wk-idea-flesh` 升级到 User Case / Inner Feature(完整 UC/IF 三段式定义 + **优化升级** 段 `[ ]`)才能接。任务提交流程:`Backlog 桶 1/2 raw → flesh → User Case / Inner Feature 段文(+ **优化升级** [ ]) → task-dev` 三步链。Backlog 桶 3(`已方案设计/有 Task ID`)也不接,直接由对应 User Case / Inner Feature 段文读,不通过 Backlog 间接找。
 
 ## git 提交规范
 
@@ -142,6 +142,6 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 ## 关联
 
 - **上游**:
-  - `wk-idea-flesh` — 写 `tasks.md Backlog` raw / `User Case / Inner Feature 段` UC/IF 定义 + 子任务列表;**前提**:本 skill 接的 `[ ]` 子任务必须已在 User Case / Inner Feature 段文(Backlog raw 行不接,需 flesh 升级后才接)
-  - `wk-task-dev`(本 skill)→ 把 User Case / Inner Feature 段 子任务列表 `[ ]` 翻成 `[x]`(同 commit,父 bullet inline `[~]`/`[!]` 状态也可翻)
+  - `wk-idea-flesh` — 写 `tasks.md Backlog` raw / `User Case / Inner Feature 段` UC/IF 定义 + **优化升级** 段;**前提**:本 skill 接的 `[ ]` 优化升级必须已在 User Case / Inner Feature 段文(Backlog raw 行不接,需 flesh 升级后才接)
+  - `wk-task-dev`(本 skill)→ 把 User Case / Inner Feature 段 **优化升级** `[ ]` 翻成 `[x]`(同 commit,父 bullet inline `[~]`/`[!]` 状态也可翻)
 - **下游**:无;本 skill 是塑形链终点

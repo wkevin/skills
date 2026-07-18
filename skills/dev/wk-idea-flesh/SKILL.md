@@ -1,6 +1,6 @@
 ---
 name: wk-idea-flesh
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,**3 个文档**(prd/add/tasks)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md User Case / Inner Feature / Backlog 看 UC/IF 定义(新/升级/删除)+ 状态(父 bullet `[ ]/[x]/[~]/[!]` 4 形态前置 markdown checkbox + 子任务列表 `- [ ]` / `- [x]`)+ Backlog(3 桶「未方案设计/无 Task ID」「已方案设计/无 Task ID」「已方案设计/有 Task ID」按设计成熟度)。flesh **只输出方案参考(必选,prd/add 章节号指针)+ 实现建议(可选,简短不限制)+ DOD(可选)**,**绝不写实现细节** —— 实现细节交给 wk-task-dev agent 自行发挥。状态机整体内聚到 tasks.md 自包含;Backlog 是新的"待办池";wk-sprint-shape 已删除(并入 wk-task-dev)。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 User Case / Inner Feature 既有条目而不是另开新 ID。**核心因果**:idea 落地后 prd/add/tasks 任一处增加新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级),都必须在 tasks.md Backlog 同步留一条 raw 行(或 User Case / Inner Feature 段文内对应 polish 子任务) — Backlog 是"待办池"角色,任何地方出现新工作必须回流到 Backlog,否则后续 task-dev 会漏。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / 已有 IF 加新步骤 / btw, ..."、或任何模糊想法描述。
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,**3 个文档**(prd/add/tasks)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md User Case / Inner Feature / Backlog 看 UC/IF 定义(新/升级/删除)+ 状态(父 bullet `[ ]/[x]/[~]/[!]` 4 形态前置 markdown checkbox)+ Backlog + **优化升级**段(`- [ ]` 待开发 + 简注)(3 桶「未方案设计/无 Task ID」「已方案设计/无 Task ID」「已方案设计/有 Task ID」按设计成熟度)。flesh **只输出方案参考(必选,prd/add 章节号指针)+ 实现建议(可选,简短不限制)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**绝不写实现细节** —— 实现细节交给 wk-task-dev agent 自行发挥。状态机整体内聚到 tasks.md 自包含;Backlog 是新的"待办池";wk-sprint-shape 已删除(并入 wk-task-dev)。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 User Case / Inner Feature 既有条目而不是另开新 ID。**核心因果**:idea 落地后 prd/add/tasks 任一处增加新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级),都必须在 tasks.md Backlog 同步留一条 raw 行(或 User Case / Inner Feature 段文内 **优化升级** 段新增对应项) — Backlog 是"待办池"角色,任何地方出现新工作必须回流到 Backlog,否则后续 task-dev 会漏。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / 已有 IF 加新步骤 / btw, ..."、或任何模糊想法描述。
 ---
 
 # /idea-flesh — 3 维度头脑风暴驱动的想法落地
@@ -22,7 +22,7 @@ description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)�
 
 **核心口径**:**没有"必动"**。flesh 的产物 = 这 3 个文档各自的 "改 / 不动" 判断结果。
 
-新产生的 UC/IF 进入 `tasks.md User Case / Inner Feature`(完整定义 + 子任务列表 `[ ]`)+ 从 `tasks.md Backlog` 移除对应 raw 行(flesh 闭环)——但**仅当**这条想法真的产出了新的 UC/IF ID。如果想法是纯 polish 或 PRD/ADD 改动,这两条规则不适用。状态机整体留 tasks.md 自包含。
+新产生的 UC/IF 进入 `tasks.md User Case / Inner Feature`(完整定义 + **优化升级** 段 `[ ]` 项)+ 从 `tasks.md Backlog` 移除对应 raw 行(flesh 闭环)——但**仅当**这条想法真的产出了新的 UC/IF ID。如果想法是纯 polish 或 PRD/ADD 改动,这两条规则不适用。状态机整体留 tasks.md 自包含。
 
 **迭代升级**:如果新想法是已有 UC/IF 的 behavior 升级 / re-scope,**改原条目**而不是开新 ID。
 
@@ -55,14 +55,14 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 | -------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | **需求** | persona / 场景 / 价值 / 优先级 / UC 拆分 | `docs/prd.md`(§2 目标 / §4 场景)+ `docs/tasks.md` User Case                                                  |
 | **方案** | 架构影响 / 决策点 / IF 拆分 / 视图更新   | `docs/add.md`(§1-§5 视图 / §7 Decision)+ `docs/tasks.md` Inner Feature                                      |
-| **任务** | 排期意向 / 依赖 / 粒度                   | `docs/tasks.md` Backlog(raw 想法暂存,3 桶)/ User Case & Inner Feature 子任务列表(`[ ]` 拆解)  |
+| **任务** | 排期意向 / 依赖 / 粒度                   | `docs/tasks.md` Backlog(raw 想法暂存,3 桶)/ User Case & Inner Feature 段文 + **优化升级**(`[ ]` 待开发) |
 
 **核心规则**:
 
 - **3 个维度必谈**(每维度至少 1 轮澄清,共 3-6 轮)
 - **讨论完才动手** —— 不要边聊边写,避免来回返工
 - **3 文档独立按需** —— 任一文档都可能"不动"。每个文档有自己的触发原则(见顶部表)。
-- **迭代升级优先** —— 3 维度头脑风暴完先问 "这是新建 ID,还是**升级已有 UC/IF**?",后者改原条目(User Case / Inner Feature 改文+加新 `[ ]` 子任务)而不是加新 ID
+- **迭代升级优先** —— 3 维度头脑风暴完先问 "这是新建 ID,还是**升级已有 UC/IF**?",后者改原条目(User Case / Inner Feature 改文 + **优化升级**段加新 `[ ]` 项)而不是加新 ID
 - **已有 ID 不要复制行为** —— 重复 ID 加 UC 是反模式;真需要新 UC 走新 ID(避免历史重叠)
 - **新 UC/IF 进 tasks.md(User Case / Inner Feature 段文)+ 从 tasks.md Backlog 移除 raw 行(flesh 闭环)** —— **仅当这条想法真的产出了新的 UC/IF ID**;纯 polish / 纯 PRD 改动不适用这条
 
@@ -76,11 +76,11 @@ skill 内部自动决定 3 维度的讨论深度(简单想法 3 轮,复杂想法
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | `docs/prd.md`                                              | 产品需求文档(PRD)— 产品向:愿景 / 目标 / 非目标 / 场景 / 范围外 / 风险        | 想法动了**产品定位 / 需求 / 场景**则改                                               |
 | `docs/add.md`                                              | 架构设计文档(ADD)— 技术向:Context + 5+1 view + Decision View + Critical Lens | 想法动了**架构 / 方案 / 决策**则改                                                   |
-| `docs/tasks.md`(`User Case` + `Inner Feature` + `Backlog`) | UC/IF 定义(骨架+状态) — 自包含 catalog + 子任务列表 + Backlog | 想法动了**UC/IF 定义**(新增 / 升级 / 删除 / 详设微调)或**状态/Backlog** 则改 |
+| `docs/tasks.md`(`User Case` + `Inner Feature` + `Backlog`) | UC/IF 定义(骨架+状态) — 自包含 catalog + **优化升级** + Backlog | 想法动了**UC/IF 定义**(新增 / 升级 / 删除 / 详设微调)或**状态/Backlog/优化升级** 则改 |
 
 **关键**: 这 3 个**可写**文档**互相不可替代** —— PRD §2 目标 ≠ tasks.md User Case 段文;ADD §5 组件图 ≠ tasks.md Inner Feature 描述(flesh 段文只锚 prd/add 章节指针,不写实现细节)。**没有"必动"**,每条想法 3 文档独立判断改 / 不改。
 
-**反过来**: 想法是升级已有 UC/IF 时,改的是 `tasks.md User Case / Inner Feature 既有段文`(加新 `[ ]` 子任务或改文);可能 `prd/add`(平级影响)。 —— 状态翻 `[~]` 不在 flesh 职责内(那是 wk-task-dev)。
+**反过来**: 想法是升级已有 UC/IF 时,改的是 `tasks.md User Case / Inner Feature 既有段文`(改文 + **优化升级**段加新 `[ ]` 项);可能 `prd/add`(平级影响)。 —— 状态翻 `[~]` 不在 flesh 职责内(那是 wk-task-dev)。
 
 > **作用域**:本 skill **只**处理 `docs/prd.md` / `docs/add.md` / `docs/tasks.md` 三个可写文档—— 这是 wk-doc-align 评估基线。任何其他文件(如独立的 `design.md` / `decisions/000N-xxx.md` / `roadmap.md`)**不在本 skill 范围**。
 
@@ -124,7 +124,7 @@ ls docs/prd.md docs/add.md docs/tasks.md 2>&1
 
 0. **新建 vs 迭代升级**(首问 — 决定整个产物的形态):
    - "这个想法是**全新功能**(开新 UC/IF),还是**已有 UC/IF 的 behavior 升级**?(如『UC-04-02 重新建议按钮:以前只更新 llmSuggestedTags,现在直接覆写 doc.tags』)"
-   - **后续**:新建走 Step 4 新增路径(产出 `tasks.md User Case / Inner Feature` 新段文 + 从 `tasks.md Backlog` 移除对应 raw 行)。**升级走 Step 4 升级路径**(产物:改 `tasks.md User Case / Inner Feature` 既有段文 + 加新 `[ ]` 子任务;状态机内聚在 tasks.md,无需另写状态文档)
+   - **后续**:新建走 Step 4 新增路径(产出 `tasks.md User Case / Inner Feature` 新段文 + 从 `tasks.md Backlog` 移除对应 raw 行)。**升级走 Step 4 升级路径**(产物:改 `tasks.md User Case / Inner Feature` 既有段文 + **优化升级** 段加新 `[ ]` 项;状态机内聚在 tasks.md,无需另写状态文档)
 1. **Persona / 场景** — "谁会用这个功能?在什么场景?"(必问)
 2. **价值 / 动机** — "解决了什么问题?不做会怎样?"(必问)
 3. **优先级** — P0(必须)/P1(重要)/P2(可选)/P3(远期)
@@ -236,7 +236,7 @@ docs/tasks.md:
 
 联动一致性预检:
 - UC-05-01 与现有最大 UC ID UC-04-09 连续 ✓
-- UC-05-01 同时出现在 tasks.md User Case(完整定义 + 子任务列表)+ Backlog 行已被移除(flesh 闭环) ✓
+- UC-05-01 同时出现在 tasks.md User Case(完整定义 + **优化升级** 段 + Backlog 行已移除)(flesh 闭环) ✓
 
 OK 就改?如要调整文案请说。
 ```
@@ -261,8 +261,8 @@ echo "$NEXT_UC"
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | **纯产品定位调整**(无 UC/IF)         | prd.md §1 愿景 / §2 目标。其余 3 文档**不动**                                                                    |
 | **纯架构决策**(如 GraphQL over REST) | add.md §7 Decision (+ tasks.md 已有 IF 段文里备注变更(或 Backlog 升级到 §1))。其余 2 文档**不动**                                |
-| **新功能**(纯新增 ID)                | tasks.md Backlog 抠出 raw → User Case / Inner Feature 段 **新段**(完整定义 + 子任务列表 [ ])+ Backlog 删除对应行。prd/add 各按自身原则判断 |
-| **迭代升级**(改已有 UC/IF)           | tasks.md User Case / Inner Feature 既有段**改文**(保留 ID)+ 加新 `[ ]` 子任务。prd/add 各按自身原则判断平级影响(多数情况不动)         |
+| **新功能**(纯新增 ID)                | tasks.md Backlog 抠出 raw → User Case / Inner Feature 段 **新段**(完整定义 + **优化升级** 段 [ ])+ Backlog 删除对应行。prd/add 各按自身原则判断 |
+| **迭代升级**(改已有 UC/IF)           | tasks.md User Case / Inner Feature 既有段**改文**(保留 ID)+ **优化升级** 段加新 `[ ]` 项。prd/add 各按自身原则判断平级影响(多数情况不动)         |
 | **纯实现 / 状态调整**                | **不属 flesh**,属于 wk-task-dev(`/wk-task-dev UC-XX-YY` 入口直接读段文 + 翻 `[ ]` → `[x]`)                                                    |
 | **极小 polish**(纯 doc-typo / 措辞)  | 甚至可能**4 文档全不动**——直接 do nothing;flesh 链路就跑了 3-dim 讨论但没产生文档产物                            |
 
@@ -280,8 +280,8 @@ echo "$NEXT_UC"
 # a. 新 UC/IF ID 唯一?
 NEW_UC="UC-05-01"
 grep -cE "^\- \[[x—~!0-9/]+\] \*\*$NEW_UC" docs/tasks.md   # User Case / Inner Feature 完整定义 1 次
-grep -cE "^[ \t]*- \[ \] " docs/tasks.md                       # 子任务列表 ≥ 1
-# (完整定义 + 子任务列表加起来,需目视确认)
+grep -cE "^[ \t]*- \[ \] " docs/tasks.md                       # 优化升级列表 ≥ 1 (若有写)
+# (完整定义 + 优化升级加起来,需目视确认)
 
 # b. 跨文件一致性:tasks.md Backlog 引用的 UC/IF 都在 User Case / Inner Feature 定义?(flesh 闭环)
 ALL_DEFINED=$(grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/tasks.md | sort -u)
@@ -317,8 +317,8 @@ grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/add.md | sort -u
 ```
 新建 ID 路径:
 - UC-05-01 在 tasks.md User Case 完整定义:是 ✓
-- UC-05-01 在 tasks.md User Case / Inner Feature 完整定义(含子任务列表):是 ✓
-- IF-05-01 在 tasks.md User Case / Inner Feature 完整定义(含子任务列表):是 ✓
+- UC-05-01 在 tasks.md User Case / Inner Feature 完整定义(含 **优化升级** 段):是 ✓
+- IF-05-01 在 tasks.md User Case / Inner Feature 完整定义(含 **优化升级** 段):是 ✓
 - Backlog raw 行已移除(flesh 闭环):是 ✓
 - ADD §7 / PRD §4 引用一致(若改了相关文档):一致 ✓
 
@@ -389,7 +389,7 @@ commit 后提示用户:
 后续可选:
 - 继续 /wk-idea-flesh 加新想法
 - 用 /wk-doc-align 评估文档质量(4 文件;只检改了的那几个)
-- 用 /wk-task-dev 实现 tasks.md User Case / Inner Feature 子任务 `[ ]`(仅在新加 User Case / Inner Feature 段文时;`wk-sprint-shape` 已废弃)
+- 用 /wk-task-dev 实现 tasks.md User Case / Inner Feature **优化升级** `[ ]` 项(只读段文 + 优化升级列表;`wk-sprint-shape` 已废弃)
 - 用 /wk-task-dev 实现 §1 Sprint 段的 [ ] 项(仅在加了新 ID 时)
 ```
 
@@ -415,7 +415,7 @@ commit 后提示用户:
     反例: 只谈需求不谈方案/任务。
 11. **直接联动改 3 文档** — WHY: 头脑风暴的产物就是 3 文档的完整改动,不是只写 Backlog 一行。
     反例: 只在 tasks.md Backlog 写一行 raw,prd/add/User Case / Inner Feature 段 不动(只写了"待办池",没闭环"完整定义")。
-12. **新 UC/IF 进 tasks.md User Case / Inner Feature(完整定义 + 子任务列表 [ ])+ 从 Backlog 移除对应 raw 行** — WHY:`tasks.md Backlog` 是"待办池"角色,任何地方出现新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级)都必须回流,且 flesh 写入 User Case / Inner Feature 段 时从 Backlog 抠出对应 raw(闭环),否则后续 task-dev 会疏漏。
+12. **新 UC/IF 进 tasks.md User Case / Inner Feature(完整定义 + **优化升级** 段 [ ])+ 从 Backlog 移除对应 raw 行** — WHY:`tasks.md Backlog` 是"待办池"角色,任何地方出现新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级)都必须回流,且 flesh 写入 User Case / Inner Feature 段 时从 Backlog 抠出对应 raw(闭环),否则后续 task-dev 会疏漏。dev agent 实现时**同时**挑段的**优化升级**列表 + 段本身的状态。
     反例: 加了新 UC/IF 但 Backlog raw 漏删(闭环断)。
 13. **不接"开新版本 / 做 v0.X / 从 backlog 抽"等已规划操作** — WHY: 这些是 wk-task-dev 的 `/wk-task-dev v0.X` 入口 + Version 表更新,不属于"新想法"。`wk-sprint-shape` 已废弃(2026-07-17)。
 14. **3 文档独立按需,无必动** — WHY: 改动集由 3-dim 头脑风暴结论决定,不是惯例。polish 想法可能只动 1 个或不动,甚至 4 文档全不动。
@@ -463,7 +463,7 @@ git revert <commit-hash>
 
 - **上游**:`wk-doc-align` — 评估本 skill 写入的 PRD/ADD/Tasks/Backlog 是否合规
 - **下游**:
-  - `wk-task-dev` — 实现本 skill 写入的 `tasks.md User Case / Inner Feature` UC/IF 段文内 **子任务列表** 的 `[ ]` 项;**前提**:本 skill 段文已就位(子任务列表已存在)。`wk-sprint-shape` 已废弃(2026-07-17,功能并入 wk-task-dev)。
+  - `wk-task-dev` — 实现本 skill 写入的 `tasks.md User Case / Inner Feature` UC/IF 段文内 **优化升级** 段 `[ ]` 项;**前提**:本 skill 段文已就位(优化升级段已存在)。`wk-sprint-shape` 已废弃(2026-07-17,功能并入 wk-task-dev)。
 - **配套**:写完后若改动显著(新增大模块 / 改 API),建议同步 `README.md` 的索引
 - **同族塑形链**:
   - `wk-idea-flesh`(本 skill):深度想法落地 —— 3 维度头脑风暴 → 联动改 3 文档 → UC/IF 进 Backlog
