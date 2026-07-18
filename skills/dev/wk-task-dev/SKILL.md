@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**优化升级** `[ ]` 的项(同 commit 翻父 bullet inline `[~]`/`[!]` 状态)(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃 —— Version 不在 tasks.md 自包含)。读 tasks.md 取 UC/IF 完整定义 + 段文 **优化升级** 段 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(`- [ ]` 优化升级 → `- [x]`,同 commit 翻父 bullet `[ ]/[~]/[!]/[x]` 4 形态状态)。dev agent 自主决定实现路径,只对照 DOD 验收 + 段文 **优化升级** 项;prd/add 只读。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收 + 优化升级;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。
+description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化升级** 列表 `- [ ]` 项(同 commit 翻父 bullet inline `[~]`/`[!]` 状态)(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃)。**Step 0 强制预检**:先扫待实现清单 + 用户确认 + 选定 commit 模式(per-commit 确认 / 无需确认 / dry-run)后才进 Step 1。读 tasks.md 取 UC/IF 完整定义 + 段文 **优化升级** 段 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(`- [ ]` 优化升级 → `- [x]`,同 commit 翻父 bullet `[ ]/[~]/[!]/[x]` 4 形态状态)。dev agent 自主决定实现路径,只对照 DOD 验收 + 段文 **优化升级** 项;prd/add 只读。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收 + 优化升级;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。Step 0 的预检 + 确认 + commit 模式选择是该 skill 的安全护栏,不在用户未确认前动手。
 ---
 
 ## 用法
@@ -25,11 +25,54 @@ description: 批量实现 docs/tasks.md User Case / Inner Feature 段文内**优
 
 ## 工作流程
 
+### 0. 预检:列出待实现清单 + 确认 + commit 模式选择(强制)
+
+进入开发前,**必须**先扫描 `docs/tasks.md` 列出所有待实现条目,经用户确认 + 选定 commit 模式后才进入 Step 1:
+
+**Step 0a — 扫待实现清单**(扫描 `docs/tasks.md`):
+- **(a) 段文父 bullet `[ ]` 状态**:匹配 `^- \[ \] \*\*UC-XX-YY\*\*` / `^- \[ \] \*\*IF-XX-NN\*\*`(UC-XX-YY / IF-XX-NN 共 4 形态中的 `[ ]` 父 bullet,即 User Case / Inner Feature 段未开始任务)
+- **(b) 段文 **优化升级** 段 `- [ ]` 项**:每个段文末尾 `**优化升级**(可选):` 子节里的 `- [ ]` checkbox(本段积压的待开发点)
+- 输出格式(必须按此格式给用户):
+  ```
+  待实现清单(扫 docs/tasks.md):
+  [段文父 bullet — N 项]
+  - UC-XX-YY 状态 [ ] / 标题(取第一句作为我希望)
+  - IF-XX-NN 状态 [ ] / 标题
+  
+  [优化升级 — M 项]
+  - 段 UC/IF-XX-YY > 优化升级#1: 简注
+  - 段 IF-XX-NN > 优化升级#1: 简注
+  
+  共 N + M 项待实现。
+  ```
+- 扫不到任何条目 → 输出 `NO_PENDING: tasks.md 中无 [ ] 父 bullet 也无 优化升级 - [ ] 项`,停下
+- 任务 ID 列表(如 `$2` 给了 UC-XX-YY):只输出该 ID 对应的清单(段文父 bullet [ ] + 该段 优化升级 - [ ] 项);不扫全局
+
+**Step 0b — 用户确认**(`AskUserQuestion`):
+- 提示:"上面是本次待实现清单, 是否全部实现?"
+- 选项:
+  - "全部实现" — 进入 Step 1 全跑
+  - "部分实现(指定)" — 用户给子集(回 `UC-XX-YY IF-XX-NN ...` 或段名)
+  - "取消" — 输出 `ABORTED`,停下
+- 用户给"部分实现"时:把子集作为新的待实现清单,不需要重新扫
+
+**Step 0c — commit 模式选择**(`AskUserQuestion`,**只问一次**,本 session 后续 task 沿用):
+- 选项:
+  - **per-commit 确认**(推荐) — 每 task / 每 优化升级完成后,**暂停**等待用户回复 "ok / 改 X / 取消" 再继续;不阻塞但每个 commit 都 human-in-the-loop
+  - **无需确认** — 自动连跑 N 项,仅在 Step 3 进度汇报里给汇总;全程 0 中断
+  - **只读 dry-run**(用于查看未来要做的清单) — 不实现,只输出清单 + 退出
+- 用户在后续若改主意:用 `/task-dev <id> --mode=confirm` 或 `--mode=auto` 临时覆盖本次单条
+- 模式选择后**进入 Step 1**
+
+```
+注:本步骤(Step 0)是 gate,跳过会直接进入实现;但**没有用户确认不得 commit**(即使选 无需确认 模式,Step 0 的清单展示 + commit 模式问询也必走)。
+```
+
 ### 1. 解析 + 过滤
 
-- 解析 `$2` 为 task id 列表
+- 解析 `$2` 为 task id 列表(已被 Step 0 锁定)
 - 若是 task id(UC-XX-YY / IF-XX-NN):读该 task 的 User Case / Inner Feature 段文 + **优化升级** 列表(`- [ ]`),**只看 `[ ]`**(已 `[x]` 视为历史已实现,跳过)
-- 若是 `/status`:仅打印当前进度(不开发);聚合 `[ ]/[x]/[~]/[!]` 状态分布
+- 若是 `/status`:仅打印当前进度(不开发);聚合 `[ ]/[x]/[~]/[!]` 状态分布 + 优化升级 数量
 - 若是其他字符串(包括 `v0.X` 旧入口):输出 `TASK_NOT_FOUND: <arg>`,停下
 - 已 `[!]` 标记的任务 → 列入"需重提决策"清单(在 progress snapshot 里也带上)
 - M > 10 → 提示用户 "批量 N 个,按顺序还是指定子集?",等回复
@@ -87,11 +130,15 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 
 ## 边界协议
 
-### Commit 节奏与全局 memory 互斥
+### Commit 节奏(由 Step 0c 选择)
 
-本 skill workflow 自身定义批量 commit 节奏 —— 每个 task 完成一次 `git commit`,**正常情况下不需要逐条询问用户确认 'commit'**。
+本 skill 启动时 Step 0c 让用户选 commit 模式,本 session 后续沿用:
 
-若全局 `git-requires-confirmation` memory 设了强约束("严格等待用户确认才 commit"),**以全局 memory 为准**,本 skill 的批量节奏失效,逐 task 停下来等用户确认。这是用户层面的硬护栏,本 skill 不绕开。
+- **`per-commit 确认`**:每个 task / 每 优化升级项完成后,`git commit` 写入前**暂停**等待用户回复 "ok / 改 X / 取消" 再继续(推荐模式,每个 commit 都有 human-in-the-loop)
+- **`无需确认`**:自动连跑全清单,每完成 N 项打印 Step 3 进度汇报,**全程 0 中断**(适合大批量 polish / 凌晨跑)
+- **临时覆盖**:用户后续可用 `/task-dev <id> --mode=confirm|auto` 单条覆盖本 session 默认
+
+若全局 `git-requires-confirmation` memory 设了强约束("严格等待用户确认才 commit"),**以全局 memory 为准**,任何模式都被强制 confirm。本 skill 不绕开用户硬护栏。
 
 ### 需要决策的任务([P3] escape hatch)
 
