@@ -1,6 +1,6 @@
 ---
 name: wk-task-dev
-description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化升级** 列表 `- [ ]` 项(同 commit 翻父 bullet inline `[~]`/`[!]` 状态)(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃)。**Step 0 强制预检**:先扫待实现清单 + 用户确认 + 选定 commit 模式(per-commit 确认 / 无需确认 / dry-run)后才进 Step 1。读 tasks.md 取 UC/IF 完整定义 + 段文 **优化升级** 段 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(`- [ ]` 优化升级 → `- [x]`,同 commit 翻父 bullet `[ ]/[~]/[!]/[x]` 4 形态状态)。dev agent 自主决定实现路径,只对照 DOD 验收 + 段文 **优化升级** 项;prd/add 只读。tasks.md UC/IF 段文只含**方案参考(prd/add 章节号指针)+ 实现建议(可选,简短)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**不写实现细节**;dev agent 自主决定实现路径,只对照 DOD 验收 + 优化升级;prd/add 只读。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。Step 0 的预检 + 确认 + commit 模式选择是该 skill 的安全护栏,不在用户未确认前动手。
+description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化升级** 列表 `- [ ]` 项(同 commit 翻父 bullet inline `[~]`/`[!]` 状态)(按单 task id UC-XX-YY / IF-XX-YY 入口;`v0.X` 入口已废弃)。**Step 0 强制预检**:先扫待实现清单 + 用户确认 + 选定 commit 模式(per-commit 确认 / 无需确认 / dry-run)后才进 Step 1。读 tasks.md 取 UC/IF 完整定义 + 段文 **优化升级** 段 + prd.md 取场景/价值 + add.md 取架构/决策 → 实现后**仅更新 tasks.md 自身**(`- [ ]` 优化升级 → `- [x]`,同 commit 翻父 bullet `[ ]/[~]/[!]/[x]` 4 形态状态)。dev agent 自主决定实现路径,只对照 DOD 验收 + 段文 **优化升级** 项;prd/add 只读。tasks.md UC/IF 段文只含 4 子段:**方案参考(必选,prd/add 章节号指针)+ DOD(必选,可验收标准)+ 实现建议(可选,1-2 句方向)+ 优化升级(可选,仅描述目标/要求/DOD,不约束 dev 怎么实现)**;**不写 `**子任务**` 子段**;**不写 `**实现细节**` 段**;dev agent 自主决定实现路径,只对照 DOD 验收 + 优化升级;prd/add 只读。段文是 task-dev 输入约束,不是 task-dev 内部细节规约;**段文父 bullet(task 编号行)只含 `[state] **ID** [P?]`** — 绝不写任何描述 / 副标题 / 斜体补充(简注/状态附加归 4 子段)。状态机整体内聚到 tasks.md。触发词:"/task-dev"、"实现 UC-XX-YY"、"批量开发"。适用于长时间、无人值守的批量 task 开发。Step 0 的预检 + 确认 + commit 模式选择是该 skill 的安全护栏,不在用户未确认前动手。
 ---
 
 ## 用法
@@ -47,6 +47,7 @@ description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化
   ```
 - 扫不到任何条目 → 输出 `NO_PENDING: tasks.md 中无 [ ] 父 bullet 也无 优化升级 - [ ] 项`,停下
 - 任务 ID 列表(如 `$2` 给了 UC-XX-YY):脚本用 `python3 scan-pending.py UC-XX-YY` 单段模式,只输出该 ID 对应的清单(段文父 bullet [ ] + 该段 优化升级 - [ ] 项);不扫全局
+- **优化升级 段内容约束**(只描述目标 / 要求 / DOD):写法 `- [ ] <目标>;<DOD>;不约束 dev 选 <实现路径> 任一`,**不允许** `- [ ] 修改 lib/xxx.ts 改用 React Hook` / `- [ ] 加 max-h-` 这种技术细节(违反原则)
 
 > 性能备注:`scan-pending.py` 单次扫 ~20ms(0.02s 范围内,文件 ~70KB)。不要内联 re.findall 在 skill 描述里 — 调脚本即可。
 
@@ -119,9 +120,9 @@ description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化
    - **(a) 新增测试通过**:本 task 新加的测试(如有)必须跑过;无新测试的纯 refactor / docs task 跳过此项
    - **(b) 既有测试不 regress**:相关测试套件全绿;如有 baseline 失败需 cite baseline commit
    - **(c) 类型 / lint 通过**:与本 task 改动的文件相关的类型检查 + lint 通过;无关报错 cite baseline
-4. 改 `docs/tasks.md`(同 commit):
-   - **优化升级** 段 `- [ ]` → `- [x]`
-   - 特殊情况:`[ ] → [!]`(需决策)/ `[ ] → [~]`(中断);父 bullet inline 状态同 commit 翻
+4. 段文结构(必含 4 子段):**方案参考**(必选,prd/add 章节号指针)+ **DOD**(必选,可验收标准)+ **实现建议**(可选,1-2 句方向)+ **优化升级**(可选,目标/DOD 形式);改 `docs/tasks.md`(同 commit):
+   - **优化升级** 段 `- [ ]` → `- [x]`(只翻 优化升级 段 checkbox;**不动 方案参考 / 实现建议 / DOD 子段**)
+   - 特殊情况:父 bullet `[ ] → [!]`(需决策)/ `[ ] → [~]`(中断);inline 状态同 commit 翻
 5. **`git add <本 task 改的代码文件> docs/tasks.md` + `git commit`**(带 `Co-Authored-By: Claude <noreply@anthropic.com>`)
 
 > **tasks.md `[x]/[!]` 翻牌必须在同一个 commit 里**(per-task commit)。
@@ -132,6 +133,7 @@ description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化
 > - `git log --grep='<UC-XX-YY>'` 与 tasks.md 状态天然对齐,**无需对照** commit body 与文档状态
 > - 中途中断(切换到其他任务)时,已完成 task 的 [x] 不会再被误批量 rollback
 >   **prd.md / add.md 在本 skill 中只读** —— 只动 `tasks.md` **优化升级** 段 `[-]` ↔ `[x]` + 父 bullet 状态 4 形态翻牌,不动 UC/IF 定义(Version 概念已废弃)。
+>   **段文不写 子任务 / 不写 实现细节** — 段文是 dev 输入约束(描述"做什么 / 怎么算成功"),不约束 dev 怎么实现。dev agent 自主决定实现路径 + 内部子段拆解,只对照 DOD 验收。
 
 **Baseline 处理**:
 

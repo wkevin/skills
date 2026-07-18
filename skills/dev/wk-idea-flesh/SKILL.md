@@ -1,6 +1,6 @@
 ---
 name: wk-idea-flesh
-description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,**3 个文档**(prd/add/tasks)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md User Case / Inner Feature / Backlog 看 UC/IF 定义(新/升级/删除)+ 状态(父 bullet `[ ]/[x]/[~]/[!]` 4 形态前置 markdown checkbox)+ Backlog + **优化升级**段(`- [ ]` 待开发 + 简注)(3 桶「未方案设计/无 Task ID」「已方案设计/无 Task ID」「已方案设计/有 Task ID」按设计成熟度)。flesh **只输出方案参考(必选,prd/add 章节号指针)+ 实现建议(可选,简短不限制)+ DOD(可选)+ 优化升级(可选,本段积压的待开发点)**,**绝不写实现细节** —— 实现细节交给 wk-task-dev agent 自行发挥。状态机整体内聚到 tasks.md 自包含;Backlog 是新的"待办池";wk-sprint-shape 已删除(并入 wk-task-dev)。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 User Case / Inner Feature 既有条目而不是另开新 ID。**核心因果**:idea 落地后 prd/add/tasks 任一处增加新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级),都必须在 tasks.md Backlog 同步留一条 raw 行(或 User Case / Inner Feature 段文内 **优化升级** 段新增对应项) — Backlog 是"待办池"角色,任何地方出现新工作必须回流到 Backlog,否则后续 task-dev 会漏。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / 已有 IF 加新步骤 / btw, ..."、或任何模糊想法描述。
+description: 把新想法通过 3 维度头脑风暴(需求 / 方案 / 任务)落到文档系统,**3 个文档**(prd/add/tasks)**每个独立按需修改,没有"必动"**。每个文档有自己的触发原则:prd.md 看产品定位/需求变更,add.md 看架构/方案/决策变更,tasks.md User Case / Inner Feature / Backlog 看 UC/IF 定义(新/升级/删除)+ 状态(父 bullet `[ ]/[x]/[~]/[!]` 4 形态前置 markdown checkbox)+ Backlog + **优化升级**段(`- [ ]` 待开发 + 简注)(3 桶「未方案设计/无 Task ID」「已方案设计/无 Task ID」「已方案设计/有 Task ID」按设计成熟度)。flesh **只输出方案参考(必选,prd/add 章节号指针)+ DOD(必选,可验收标准)+ 实现建议(可选,1-2 句方向,不为 dev agent 限定实现路径)+ 优化升级(可选,仅描述目标/要求/DOD,不约束 dev 怎么实现)**,**绝不写 `**子任务**` 子段 + 绝不写 `**实现细节**` 段** —— 段文是 task-dev 的输入约束(描述"做什么 / 怎么算成功"),不是 task-dev 开发内部细节的规约(不约束 dev 怎么实现)。状态机整体内聚到 tasks.md 自包含;Backlog 是新的"待办池";wk-sprint-shape 已删除(并入 wk-task-dev)。支持「迭代升级」:如果新想法是修改已有 UC/IF 的 behavior,直接改 User Case / Inner Feature 既有条目而不是另开新 ID。**核心因果**:idea 落地后 prd/add/tasks 任一处增加新待办工作(新 UC/IF / 已有 IF 段文扩展 / 已有 UC 行为升级),都必须在 tasks.md Backlog 同步留一条 raw 行(或 User Case / Inner Feature 段文内 **优化升级** 段新增对应项) — Backlog 是"待办池"角色,任何地方出现新工作必须回流到 Backlog,否则后续 task-dev 会漏。所有产物严格对齐 wk-doc-align 评估基线。触发词:"/idea-flesh"、用户说"加需求 / 加个 task / 加个 UC / 加个 IF / 加个决策 / 已有 IF 加新步骤 / btw, ..."、或任何模糊想法描述。
 ---
 
 # /idea-flesh — 3 维度头脑风暴驱动的想法落地
@@ -261,8 +261,8 @@ echo "$NEXT_UC"
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | **纯产品定位调整**(无 UC/IF)         | prd.md §1 愿景 / §2 目标。其余 3 文档**不动**                                                                    |
 | **纯架构决策**(如 GraphQL over REST) | add.md §7 Decision (+ tasks.md 已有 IF 段文里备注变更(或 Backlog 升级到 §1))。其余 2 文档**不动**                                |
-| **新功能**(纯新增 ID)                | tasks.md Backlog 抠出 raw → User Case / Inner Feature 段 **新段**(完整定义 + **优化升级** 段 [ ])+ Backlog 删除对应行。prd/add 各按自身原则判断 |
-| **迭代升级**(改已有 UC/IF)           | tasks.md User Case / Inner Feature 既有段**改文**(保留 ID)+ **优化升级** 段加新 `[ ]` 项。prd/add 各按自身原则判断平级影响(多数情况不动)         |
+| **新功能**(纯新增 ID)                | tasks.md Backlog 抠出 raw → User Case / Inner Feature 段 **新段**(完整定义 + 方案参考 必选 + DOD 必选 + 可选 优化升级)+ Backlog 删除对应行。prd/add 各按自身原则判断 |
+| **迭代升级**(改已有 UC/IF)           | tasks.md User Case / Inner Feature 既有段**改文**(保留 ID)+ **优化升级** 段加新 `- [ ]` 项(目标/DOD 形式,不约束 dev 怎么实现)。prd/add 各按自身原则判断平级影响(多数情况不动)         |
 | **纯实现 / 状态调整**                | **不属 flesh**,属于 wk-task-dev(`/wk-task-dev UC-XX-YY` 入口直接读段文 + 翻 `[ ]` → `[x]`)                                                    |
 | **极小 polish**(纯 doc-typo / 措辞)  | 甚至可能**4 文档全不动**——直接 do nothing;flesh 链路就跑了 3-dim 讨论但没产生文档产物                            |
 
@@ -399,7 +399,7 @@ commit 后提示用户:
 
 1. **不修改代码** — WHY: 本 skill 只管文档;代码实应用 `dev:end-to-end` / `ultracode` 模式。
    反例: 联动改完文档顺手改 `src/`。
-2. **每个 UC 至少 `方案参考` 段(必选)+ 2-3 个子项 + 可选 DOD** — WHY: 来自 tasks-checklist;`方案参考` 段只列 prd/add 章节号指针(必选),不给具体实现代码。UC 没 `方案参考` = 占位。
+2. **每个 UC/IF 段的 父 bullet(task 编号行)只含 `[state] **ID** [P?]`** — 绝不写描述 / 副标题 / 斜体补充,信息归 4 子段;**每个段必含 4 子段(方案参考(必选) + DOD(必选) + 可选 实现建议 + 可选 优化升级)** — WHY: 段文是 task-dev 的输入约束,不约束 dev 怎么实现;`方案参考` 段列 prd/add 章节号指针(必选,dev 知道去哪查);`DOD` 段写可验收标准(必选,dev 知道完成时怎么验);**段文不写 `**子任务**` 子段**(子段拆解是 dev agent 实施时的内部决策);**段文不写 `**实现细节**` 段**(实现路径由 dev 决定);**`**优化升级**` 段(若写)只描述目标/要求/DOD,不约束 dev 怎么实现**;UC 没 `方案参考` + `DOD` = 占位。
    反例: UC 写 "I want to" 没翻译成 "我希望" 三段式;UC 段缺 `**方案参考**:` 段。
 3. **UC / IF 编号避免冲突** — WHY: 编号冲突会让 git log 和检索定位失效。
 4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 task-dev 完成实现的工作流;本 skill 只管"加想法"。

@@ -1,6 +1,6 @@
 ---
 name: wk-doc-align
-description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 4 形态 `[ ]/[x]/[~]/[!]` + Backlog)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。**任务段文结构**:tasks.md UC/IF 段文只应有 `方案参考 / 实现建议 / DOD / 优化升级`,**禁出现 `**实现细节**:** 段(flesh 不写实现细节,留给 dev 自主决策)。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
+description: 评估项目最重要的三件套文档——prd.md / add.md / tasks.md(tasks.md 自包含 catalog + 状态 4 形态 `[ ]/[x]/[~]/[!]` + Backlog)——是否符合方法论,并提供两种模式:evaluate(纯评估,出 issue+verdict)和 transform(评估+修复路线图+联动扫描+commit 编排)。检查 WHY 列是否具体、UC agile 三段式、Critical Lens ≥ 3 毛病等。**任务编号行(段文父 bullet)只含 `[state] **ID** [P?]`**,**绝不写任何描述**(包括简注/副标题/状态附加/斜体补充)— 信息归 4 子段。**段文结构(5 子段)**:tasks.md UC/IF 段文必含 **方案参考(必选,prd/add 章节号指针)+ DOD(必选,可验收标准)+ 实现建议(可选,1-2 句方向)+ 优化升级(可选,目标/要求/DOD,不约束 dev 实现路径)+ 关联IF/UC(可选)**;**禁出现 `**子任务**` 子段**(dev 内部子段拆解是 dev 自己的事)+ **禁出现 `**实现细节**:** 段**(实现路径由 dev 决定)。段文是 task-dev 输入约束,不约束 dev 怎么实现。依赖方向链 `prd → add → tasks`(tasks 是最下游,自包含)。Use when user asks to "评审 / 评估 / 检查 / audit / review / 评分" 已有 docs,或 "改造 / 修复 / 按评估意见修" 已有 docs,或接手别人文档先评估再决定是否按此规范继续。
 ---
 
 # /doc-align — 三件套文档评估器 / 改造器
