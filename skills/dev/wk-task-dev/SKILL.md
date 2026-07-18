@@ -29,8 +29,8 @@ description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化
 
 进入开发前,**必须**先扫描 `docs/tasks.md` 列出所有待实现条目,经用户确认 + 选定 commit 模式后才进入 Step 1:
 
-**Step 0a — 扫待实现清单**(扫描 `docs/tasks.md`):
-- **(a) 段文父 bullet `[ ]` 状态**:匹配 `^- \[ \] \*\*UC-XX-YY\*\*` / `^- \[ \] \*\*IF-XX-NN\*\*`(UC-XX-YY / IF-XX-NN 共 4 形态中的 `[ ]` 父 bullet,即 User Case / Inner Feature 段未开始任务)
+**Step 0a — 扫待实现清单**(执行 `python3 scan-pending.py`(本 skill 同目录),~20ms 完成):
+- **(a) 段文父 bullet `[ ]` 状态**:匹配 `^- \[ \] \*\*UC-XX-YY\*\*` / `^- \[ \] \*\*IF-XX-NN\*\*`(UC-XX-YY / IF-XX-NN 共 4 形态中的 `[ ]` 父 bullet,即 User Case / Inner Feature 段未开始任务)。简述优先取 `/` 后短语,无则回退到「**我希望**」首句 30 字
 - **(b) 段文 **优化升级** 段 `- [ ]` 项**:每个段文末尾 `**优化升级**(可选):` 子节里的 `- [ ]` checkbox(本段积压的待开发点)
 - 输出格式(必须按此格式给用户):
   ```
@@ -46,15 +46,38 @@ description: 批量实现 docs/tasks.md 段文父 bullet `[ ]` + 段文 **优化
   共 N + M 项待实现。
   ```
 - 扫不到任何条目 → 输出 `NO_PENDING: tasks.md 中无 [ ] 父 bullet 也无 优化升级 - [ ] 项`,停下
-- 任务 ID 列表(如 `$2` 给了 UC-XX-YY):只输出该 ID 对应的清单(段文父 bullet [ ] + 该段 优化升级 - [ ] 项);不扫全局
+- 任务 ID 列表(如 `$2` 给了 UC-XX-YY):脚本用 `python3 scan-pending.py UC-XX-YY` 单段模式,只输出该 ID 对应的清单(段文父 bullet [ ] + 该段 优化升级 - [ ] 项);不扫全局
 
-**Step 0b — 用户确认**(`AskUserQuestion`):
-- 提示:"上面是本次待实现清单, 是否全部实现?"
-- 选项:
-  - "全部实现" — 进入 Step 1 全跑
-  - "部分实现(指定)" — 用户给子集(回 `UC-XX-YY IF-XX-NN ...` 或段名)
-  - "取消" — 输出 `ABORTED`,停下
+> 性能备注:`scan-pending.py` 单次扫 ~20ms(0.02s 范围内,文件 ~70KB)。不要内联 re.findall 在 skill 描述里 — 调脚本即可。
+
+**Step 0b — 用户确认**(**必须先把 Step 0a 输出逐项** as 文本段**写在消息中**给用户,让用户清楚看到清单,然后才 `AskUserQuestion`):
+- 文本输出格式(必须按此 markdown code block 格式):
+  ```
+  === Step 0a 输出 ===
+  共 N + M 项待实现([段文父 bullet N 项 / 优化升级 M 项]):
+
+  [段文父 bullet — N 项]
+   1. UC-XX-YY 状态 [ ] / 简述
+   2. IF-XX-NN 状态 [ ] / 简述
+
+  [优化升级 — M 项]
+   1. 段 UC/IF-XX-YY > 优化升级#1: 简注
+   2. 段 IF-XX-NN > 优化升级#1: 简注
+
+  执行顺序(按 P0→P1→P2→P3 排序,IF 优先 UC):
+   - #1 IF-08-05 官方 Dockerfile...
+   - #2 IF-03-08 LLM 月度花费...
+   ...
+
+  ```
+- 文本段输出后**才** `AskUserQuestion`:
+  - 提示:"上面是本次待实现清单(共 N+M 项),是否全部实现?"
+  - 选项:
+    - "全部实现" — 进入 Step 1 全跑
+    - "部分实现(指定)" — 用户给子集(回 `UC-XX-YY IF-XX-NN ...` 或段名)
+    - "取消" — 输出 `ABORTED`,停下
 - 用户给"部分实现"时:把子集作为新的待实现清单,不需要重新扫
+- **关键**:AskUserQuestion 选项"全部实现"前必须展示清单;不能只 ask "yes/no" 而不显示清单
 
 **Step 0c — commit 模式选择**(`AskUserQuestion`,**只问一次**,本 session 后续 task 沿用):
 - 选项:
