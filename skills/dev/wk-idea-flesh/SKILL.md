@@ -312,6 +312,36 @@ grep -oE "UC-[0-9]+-[0-9]+|IF-[0-9]+-[0-9]+" docs/add.md | sort -u
 # 跨文件:tasks.md Backlog 引用的 UC/IF(已塑形 polish 桶)是否都仍在 User Case / Inner Feature 段 定义?(新建路径关键校验)
 ```
 
+#### 5.0 状态自检(必跑,无论形态)
+
+> **WHY**:flesh 段文写完后,父 bullet 状态 + 段文内**关联 UC/IF 引用编号** 必须真实存在且与描述一致。
+> 这两步都是**写完段文立刻跑**,便宜且 high-value。
+
+```bash
+# (a) 新段文父 bullet 状态正确?
+# 新建段文应是 [ ];迭代升级保留原状,不应被 flesh 翻 [x]
+NEW_ID="UC-05-04"  # 替换为本次实际写的新 ID(或多个,用 | 分隔)
+grep -nE "^- \[[ x]\] \*\*($NEW_ID)\b" docs/tasks.md
+
+# (b) 段文内引用的所有 UC/IF ID 都真实存在?
+# 从新段文摘出 **关联 IF**: / **关联 UC**: 字段的 ID,逐个核对
+# 例:UC-05-04 段文写了"关联 IF: IF-04-05 / IF-04-13" → 两个都要在 tasks.md 找得到
+grep -nE "^- \[[ x]\] \*\*(IF|UC)-[0-9]+-[0-9]+\b" docs/tasks.md
+
+# (c) 跨文档引用一致(add.md §DA-XX、prd.md §4 锚点里引的 ID 都在 tasks.md 找得到)
+grep -oE "(UC|IF)-[0-9]+-[0-9]+" docs/add.md docs/prd.md | sort -u \
+  | while read id; do
+      grep -qE "^- \[[ x]\] \*\*$id\b" docs/tasks.md || echo "MISSING: $id"
+    done
+```
+
+**通过标准**:
+
+- (a) 新段文若为「新建」必须 `[ ]`;若为「升级」保留原状(如 `[x]` 不变)
+- (b) 段文**关联 IF / 关联 UC** 字段列出的 ID 必须 grep 得到,**编号一字不差**
+
+不通过则**先修 docs 再 commit**,不要 commit 一个 dangling reference。
+
 输出校验报告(按形态选):
 
 ```
@@ -402,7 +432,9 @@ commit 后提示用户:
    反例: UC 写 "I want to" 没翻译成 "我希望" 三段式;UC 段缺 `**方案参考**:` 段。
 3. **UC / IF 编号避免冲突** — WHY: 编号冲突会让 git log 和检索定位失效。
 4. **不修改 task 状态 `[ ]` → `[x]`** — WHY: 那是 task-dev 完成实现的工作流;本 skill 只管"加想法"。
-   反例: UC 段带 `[x]` —— 翻状态归 wk-task-dev(不在 flesh)。
+   反例 1: 新建段文(补建 UC/IF + 扩展描述新行为)父 bullet 写成 `[x]` —— 即使旧代码在库内,新段文描述的「新行为」未实现就仍是 `[ ]`;翻状态归 wk-task-dev。
+   反例 2: 迭代升级既有 UC 时,父 bullet 状态保留原状(如原 `[x]` 不变),不动 `[x] → [~]` 等中间态 —— flesh 不管 task-dev 状态机。
+   反例 3: 段文**关联 IF / 关联 UC** 字段写错编号(如本应 `IF-04-13` 写成 `IF-05-05`) —— 引用必须 grep 得到一字不差;不在 tasks.md 的 ID 视为 dangling reference,先修再 commit。
 5. **commit message subject ≤ 60 字 + 2 段式 body** — WHY: git log 可读性 + Conventional Commits 规范;2 段式结构(`>> original idea` / `>> 头脑风暴`)让后续 reader 不必读对话历史就能理解决策理由 + 追溯用户原始诉求(详见 Step 6 commit 模板)。
 6. **PRD 瘦身** — WHY: 已迁到 ADD 的内容(数据模型 / 技术栈等)写回 PRD 会双源失同步。
    反例: 把数据模型 / 技术栈重新写回 PRD(doc-align 视为已迁出章节)。
