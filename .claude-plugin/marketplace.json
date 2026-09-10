@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Skills shared by wkevin",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "plugins": [
     {
@@ -18,8 +18,16 @@
         "./skills/dev/wk-arch-decoder",
         "./skills/dev/wk-doc-align",
         "./skills/dev/wk-idea-flesh",
-        "./skills/dev/wk-sprint-shape",
         "./skills/dev/wk-task-dev"
+      ]
+    },
+    {
+      "name": "research",
+      "description": "学术类 skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/research/wk-paper-triage"
       ]
     },
     {

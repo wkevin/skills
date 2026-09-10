@@ -207,7 +207,7 @@ batch 全部完成后给最终 summary:commit 列表 + 跳过的 `[!]` + 剩余 
 - **`无需确认`**:自动连跑全清单,每完成 N 项打印 Step 3 进度汇报,**全程 0 中断**(适合大批量 polish / 凌晨跑)
 - **临时覆盖**:用户后续可用 `/task-dev <id> --mode=confirm|auto` 单条覆盖本 session 默认
 
-若全局 `git-requires-confirmation` memory 设了强约束("严格等待用户确认才 commit"),**以全局 memory 为准**,任何模式都被强制 confirm。本 skill 不绕开用户硬护栏。
+本 skill 不绑硬护栏:Step 0c 选什么模式就跑什么模式。如项目或个人全局规则另有约束(例如 user memory 锁、CI gating),按那个执行;否则按 Step 0c 选择跑。如果用户在 batch 中途改主意,任一 task 完成后用 `git reset` / amend / `git revert` 收口。详见 `git log -p HEAD~N..HEAD` 或 Step 3 进度汇报。
 
 ### 需要决策的任务([P3] escape hatch)
 
