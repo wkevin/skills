@@ -1,0 +1,7 @@
+{
+  "markdown.marp.themes": ["./main.css"],
+  "markdown.marp.outlineExtension": false,
+  "markdown.marp.enableHtml": true,
+  "markdown.extension.toc.levels": "1..1",
+  "markdown.extension.toc.updateOnSave": true
+}

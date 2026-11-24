@@ -36,7 +36,8 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/utils/wk-srt-translate"
+        "./skills/utils/wk-srt-translate",
+        "./skills/utils/wk-marp-slide"
       ]
     }
   ]

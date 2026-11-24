@@ -1,0 +1,62 @@
+{
+  "multicolumn-2": {
+    "prefix": "insert-2-column",
+    "body": [
+      "",
+      "<div class=\"container\"><div class=\"col\">",
+      "$1",
+      "</div><div class=\"col\">",
+      "",
+      "</div></div>",
+      ""
+    ],
+    "description": "insert 2 column"
+  },
+  "multicolumn-3": {
+    "prefix": "insert-3-column",
+    "body": [
+      "",
+      "<div class=\"container\"><div class=\"col\">",
+      "$1",
+      "</div><div class=\"col\">",
+      "",
+      "</div><div class=\"col\">",
+      "",
+      "</div></div>",
+      ""
+    ],
+    "description": "insert 3 column"
+  },
+  "divblock": {
+    "prefix": "insert-div-block",
+    "body": [
+      "",
+      "<div class=\"${1|rightBottomInPage,leftBottomInPage,centerblock,onleft,oncenter,onright|} ${2|smallfont,smallestfont|}\">",
+      "$3",
+      "</div>",
+      ""
+    ],
+    "description": "插入 Marp 的文档块儿（字体大小、位置可选）"
+  },
+  "fontblock": {
+    "prefix": "insert-font-block",
+    "body": [
+      "",
+      "<font class=\"${1|onleft,oncenter,onright|} ${2|smallfont,smallestfont|}\" color=${3|Gray,Blue,Red,Yellow|}>$4</font>",
+      ""
+    ],
+    "description": "insert font block"
+  },
+  "mermaidblock": {
+    "prefix": "insert-mermaid-block",
+    "body": [
+      "",
+      "<div class=\"mermaid\">",
+      "%%{init: {'theme':'base'}}%%",
+      "$1",
+      "</div>",
+      ""
+    ],
+    "description": "insert mermaid block"
+  }
+}
