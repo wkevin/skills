@@ -87,8 +87,16 @@ section.chapter h1 {
 
 /* mermaid 生成的 svg 图片配置 */
 svg[id^="mermaid-"]{
-    max-height: 500px;
+    max-height: 540px;
     max-width: 1200px;
+    width: 100%;
+    height: auto;
+}
+
+/* 行内强调 */
+.highlight {
+    color: #1d87ca;
+    font-weight: 700;
 }
 
 /* 页内位置控制 */

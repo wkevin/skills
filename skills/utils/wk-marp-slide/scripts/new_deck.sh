@@ -92,9 +92,11 @@ mkdir -p "$DECK/images/motherboard"
 mkdir -p "$DECK/.vscode"
 
 # 模板 → index.md：替换占位符，并把 __BRAND__ 烘焙成默认母版。
+# 「姓名.工号」的句点同时容忍中文句号 —— 免得模板被自动纠错工具改成「姓名。工号」
+# 之后 sed 匹配不上、新 deck 里静默留着占位符。
 sed -e "s|改为 Slide 标题|${TITLE}|g" \
     -e "s|改为 Slide 副标题|${SUBTITLE}|g" \
-    -e "s|姓名\.工号|${AUTHOR}|g" \
+    -e "s|姓名[.。]工号|${AUTHOR}|g" \
     -e "s|202x\.yy\.zz|${DATE}|g" \
     -e "s|__BRAND__|${BRAND}|g" \
     "$SKILL_DIR/template/index.md" > "$DECK/index.md"

@@ -5,11 +5,14 @@ description: >
   (theme background art) is generic and data-driven: every directory under
   this skill's assets/images/motherboard/ is one selectable brand. Ships a
   cover / TOC / chapter-divider / content / closing page system, multi-column
-  layouts, Mermaid diagrams, and Chinese classical typography (Heti). Builds
-  to HTML, PDF, and PNG. Use when the user asks to make a slide deck /
-  presentation / PPT / 幻灯片 / 汇报材料, to edit or rebuild an existing Marp
-  deck, or to add a Mermaid diagram or multi-column layout. Triggers on
-  "做 PPT" / "生成 slide" / "建个讲稿" / "slide deck" / "marp" / "汇报材料".
+  layouts, Mermaid diagrams, and Chinese classical typography (Heti). Includes
+  a layout guide and a static layout linter that catch empty pages, wall-of-
+  text pages and unsized images. Builds to HTML, PDF, and PNG. Use when the
+  user asks to make a slide deck / presentation / PPT / 幻灯片 / 汇报材料, to
+  edit or rebuild an existing Marp deck, to add a Mermaid diagram or
+  multi-column layout, or to improve slide 排版 / 版式 / 密度 / 多栏 /
+  图文混排. Triggers on "做 PPT" / "生成 slide" / "建个讲稿" / "slide deck" /
+  "marp" / "汇报材料" / "排版" / "版式".
 allowed-tools:
   - Bash
   - Read
@@ -60,10 +63,23 @@ bash "$SKILL_DIR/scripts/new_deck.sh" <deck_dir> \
 
 deck 目录放哪由你定 —— 默认建在用户当前工作目录下，或问一下用户想放哪。
 
-### 3. 用户编辑 `index.md`（或你来改）
+### 3. 写内容（**这一步决定了 deck 好不好看**）
 
-源文件是 `index.md`，用户在里面填内容。你可以按下面「页面版式」直接帮用户搭
-好结构，也可以让用户自己改。
+新 deck 的 `index.md` 是一个**骨架**：9 页，每页一种版式，占位文字用 `【】` 标出。
+你要做的是**逐页替换成真实内容**，而不是照着骨架再填一遍占位符。
+
+写之前先读这两份东西：
+
+| 读什么 | 得到什么 |
+|---|---|
+| `$SKILL_DIR/references/layout-guide.md` | 页面解剖、版式决策表、密度规则、内容深度规则、叙事结构、反模式 |
+| `$SKILL_DIR/template/style-sample.md` | 一份**真实排版的样张** —— 照它的密度、句式、分栏方式写 |
+
+三条硬规则（违反即返工）：
+
+1. **一页一个论点**；正文页加权密度 ≥ 8（内容行 + 3×图片行）；单栏 ≤ 6 条 bullet。
+2. **每页至少 1 条带具体信息的条目**（数字 / 版本 / 年份 / 机构名 / 判定）。
+3. **同页分段用 `<hr>`，分页用 `---`**，两者不可混。
 
 ### 4. 构建
 
@@ -85,6 +101,43 @@ bash "$SKILL_DIR/scripts/build.sh" -d <deck_dir> -f html,pdf,png [-b <brand>] [-
 
 **切品牌不用改源文件**：`build.sh -b <brand>` 构建时临时把 `index.md` 里的
 品牌路径换掉，产物写到独立目录（用 `-o <dir>`），源文件保持不变。
+
+### 5. 视觉自检（**模型支持视觉时才做**）
+
+构建后要**自己先看**渲染结果 —— 但**前提是你能看懂图片**。
+
+**先判断自己有没有视觉能力**：把 PNG `Read` 进来。
+
+- **能读出画面内容** → 有视觉能力，按下面的清单逐页自检。
+- **读不出**（工具报无法解析 / 你描述不出画面） → **没有视觉能力，直接跳过本步**。
+  **不要假装看过。** 改为：
+  - 只依赖 `check_layout.py` 的静态结果（它能查空页、文字墙、图没定尺、密度等）；
+  - 交付时**明确告诉用户**："我没有视觉能力，无法自查渲染效果，麻烦你过一眼"，
+    并把 `dist/sheet-<brand>.png` 或 PDF 的路径一起给出。
+
+有视觉能力时：
+
+```bash
+bash "$SKILL_DIR/scripts/build.sh" -d <deck_dir> -f html,png -s
+# 然后 Read dist/sheet-<brand>.png（逐页长图），逐页过一遍：
+```
+
+- 有没有**空白页**（内容被 `---` 切空）？
+- 有没有**溢出**（底部被裁掉、字压到页脚）？
+- 有没有**塌陷**（分栏挤成一条、图撑破栏）？
+- 有没有**连续 2 页太空**（加权密度 < 6）→ 并页？
+- 有没有**孤儿标题**（页面只有标题没内容）？
+- 分隔线是不是画成了**满宽细线**（`<hr>`），而不是被当成新的一页？
+
+发现问题 → 改 `index.md` → 重新构建 → 再看。**修完再交付给用户。**
+
+静态检查（空页 / div 内标题 / 文字墙 / 图没定尺 / 占位符残留 / mermaid 运行时
+缺失）由 `build.sh` 自动跑 `scripts/check_layout.py`；**它不依赖视觉能力，两种模型
+都要跑**。也可以单独跑：
+
+```bash
+python3 "$SKILL_DIR/scripts/check_layout.py" <deck_dir> [--strict] [--json]
+```
 
 ---
 
@@ -132,12 +185,67 @@ my-talk/
 
 ---
 
-## 页面版式（6 种）
+## 内容编排
 
-模板 `template/index.md` 演示了全部（以 `<brand>` 指代所选品牌）。关键在于
-**Marp 指令 + CSS class**：
+细则在 `$SKILL_DIR/references/layout-guide.md`，这里只放最常用的决策。
 
-### 1. 封面（face）
+### 页面解剖
+
+| 层 | 谁控制 | 长什么样 |
+|---|---|---|
+| 固定层 | front matter | 页眉 `header:`、页脚 `footer:`、页码（`paginate: true`） |
+| 页标题 | `##` | **一页只有一个**，左对齐，字号最大 |
+| 栏标题 | `###` | 只在 `.col` 里用，被主题**自动居中** |
+| 正文 | markdown | 22px 基准 |
+
+### 版式决策表
+
+| 内容类型 | 版式 | 骨架 |
+| --- | --- | --- |
+| 两个对等维度 | 双栏 | `.container` + `.col` × 2 |
+| 三个对等维度 | 三栏 | `.container` + `.col` × 3 |
+| 主次不均 | 非对称 | `.col2` + `.col` |
+| 一组对比 + 另一组对比 | 三栏 ×2 + 分隔线 | 两段 `.container`，中间 `<hr>` |
+| 四张图 + 短注 | 四栏图卡 | `.col` × 4，每栏 `![h:250px]` + 短注 |
+| 一张大图 + 短文 | 图文分屏 | `![bg fit left:30%](...)` + 正文 |
+| 字段对照 | 宽表 | `.centerblock` + `table`，结论写在表下 |
+| 流程 / 依赖 | 图或 mermaid | `<div class="mermaid">` 或一张 SVG |
+| 出处 / 脚注 | 页角 | `.rightBottomInPage smallestfont` |
+
+### 密度
+
+**加权密度 = 内容行数 + 3 × 图片行数。** 真实 deck 的中位是 **17**，典型区间
+**8 – 32**。低于 8 页面发空（连续两页低于 6 就并页），高于 32 有溢出风险。
+
+**溢出是静默的** —— 内容被裁掉，页面看起来还正常。所以必须渲染出来看（步骤 5）。
+
+### 内容深度
+
+一条 bullet 要是一个**完整短句**，不是一个名词短语；每页至少一条带具体信息的
+条目。
+
+```
+❌ - 标准、规范
+✅ - **ISO/IEC 30173:2023** 规定了数字孪生的三层参考架构
+```
+
+完整清单（成对 before/after）见 `$SKILL_DIR/references/layout-guide.md` §8。
+
+### 叙事结构
+
+```
+封面 → 目录 → 章节页 → 内容页 ×(3-8) → 章节页 → … → 小结页 → 尾页
+```
+
+章节页每 **5–8 页**出现一次；收尾要有**小结页**，不要直接跳到尾页。
+
+---
+
+## 页面骨架速查
+
+模板 `template/index.md` 演示了全部骨架（以 `<brand>` 指代所选品牌）。
+
+### 1. 封面（face）—— 何时用：整份 deck 的第一页
 
 ```markdown
 ## 标题
@@ -158,7 +266,7 @@ my-talk/
 `_class: face` → 白字大标题；`_paginate: skip` → 不计页码；
 `_header/_footer: ''` → 隐藏页眉页脚。
 
-### 2. 目录（TOC）
+### 2. 目录（TOC）—— 何时用：封面之后第一章之前
 
 ```markdown
 ## 目录
@@ -169,9 +277,9 @@ my-talk/
 ![bg left:30%](images/motherboard/<brand>/slide-face.png)
 ```
 
-`![bg left:30%]` → 封面图占左侧 30%，正文在右侧。
+`![bg left:30%]` → 封面图占左侧 30%，正文在右侧。条目要写真链接。
 
-### 3. 章节页（chapter）
+### 3. 章节页（chapter）—— 何时用：每 5-8 页一次，切换大章节
 
 ```markdown
 # 一级目录
@@ -181,7 +289,7 @@ my-talk/
 
 `#` 标题 + `_class: chapter` → 整页变成蓝底白字的大标题条。
 
-### 4. 内容页
+### 4. 内容页 —— 何时用：默认
 
 ```markdown
 ## 二级目录
@@ -189,7 +297,95 @@ my-talk/
 正文内容。
 ```
 
-### 5. 尾页（结束）
+**一页一个 `##` 标题。** 下面 5 种版式都是内容页的内部结构。
+
+### 5. 双栏 —— 何时用：两个对等维度
+
+```markdown
+<div class="container"><div class="col">
+
+### 第一列
+
+- 条目
+
+</div><div class="col">
+
+### 第二列
+
+- 条目
+
+</div></div>
+```
+
+`.col` 等分，`.col2` 两倍宽，`.colv` 纵向居中。
+
+### 6. 三栏 + 同页分隔线 —— 何时用：一页承载两组信息
+
+```markdown
+<div class="container smallfont"><div class="col">
+### 维度 A
+- …
+</div><div class="col">
+### 维度 B
+- …
+</div><div class="col">
+### 维度 C
+- …
+</div></div>
+
+<hr>
+
+<div class="container smallfont"><div class="col">
+- …
+</div><div class="col">
+- …
+</div><div class="col">
+- …
+</div></div>
+```
+
+`<hr>` 是**满宽细线、不分页**；顶格 `---` 和 `***` 都会分页，别拿来当分隔线。
+
+### 7. 四栏图卡 —— 何时用：四张图并排比较
+
+```markdown
+<div class="container"><div class="col">
+![h:250px](img/1.png)
+- 一句话说明
+</div><div class="col">
+![h:250px](img/2.png)
+- 一句话说明
+</div>…</div>
+```
+
+所有图**同一个 `h:` 值**，视觉才对齐。
+
+### 8. 宽表 —— 何时用：字段对照
+
+```markdown
+<div class="centerblock">
+
+| 列一 | 列二 |
+| --- | --- |
+| 值 | 值 |
+
+</div>
+
+- 结论写在表下面
+```
+
+### 9. 图文分屏 —— 何时用：一张大图 + 短文
+
+```markdown
+![bg fit left:30%](img/poster.png)
+
+- 一条硬信息
+- 一条判断
+```
+
+分屏页正文 ≤ 8 条，不放表格。
+
+### 10. 尾页（结束）
 
 ```markdown
 ---
@@ -200,29 +396,6 @@ my-talk/
 
 ![bg](images/motherboard/<brand>/slide-bottom.png)
 ```
-
-### 6. 分栏
-
-```markdown
-<div class="container">
-<div class="col">
-
-### 第一列
-
-- 条目
-
-</div>
-<div class="col">
-
-### 第二列
-
-- 条目
-
-</div>
-</div>
-```
-
-`.col` 等分，`.col2` 两倍宽，`.colv` 纵向居中。
 
 ### 全局背景
 
@@ -256,48 +429,29 @@ graph LR;
 ```
 
 `mermaid.min.js` 必须在**与 md 同目录**（路径 `./mermaid.min.js` 是相对 md 解析的）。
+少了这段，图不会渲染成 SVG，只会显示源码。
 
 ---
 
 ## 中文古典排版（Heti）
 
-`main.css` 内置了 Heti（[sivan/heti](https://github.com/sivan/heti)），
-用于古诗文、竖排等场景。
-
-**用显式 HTML 标签写标题**（`<h1>` / `<p>`），不要用 Markdown 的 `#`：
+`main.css` 内置了 Heti（[sivan/heti](https://github.com/sivan/heti)），用于古诗文、
+竖排等场景。**标题要用显式 HTML 标签（`<h1>` / `<p>`），不要用 Markdown 的 `#`** ——
+`headingDivider: 2` 会让 `#` / `##` 变成分页符，把 `<div>` 里的块劈成两页。
 
 ```markdown
 <div class="heti heti--ancient">
 
 <h1>出师表</h1>
 
-<p>作者：諸葛亮</p>
-
 <p>先帝创业未半而中道崩殂，今天下三分。</p>
 
 </div>
 ```
 
-原因：`headingDivider: 2` 让 `#` / `##` 成为**分页符**，写在 `<div>` 里会把
-这个块从中间劈成两页（实测：标题跑到前一页、正文留在后一页，版式全乱）。
-`<h1>` 是普通 HTML，不触发分页。
-
-`heti--ancient` 下的一级标题会变成**居中、加粗、楷体**；正文段落自动首行缩进 2 字符。
-
-诗词用显式 HTML 标签控制得更细：
-
-```markdown
-<div class="heti heti--poetry">
-  <h2>九月九日忆山东兄弟</h2>
-  <p class="heti-x-large">
-    独在异乡为异客，<br>
-    每逢佳节倍思亲。
-  </p>
-</div>
-```
-
-可用变体：`heti--ancient`（古文）、`heti--poetry`（诗词）、`heti--columns-2`（分栏）、
-`heti--vertical`（竖排）、`heti--annotation`（夹注）、`heti--song`/`heti--hei`/`heti--kai`（字体）。
+变体：`heti--ancient`（古文）、`heti--poetry`（诗词）、`heti--columns-2`（分栏）、
+`heti--vertical`（竖排）、`heti--annotation`（夹注）、`heti--song`/`heti--hei`/
+`heti--kai`（字体）。细节见 `$SKILL_DIR/references/layout-guide.md` §11。
 
 ---
 
@@ -312,9 +466,13 @@ build.sh [选项] [deck_dir]
 -b, --brand NAME     背景母版（默认 index.md 里烘焙的）
 -c, --compress       用 ghostscript 压缩 PDF
 -s, --sheet          额外拼一张 contact sheet 长图
+    --no-lint        跳过排版检查（默认会跑）
+    --strict         排版检查有 ERROR 时中断构建
 ```
 
 `-b` 会校验品牌存在：deck 里 `images/motherboard/` 下没有的，直接报错并列可用列表。
+
+`check_layout.py` 的规则（E1–E6 / W1–W9 / I1–I2）见文件头 docstring。
 
 ---
 
@@ -347,6 +505,14 @@ build.sh [选项] [deck_dir]
 8. **临时母版文件**：`build.sh -b <brand>` 会在 deck 目录生成 `build-<brand>.md`，
    构建结束自动删除。**不要**把它提交进 git（`.gitignore` 已含 `build-*.md`）。
 
+9. **`<hr>` / `> ---` 是同页横线，不是分页符**；顶格 `---` 和 `***` 才是分页符。
+   （`***` / `___` 也分页，很多人以为只有 `---` 会。）
+
+10. **`---` 紧跟标题会产生一张空页** —— `---` 开一页、标题再开一页。
+
+11. **文件开头的 HTML 注释块不会多出一页**，但**注释里不能嵌套 `<!-- -->`** ——
+    外层注释会在第一个 `-->` 处提前结束，后面的文字会漏到页面上。
+
 ---
 
 ## 依赖
@@ -357,6 +523,7 @@ build.sh [选项] [deck_dir]
 | Chrome / Chromium              | PDF、PNG 渲染 | 装 Chrome，或 `CHROME_PATH` 指定           |
 | `gs` (ghostscript)             | `-c` 压缩 PDF | 可选                                       |
 | `convert` (ImageMagick)        | `-s` 拼长图   | 可选                                       |
+| `python3`                      | 排版检查      | 必装（`check_layout.py`）                  |
 
 ---
 

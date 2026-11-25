@@ -16,6 +16,8 @@
 #   -m, --motherboard  同 --brand，母版名直接替换 images/motherboard/<name>
 #   -c, --compress     额外用 ghostscript 压缩 PDF
 #   -s, --sheet        把 PNG 逐页拼成一张长图 (contact sheet)
+#       --no-lint      跳过排版检查（默认会跑 check_layout.py）
+#       --strict       排版检查有 ERROR 时中断构建
 #   -h, --help         显示本帮助
 #
 # deck 目录结构（用 new_deck.sh 生成）:
@@ -32,12 +34,18 @@
 
 set -euo pipefail
 
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_DIR="$(cd "$HERE/.." && pwd)"
+
 DECK=""
 OUT=""
 FORMATS="html,pdf"
 BRAND=""
+BRAND_EXPLICIT=false
 COMPRESS=false
 SHEET=false
+LINT=true
+STRICT=false
 
 usage() {
     awk 'NR>1 && /^[a-zA-Z]/{exit} NR>1{print}' "$0"
@@ -48,10 +56,13 @@ list_brands() {
     find "$1/images/motherboard" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | sort
 }
 
-# 从 index.md 里探测烘焙的母版（第一个出现 images/motherboard/<name>/ 的名字）
+# 从 index.md 里探测烘焙的母版（第一个出现 images/motherboard/<name>/ 的名字）。
+# 先剥掉 HTML 注释块 —— 注释里写的示例路径（如 images/motherboard/<brand>/）
+# 不是真的母版名。
 detect_brand() {
     local md="$1"
-    grep -oE 'images/motherboard/[^/]+/' "$md" 2>/dev/null \
+    sed '/<!--/,/-->/d' "$md" 2>/dev/null \
+        | grep -oE 'images/motherboard/[^/]+/' \
         | head -n1 | cut -d/ -f3
 }
 
@@ -60,10 +71,13 @@ while [ $# -gt 0 ]; do
         -d|--deck)       DECK="$2"; shift 2 ;;
         -o|--out)        OUT="$2"; shift 2 ;;
         -f|--format)     FORMATS="$2"; shift 2 ;;
-        -b|--brand)      BRAND="$2"; shift 2 ;;
-        -m|--motherboard) BRAND="$2"; shift 2 ;;
+        -b|--brand)      BRAND="$2"; BRAND_EXPLICIT=true; shift 2 ;;
+        -m|--motherboard) BRAND="$2"; BRAND_EXPLICIT=true; shift 2 ;;
         -c|--compress)   COMPRESS=true; shift ;;
         -s|--sheet)      SHEET=true; shift ;;
+        --no-lint)       LINT=false; shift ;;
+        --lint)          LINT=true; shift ;;
+        --strict)        STRICT=true; shift ;;
         -h|--help)       usage; exit 0 ;;
         -*)              echo "未知选项: $1" >&2; usage >&2; exit 1 ;;
         *)               DECK="$1"; shift ;;
@@ -107,10 +121,34 @@ if [ -z "$BRAND" ]; then
     [ -n "$BRAND" ] || BRAND="$(echo "$AVAILABLE" | head -n1)"
 fi
 
-# 校验目标母版存在
+# 校验目标母版存在。
+# 用户显式指定的 (-b) 报错；自动探测出来的探测错了就退回第一个可用母版。
 if ! echo "$AVAILABLE" | grep -qx "$BRAND"; then
-    echo "错误: 未知母版 '$BRAND'。可用: $(echo "$AVAILABLE" | tr '\n' ' ')" >&2
-    exit 1
+    if $BRAND_EXPLICIT; then
+        echo "错误: 未知母版 '$BRAND'。可用: $(echo "$AVAILABLE" | tr '\n' ' ')" >&2
+        exit 1
+    fi
+    echo "警告: 探测到的母版 '$BRAND' 不在 deck 里，改用 $(echo "$AVAILABLE" | head -n1)" >&2
+    BRAND="$(echo "$AVAILABLE" | head -n1)"
+fi
+
+# --- 排版检查 ------------------------------------------------------------------
+# 在 marp 之前跑：空页 / div 内标题 / 文字墙 / 占位符残留…… 早发现早改。
+# 默认只报告不阻断（老 deck 不该因为新规则构建失败）；--strict 才在有 ERROR 时中断。
+if $LINT; then
+    LINTER="$SKILL_DIR/scripts/check_layout.py"
+    if [ -f "$LINTER" ]; then
+        echo "==> 排版检查"
+        if $STRICT; then
+            python3 "$LINTER" "$MD" --strict || {
+                echo "错误: 排版检查未通过（--strict）" >&2
+                exit 1
+            }
+        else
+            python3 "$LINTER" "$MD"
+        fi
+        echo
+    fi
 fi
 
 # --- 母版切换：把 md 里烘焙的母版路径换成目标母版 --------------------------------
@@ -168,6 +206,10 @@ fi
 if [[ ",$FORMATS," == *",png,"* ]]; then
     echo "==> PNG"
     mkdir -p "$OUT/png"
+    # 先清掉上一次的逐页 PNG：
+    #   1) 旧页数比新页数多时，残留页会混进 contact sheet
+    #   2) 不清的话，改名循环会把已有的 index.001.png 又改成 index.001.png.png
+    rm -f "$OUT/png/$MD_NAME".[0-9]* 2>/dev/null || true
     # 单文件模式下 marp 输出 index.001 / index.002（不带 .png 后缀），
     # 这里统一改名成 index.001.png ...
     marp --allow-local-files --html --theme "$THEME" --images png \
